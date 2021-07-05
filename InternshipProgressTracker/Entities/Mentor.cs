@@ -5,9 +5,17 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    public enum MentorRole
+    {
+        Mentor,
+        Lead
+    }
+
     public class Mentor
     {
         public int Id { get; set; }
+
+        public MentorRole Role { get; set; }
 
         public bool IsAdmin { get; set; }
 
