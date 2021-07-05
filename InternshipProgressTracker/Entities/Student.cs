@@ -12,5 +12,7 @@ namespace InternshipProgressTracker.Entities
         public int InternshipStreamId { get; set; }
 
         public int CurrentGrade { get; set; }
+
+        public User User { get; set; }
     }
 }

@@ -20,5 +20,7 @@ namespace InternshipProgressTracker.Entities
         public bool IsAdmin { get; set; }
 
         public int InternshipStreamId { get; set; }
+
+        public User User { get; set; }
     }
 }
