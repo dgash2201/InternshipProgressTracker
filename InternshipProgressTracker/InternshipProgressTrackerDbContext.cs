@@ -1,10 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker
 {
     public class InternshipProgressTrackerDbContext : DbContext
     {
-        public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) : base(options) {}
+        public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) 
+            : base(options) {}
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Mentor> Mentors { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<StudyPlan> StudyPlans { get; set; }
+        public DbSet<StudyPlanEntry> StudyPlanEntries { get; set; }
+        public DbSet<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
+
     }
 }
