@@ -22,5 +22,9 @@ namespace InternshipProgressTracker.Entities
         public InternshipStreamStatus Status { get; set; }
 
         public ICollection<StudyPlan> StudyPlans { get; set; }
+
+        public ICollection<Student> Students { get; set; }
+
+        public ICollection<Mentor> Mentors { get; set; }
     }
 }
