@@ -14,5 +14,7 @@ namespace InternshipProgressTracker.Entities
         public string Description { get; set; }
 
         public int InternshipStreamId { get; set; }
+
+        public ICollection<StudyPlanEntry> Entries { get; set; }
     }
 }
