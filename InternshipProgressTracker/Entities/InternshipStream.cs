@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    public enum InternshipStreamStatus
+    {
+        Current,
+        Finished
+    }
+
     public class InternshipStream
     {
         public int Id { get; set; }
@@ -13,6 +19,8 @@ namespace InternshipProgressTracker.Entities
 
         public string Description { get; set; }
 
-        public string Status { get; set; }
+        public InternshipStreamStatus Status { get; set; }
+
+        public ICollection<StudyPlan> StudyPlans { get; set; }
     }
 }
