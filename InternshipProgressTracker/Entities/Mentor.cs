@@ -22,5 +22,7 @@ namespace InternshipProgressTracker.Entities
         public int InternshipStreamId { get; set; }
 
         public User User { get; set; }
+
+        public ICollection<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
     }
 }
