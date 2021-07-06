@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    /// <summary>
+    /// Represents the User entity
+    /// </summary>
     public class User
     {
         [Key]

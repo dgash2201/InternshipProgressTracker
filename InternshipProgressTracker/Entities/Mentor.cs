@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    /// <summary>
+    /// Contains roles of a mentor
+    /// </summary>
     public enum MentorRole
     {
         Mentor,
         Lead
     }
 
+    /// <summary>
+    /// Represents the Mentor entity
+    /// </summary>
     public class Mentor
     {
         [Key]

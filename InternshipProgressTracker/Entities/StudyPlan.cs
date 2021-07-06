@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    /// <summary>
+    /// Represents the StudyPlan entity
+    /// </summary>
     public class StudyPlan
     {
         [Key]

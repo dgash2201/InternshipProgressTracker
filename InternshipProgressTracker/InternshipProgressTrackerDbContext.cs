@@ -4,6 +4,9 @@ using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker
 {
+    /// <summary>
+    /// Class for working with InternshipProgressTracker database
+    /// </summary>
     public class InternshipProgressTrackerDbContext : DbContext
     {
         public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) 
@@ -17,6 +20,10 @@ namespace InternshipProgressTracker
         public DbSet<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
         public DbSet<InternshipStream> InternshipStreams { get; set; }
 
+        /// <summary>
+        /// Method for configuring relationships between entities by Fluent API
+        /// </summary>
+        /// <param name="builder">Builder to construct a model for a context</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder

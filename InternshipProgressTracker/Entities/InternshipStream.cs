@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
+    /// <summary>
+    /// Contains statuses of Internship Stream
+    /// </summary>
     public enum InternshipStreamStatus
     {
         NotStarted,
@@ -12,6 +15,9 @@ namespace InternshipProgressTracker.Entities
         Completed
     }
 
+    /// <summary>
+    /// Represents the InternshipStream entity
+    /// </summary>
     public class InternshipStream
     {
         public int Id { get; set; }
