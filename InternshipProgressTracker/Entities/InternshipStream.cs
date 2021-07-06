@@ -7,8 +7,9 @@ namespace InternshipProgressTracker.Entities
 {
     public enum InternshipStreamStatus
     {
-        Current,
-        Finished
+        NotStarted,
+        Active,
+        Completed
     }
 
     public class InternshipStream
