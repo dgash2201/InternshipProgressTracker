@@ -14,5 +14,7 @@ namespace InternshipProgressTracker.Entities
         public int CurrentGrade { get; set; }
 
         public User User { get; set; }
+
+        public ICollection<StudentStudyPlanProgress> StudyPlanProgresses { get; set; }
     }
 }
