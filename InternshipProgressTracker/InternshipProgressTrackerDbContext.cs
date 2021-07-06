@@ -17,5 +17,29 @@ namespace InternshipProgressTracker
         public DbSet<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
         public DbSet<InternshipStream> InternshipStreams { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder
+                .Entity<StudentStudyPlanProgress>()
+                .HasKey(e => new { e.StudentId, e.StudyPlanEntryId });
+
+            builder
+                .Entity<Student>()
+                .HasMany(e => e.StudyPlanProgresses)
+                .WithOne()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .Entity<StudyPlanEntry>()
+                .HasMany(e => e.StudentsProgresses)
+                .WithOne()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .Entity<Mentor>()
+                .HasMany(e => e.StudentStudyPlanProgresses)
+                .WithOne()
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }
