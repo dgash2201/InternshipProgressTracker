@@ -15,6 +15,7 @@ namespace InternshipProgressTracker
         public DbSet<StudyPlan> StudyPlans { get; set; }
         public DbSet<StudyPlanEntry> StudyPlanEntries { get; set; }
         public DbSet<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
+        public DbSet<InternshipStream> InternshipStreams { get; set; }
 
     }
 }
