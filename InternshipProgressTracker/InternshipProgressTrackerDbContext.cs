@@ -46,6 +46,7 @@ namespace InternshipProgressTracker
                 .Entity<Mentor>()
                 .HasMany(e => e.StudentStudyPlanProgresses)
                 .WithOne()
+                .HasForeignKey(s => s.GradingMentorId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
