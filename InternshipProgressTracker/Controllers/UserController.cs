@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
+    /// <summary>
+    /// Controller for authentication and working with User entities
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
@@ -16,6 +19,11 @@ namespace InternshipProgressTracker.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Receives data for registration and pass them to the user service register method
+        /// </summary>
+        /// <param name="registerDto">Contains signup form data</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
@@ -25,6 +33,11 @@ namespace InternshipProgressTracker.Controllers
             return Ok(new { Success = true });
         }
 
+        /// <summary>
+        /// Receives data for login and pass them to the user service login method
+        /// </summary>
+        /// <param name="loginDto">Contains login form data</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Models.User
 {
+    /// <summary>
+    /// Represents data from login form
+    /// </summary>
     public class LoginDto
     {
         [Required]

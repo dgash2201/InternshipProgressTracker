@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace InternshipProgressTracker.Models.User
 {
+    /// <summary>
+    /// Represents data from signup form
+    /// </summary>
     public class RegisterDto
     {
         [Required]
