@@ -1,7 +1,8 @@
-﻿using InternshipProgressTracker.Models.User;
-using InternshipProgressTracker.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using InternshipProgressTracker.Models.User;
+using InternshipProgressTracker.Services;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -28,9 +29,17 @@ namespace InternshipProgressTracker.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            await _service.Register(registerDto);
+            try
+            {
+                var id = await _service.Register(registerDto);
 
-            return Ok(new { Success = true });
+                return Ok(new { Success = true, Id = id });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+
         }
 
         /// <summary>
@@ -42,9 +51,16 @@ namespace InternshipProgressTracker.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            await _service.Login(loginDto);
+            try
+            {
+                var token = await _service.Login(loginDto);
 
-            return Ok(new { Success = true });
+                return Ok(new { Success = true, Token = token });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message })
+            }
         }
     }
 }
