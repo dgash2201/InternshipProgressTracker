@@ -24,5 +24,14 @@ namespace InternshipProgressTracker.Controllers
 
             return Ok(new { Success = true });
         }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            await _service.Login(loginDto);
+
+            return Ok(new { Success = true });
+        }
     }
 }

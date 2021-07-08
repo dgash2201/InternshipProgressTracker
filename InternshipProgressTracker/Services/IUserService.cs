@@ -6,5 +6,6 @@ namespace InternshipProgressTracker.Services
     public interface IUserService
     {
         Task Register(RegisterDto registerDto);
+        Task Login(LoginDto loginDto);
     }
 }
