@@ -6,7 +6,7 @@ namespace InternshipProgressTracker.Entities
     /// <summary>
     /// Represents the User entity
     /// </summary>
-    public class User : IdentityUser
+    public class User : IdentityUser<int>
     {
         [Required]
         public string FirstName { get; set; }

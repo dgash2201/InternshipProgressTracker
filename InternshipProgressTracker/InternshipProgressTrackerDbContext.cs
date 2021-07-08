@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker
@@ -7,12 +8,11 @@ namespace InternshipProgressTracker
     /// <summary>
     /// Class for working with InternshipProgressTracker database
     /// </summary>
-    public class InternshipProgressTrackerDbContext : DbContext
+    public class InternshipProgressTrackerDbContext : IdentityDbContext<User>
     {
         public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) 
             : base(options) {}
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Mentor> Mentors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudyPlan> StudyPlans { get; set; }
@@ -48,6 +48,10 @@ namespace InternshipProgressTracker
                 .WithOne()
                 .HasForeignKey(s => s.GradingMentorId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .Entity<User>()
+                .HasKey(e => e.Id);
         }
     }
 }
