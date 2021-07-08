@@ -1,14 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
+
 
 namespace InternshipProgressTracker
 {
     /// <summary>
     /// Class for working with InternshipProgressTracker database
     /// </summary>
-    public class InternshipProgressTrackerDbContext : IdentityDbContext<User>
+    public class InternshipProgressTrackerDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) 
             : base(options) {}
@@ -26,6 +28,8 @@ namespace InternshipProgressTracker
         /// <param name="builder">Builder to construct a model for a context</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder
                 .Entity<StudentStudyPlanProgress>()
                 .HasKey(e => new { e.StudentId, e.StudyPlanEntryId });
