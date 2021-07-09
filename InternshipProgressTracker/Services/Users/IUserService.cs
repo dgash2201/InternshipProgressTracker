@@ -1,7 +1,7 @@
-﻿using InternshipProgressTracker.Models.User;
+﻿using InternshipProgressTracker.Models.Users;
 using System.Threading.Tasks;
 
-namespace InternshipProgressTracker.Services.User
+namespace InternshipProgressTracker.Services.Users
 {
     /// <summary>
     /// Interface for user service

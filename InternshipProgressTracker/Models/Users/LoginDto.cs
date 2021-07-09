@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InternshipProgressTracker.Models.User
+namespace InternshipProgressTracker.Models.Users
 {
     /// <summary>
     /// Represents data from login form

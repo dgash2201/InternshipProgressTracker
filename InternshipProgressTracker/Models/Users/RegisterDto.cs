@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace InternshipProgressTracker.Models.User
+namespace InternshipProgressTracker.Models.Users
 {
     /// <summary>
     /// Represents data from signup form

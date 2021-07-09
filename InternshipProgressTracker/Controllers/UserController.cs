@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using InternshipProgressTracker.Models.User;
-using InternshipProgressTracker.Services.User;
+using InternshipProgressTracker.Models.Users;
+using InternshipProgressTracker.Services.Users;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -59,7 +59,7 @@ namespace InternshipProgressTracker.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message })
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
         }
     }
