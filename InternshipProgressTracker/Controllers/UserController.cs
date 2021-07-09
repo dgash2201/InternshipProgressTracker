@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using InternshipProgressTracker.Models.User;
-using InternshipProgressTracker.Services;
+using InternshipProgressTracker.Services.User;
 
 namespace InternshipProgressTracker.Controllers
 {
