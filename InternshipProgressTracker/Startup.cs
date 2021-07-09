@@ -42,7 +42,7 @@ namespace InternshipProgressTracker
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"])),
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["InternshipProgressTracker:ServiceApiKey"])),
                     };
                 });
             services.AddAuthorization();
