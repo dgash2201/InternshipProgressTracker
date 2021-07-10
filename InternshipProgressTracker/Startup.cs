@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Services.Users;
+using InternshipProgressTracker.Utils;
 
 namespace InternshipProgressTracker
 {
@@ -30,6 +32,10 @@ namespace InternshipProgressTracker
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services
+                .AddScoped<IUserService, UserService>()
+                .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>()

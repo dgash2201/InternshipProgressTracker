@@ -27,7 +27,7 @@ namespace InternshipProgressTracker.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromForm]RegisterDto registerDto)
         {
             try
             {
