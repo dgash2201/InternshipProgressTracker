@@ -8,6 +8,9 @@ using System.Text;
 
 namespace InternshipProgressTracker.Utils
 {
+    /// <summary>
+    /// Class for generating JWT tokens
+    /// </summary>
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration _config;
@@ -17,6 +20,10 @@ namespace InternshipProgressTracker.Utils
             _config = config;
         }
 
+        /// <summary>
+        /// Generates JWT token
+        /// </summary>
+        /// <param name="user">Object with user data</param>
         public string Generate(IdentityUser<int> user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["InternshipProgressTracker:ServiceApiKey"]));

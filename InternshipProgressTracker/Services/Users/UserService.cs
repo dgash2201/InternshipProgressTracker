@@ -7,6 +7,9 @@ using InternshipProgressTracker.Utils;
 
 namespace InternshipProgressTracker.Services.Users
 {
+    /// <summary>
+    /// Service for authorization and 
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly string _avatarsPath = Directory.GetCurrentDirectory() + "/SourceData/Avatars/";
@@ -21,6 +24,10 @@ namespace InternshipProgressTracker.Services.Users
             _tokenGenerator = tokenGenerator;
         }
 
+        /// <summary>
+        /// Checks login data and returns generated token
+        /// </summary>
+        /// <param name="loginDto">Contains login form data</param>
         public async Task<string> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -36,6 +43,10 @@ namespace InternshipProgressTracker.Services.Users
             return _tokenGenerator.Generate(user);
         }
 
+        /// <summary>
+        /// Creates user entity and saves it in the database
+        /// </summary>
+        /// <param name="registerDto">Contains signup form data</param>
         public async Task<int> Register(RegisterDto registerDto)
         {
             var user = new User
