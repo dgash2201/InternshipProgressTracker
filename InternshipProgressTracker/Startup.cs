@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +9,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System;
+using Microsoft.AspNetCore.Identity;
+using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker
 {
@@ -28,6 +30,10 @@ namespace InternshipProgressTracker
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services
+                .AddIdentity<User, IdentityRole<int>>()
+                .AddEntityFrameworkStores<InternshipProgressTrackerDbContext>();
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
