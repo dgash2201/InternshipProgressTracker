@@ -38,7 +38,10 @@ namespace InternshipProgressTracker
                 .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
             services
-                .AddIdentity<User, IdentityRole<int>>()
+                .AddIdentity<User, IdentityRole<int>>(options =>
+                {
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<InternshipProgressTrackerDbContext>();
 
             services

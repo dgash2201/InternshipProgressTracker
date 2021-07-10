@@ -17,12 +17,14 @@ namespace InternshipProgressTracker.Models.Users
         public IFormFile Avatar { get; set; }
 
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
         public string Password { get; set; }
 
         [Required]
+        [Compare(nameof(Password), ErrorMessage = "passwords don't match")]
         public string ConfirmPassword { get; set; }
     }
 }
