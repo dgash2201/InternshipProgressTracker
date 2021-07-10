@@ -19,7 +19,7 @@ namespace InternshipProgressTracker.Utils
 
         public string Generate(IdentityUser<int> user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["IdentityProgressTracker:ServiceApiKey"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["InternshipProgressTracker:ServiceApiKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
