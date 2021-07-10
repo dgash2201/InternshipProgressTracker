@@ -11,10 +11,10 @@ namespace InternshipProgressTracker.Models.Users
     /// </summary>
     public class LoginDto
     {
-        [Required]
+        [Required(ErrorMessage = "email is required")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "password is required")]
         public string Password { get; set; }
     }
 }

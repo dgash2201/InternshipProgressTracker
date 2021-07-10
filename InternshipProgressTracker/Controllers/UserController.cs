@@ -55,6 +55,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 var token = await _service.Login(loginDto);
 
+                if (token == null)
+                {
+                    return BadRequest(new { Success = false, Message = "login or password is incorrect" });
+                }
+
                 return Ok(new { Success = true, Token = token });
             }
             catch(Exception ex)

@@ -24,6 +24,10 @@ namespace InternshipProgressTracker.Services.Users
         public async Task<string> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
+
+            if (user == null)
+                return null;
+
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             
             if (!signInResult.Succeeded)
