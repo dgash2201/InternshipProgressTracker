@@ -6,5 +6,6 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     public interface IInternshipStreamService
     {
         Task<int> Create(CreateInternshipStreamDto createDto);
+        Task Delete(int id);
     }
 }

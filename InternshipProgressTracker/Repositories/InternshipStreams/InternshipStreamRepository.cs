@@ -1,5 +1,5 @@
 ﻿using InternshipProgressTracker.Entities;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +21,18 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
             await _dbContext.SaveChangesAsync();
 
             return internshipStream.Id;
+        }
+
+        public async Task Delete(int id)
+        {
+            var toRemove = await _dbContext
+                .InternshipStreams
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
+            _dbContext.Remove(toRemove);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

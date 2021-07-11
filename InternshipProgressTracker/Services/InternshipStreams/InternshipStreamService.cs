@@ -27,5 +27,10 @@ namespace InternshipProgressTracker.Services.InternshipStreams
 
             return id;
         }
+
+        public async Task Delete(int id)
+        {
+            await _internshipStreamRepository.Delete(id);
+        }
     }
 }

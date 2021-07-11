@@ -52,9 +52,18 @@ namespace InternshipProgressTracker.Controllers
         }
 
         [HttpDelete("{id}")]
-        public Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _internshipStreamService.Delete(id);
+
+                return Ok(new { Success = true });
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false });
+            }
         }
     }
 }
