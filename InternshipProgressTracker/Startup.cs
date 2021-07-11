@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
+using InternshipProgressTracker.Services.InternshipStreams;
+using InternshipProgressTracker.Repositories.InternshipStreams;
 
 namespace InternshipProgressTracker
 {
