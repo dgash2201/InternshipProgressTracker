@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using InternshipProgressTracker.Models.Users;
@@ -27,7 +28,7 @@ namespace InternshipProgressTracker.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromForm]RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromForm]RegisterDto registerDto, CancellationToken cancellationToken)
         {
             try
             {
@@ -49,7 +50,7 @@ namespace InternshipProgressTracker.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
         {
             try
             {

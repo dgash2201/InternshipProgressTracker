@@ -1,5 +1,6 @@
-﻿using InternshipProgressTracker.Models.Users;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using InternshipProgressTracker.Models.Users;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -8,7 +9,7 @@ namespace InternshipProgressTracker.Services.Users
     /// </summary>
     public interface IUserService
     {
-        Task<int> Register(RegisterDto registerDto);
-        Task<string> Login(LoginDto loginDto);
+        Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken);
+        Task<string> Login(LoginDto loginDto, CancellationToken cancellationToken);
     }
 }

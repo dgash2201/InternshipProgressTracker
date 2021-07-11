@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
@@ -28,8 +29,10 @@ namespace InternshipProgressTracker.Services.Users
         /// Checks login data and returns generated token
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        public async Task<string> Login(LoginDto loginDto)
+        public async Task<string> Login(LoginDto loginDto, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
@@ -47,8 +50,10 @@ namespace InternshipProgressTracker.Services.Users
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> Register(RegisterDto registerDto)
+        public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = new User
             {
                 Email = registerDto.Email,
