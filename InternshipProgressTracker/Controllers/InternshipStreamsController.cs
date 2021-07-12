@@ -46,9 +46,18 @@ namespace InternshipProgressTracker.Controllers
         }
 
         [HttpPut("{id}")]
-        public Task<IActionResult> Update(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateInternshipStreamDto updateDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _internshipStreamService.Update(id, updateDto);
+
+                return Ok(new { Success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -62,7 +71,7 @@ namespace InternshipProgressTracker.Controllers
             } 
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false });
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
         }
     }

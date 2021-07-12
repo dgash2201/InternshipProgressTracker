@@ -32,7 +32,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _service.Register(registerDto);
+                var id = await _service.Register(registerDto, cancellationToken);
 
                 return Ok(new { Success = true, Id = id });
             }
@@ -54,7 +54,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var token = await _service.Login(loginDto);
+                var token = await _service.Login(loginDto, cancellationToken);
 
                 if (token == null)
                 {

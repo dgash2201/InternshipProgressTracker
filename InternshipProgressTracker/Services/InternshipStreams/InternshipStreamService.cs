@@ -27,6 +27,17 @@ namespace InternshipProgressTracker.Services.InternshipStreams
 
             return id;
         }
+        
+        public async Task Update(int id, UpdateInternshipStreamDto updateDto)
+        {
+            var internshipStream = await _internshipStreamRepository.Get(id);
+
+            internshipStream.Title = updateDto.Title;
+            internshipStream.Description = updateDto.Description;
+            internshipStream.Status = updateDto.Status;
+
+            await _internshipStreamRepository.Update(internshipStream);
+        }
 
         public async Task Delete(int id)
         {

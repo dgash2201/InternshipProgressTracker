@@ -13,6 +13,14 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
         public InternshipStreamRepository(InternshipProgressTrackerDbContext dbContext)
         {
             _dbContext = dbContext;
+        } 
+        
+        public async Task<InternshipStream> Get(int id)
+        {
+            return await _dbContext
+                .InternshipStreams
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<int> Add(InternshipStream internshipStream)
@@ -21,6 +29,12 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
             await _dbContext.SaveChangesAsync();
 
             return internshipStream.Id;
+        }
+
+        public async Task Update(InternshipStream internshipStream)
+        {
+            _dbContext.Entry(internshipStream).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
