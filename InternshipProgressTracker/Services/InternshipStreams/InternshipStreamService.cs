@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using AutoMapper;
+using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Repositories.InternshipStreams;
 using System.Threading.Tasks;
@@ -8,20 +9,17 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     public class InternshipStreamService : IInternshipStreamService
     {
         private readonly IInternshipStreamRepository _internshipStreamRepository;
+        private readonly IMapper _mapper;
 
-        public InternshipStreamService(IInternshipStreamRepository internshipStreamRepository)
+        public InternshipStreamService(IInternshipStreamRepository internshipStreamRepository, IMapper mapper)
         {
             _internshipStreamRepository = internshipStreamRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(CreateInternshipStreamDto createDto)
         {
-            var internshipStream = new InternshipStream
-            {
-                Title = createDto.Title,
-                Description = createDto.Description,
-                Status = createDto.Status
-            };
+            var internshipStream = _mapper.Map<CreateInternshipStreamDto, InternshipStream>(createDto);
 
             var id = await _internshipStreamRepository.Add(internshipStream);
 
@@ -32,9 +30,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         {
             var internshipStream = await _internshipStreamRepository.Get(id);
 
-            internshipStream.Title = updateDto.Title;
-            internshipStream.Description = updateDto.Description;
-            internshipStream.Status = updateDto.Status;
+            _mapper.Map(updateDto, internshipStream);
 
             await _internshipStreamRepository.Update(internshipStream);
         }

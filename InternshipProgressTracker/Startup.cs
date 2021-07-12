@@ -35,9 +35,15 @@ namespace InternshipProgressTracker
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services
                 .AddScoped<IUserService, UserService>()
                 .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services
+                .AddScoped<IInternshipStreamService, InternshipStreamService>();
+            services
+                .AddScoped<IInternshipStreamRepository, InternshipStreamRepository>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>
