@@ -14,11 +14,9 @@ namespace InternshipProgressTracker.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public int InternshipStreamId { get; set; }
+        public int? InternshipStreamId { get; set; }
 
-        [Required]
-        public int CurrentGrade { get; set; }
+        public int? CurrentGrade { get; set; }
 
         public User User { get; set; }
 
