@@ -19,15 +19,19 @@ namespace InternshipProgressTracker.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            throw new NotImplementedException();
+            var internshipStreams = await _internshipStreamService.Get();
+
+            return Ok(internshipStreams);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            throw new NotImplementedException();
+            var internshipStream = await _internshipStreamService.Get(id);
+
+            return Ok(internshipStream);
         }
 
         [HttpPost]

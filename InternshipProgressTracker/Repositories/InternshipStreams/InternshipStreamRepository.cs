@@ -14,6 +14,13 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
         {
             _dbContext = dbContext;
         } 
+
+        public async Task<IEnumerable<InternshipStream>> Get()
+        {
+            return _dbContext
+                .InternshipStreams
+                .AsEnumerable();
+        }
         
         public async Task<InternshipStream> Get(int id)
         {
