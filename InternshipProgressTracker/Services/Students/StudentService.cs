@@ -13,6 +13,11 @@ namespace InternshipProgressTracker.Services.Students
             _studentRepository = studentRepository;
         }
 
+        public async Task<Student> Get(int id)
+        {
+            return await _studentRepository.Get(id);
+        }
+
         public async Task Create(User user)
         {
             var student = new Student
@@ -22,6 +27,12 @@ namespace InternshipProgressTracker.Services.Students
             };
 
             await _studentRepository.Add(student);
+        }
+
+        public async Task SetStreamId(Student student, int streamId)
+        {
+            student.Id = streamId;
+            await _studentRepository.Update(student);
         }
     }
 }

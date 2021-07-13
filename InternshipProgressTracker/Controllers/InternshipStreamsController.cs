@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
+    /// <summary>
+    /// Controller for working with InternshipStream entities
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class InternshipStreamsController : Controller
@@ -18,6 +21,28 @@ namespace InternshipProgressTracker.Controllers
             _internshipStreamService = internshipStreamService;
         }
 
+        /// <summary>
+        /// Binds student with InternshipStream
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> AddStudent(int streamId, int studentId)
+        {
+            try
+            {
+                await _internshipStreamService.AddStudent(streamId, studentId);
+
+                return Ok(new { Success = true });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Get list of InternshipStreams
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -26,6 +51,11 @@ namespace InternshipProgressTracker.Controllers
             return Ok(internshipStreams);
         }
 
+        /// <summary>
+        /// Gets an InternshipStream by id
+        /// </summary>
+        /// <param name="id">Id of an InternshipStream</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {

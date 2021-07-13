@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Repositories.InternshipStreams;
+using InternshipProgressTracker.Services.Students;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,11 +12,24 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     {
         private readonly IInternshipStreamRepository _internshipStreamRepository;
         private readonly IMapper _mapper;
+        private readonly IStudentService _studentService;
 
-        public InternshipStreamService(IInternshipStreamRepository internshipStreamRepository, IMapper mapper)
+        public InternshipStreamService(IInternshipStreamRepository internshipStreamRepository, 
+            IMapper mapper,
+            IStudentService studentService)
         {
             _internshipStreamRepository = internshipStreamRepository;
             _mapper = mapper;
+            _studentService = studentService;
+        }
+
+        public async Task AddStudent(int streamId, int studentId)
+        {
+            var student = await _studentService.Get(studentId);
+            var stream = await Get(streamId);
+
+            stream.Students.Add(student);
+            await _studentService.SetStreamId(student, streamId);
         }
 
         public async Task<IEnumerable<InternshipStream>> Get()
