@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Students
 {
+    /// <summary>
+    /// Student service interface
+    /// </summary>
     public interface IStudentService
     {
         Task<Student> Get(int id);

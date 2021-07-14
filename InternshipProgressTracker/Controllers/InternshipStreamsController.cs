@@ -55,7 +55,6 @@ namespace InternshipProgressTracker.Controllers
         /// Gets an InternshipStream by id
         /// </summary>
         /// <param name="id">Id of an InternshipStream</param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -64,6 +63,10 @@ namespace InternshipProgressTracker.Controllers
             return Ok(internshipStream);
         }
 
+        /// <summary>
+        /// Creates InternshipStream
+        /// </summary>
+        /// <param name="createDto">Contains data for creation</param>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateInternshipStreamDto createDto)
         {
@@ -79,6 +82,11 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates InternshipStream data
+        /// </summary>
+        /// <param name="id">InternshipStream id</param>
+        /// <param name="updateDto">New data</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateInternshipStreamDto updateDto)
         {
@@ -94,6 +102,10 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes InternshipStream
+        /// </summary>
+        /// <param name="id">IntenshipStream id</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

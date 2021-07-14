@@ -5,6 +5,9 @@ using InternshipProgressTracker.Models.InternshipStreams;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
 {
+    /// <summary>
+    /// Internship stream service interface
+    /// </summary>
     public interface IInternshipStreamService
     {
         Task AddStudent(int streamId, int studentId);

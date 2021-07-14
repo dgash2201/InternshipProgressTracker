@@ -4,6 +4,9 @@ using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker.Repositories.InternshipStreams
 {
+    /// <summary>
+    /// Internship stream repository interface
+    /// </summary>
     public interface IInternshipStreamRepository
     {
         Task<IEnumerable<InternshipStream>> Get();
