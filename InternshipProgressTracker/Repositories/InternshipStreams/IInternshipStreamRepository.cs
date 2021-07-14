@@ -9,7 +9,7 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
     /// </summary>
     public interface IInternshipStreamRepository
     {
-        Task<IEnumerable<InternshipStream>> Get();
+        Task<IReadOnlyCollection<InternshipStream>> Get();
         Task<InternshipStream> Get(int id);
         Task<int> Add(InternshipStream internshipStream);
         Task Update(InternshipStream internshipStream);

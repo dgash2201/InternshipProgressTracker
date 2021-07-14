@@ -41,7 +41,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <summary>
         /// Gets list of internship streams
         /// </summary>
-        public async Task<IEnumerable<InternshipStream>> Get()
+        public async Task<IReadOnlyCollection<InternshipStream>> Get()
         {
             return await _internshipStreamRepository.Get();
         }

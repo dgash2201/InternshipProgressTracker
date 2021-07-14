@@ -11,7 +11,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     public interface IInternshipStreamService
     {
         Task AddStudent(int streamId, int studentId);
-        Task<IEnumerable<InternshipStream>> Get();
+        Task<IReadOnlyCollection<InternshipStream>> Get();
         Task<InternshipStream> Get(int id);
         Task<int> Create(CreateInternshipStreamDto createDto);
         Task Update(int id, UpdateInternshipStreamDto updateDto);

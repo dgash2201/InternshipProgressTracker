@@ -18,11 +18,13 @@ namespace InternshipProgressTracker.Repositories.InternshipStreams
             _dbContext = dbContext;
         } 
 
-        public async Task<IEnumerable<InternshipStream>> Get()
+        public async Task<IReadOnlyCollection<InternshipStream>> Get()
         {
-            return _dbContext
+            var internshipStreams = await _dbContext
                 .InternshipStreams
-                .AsEnumerable();
+                .ToListAsync();
+
+            return internshipStreams.AsReadOnly();
         }
         
         /// <summary>
