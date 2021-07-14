@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
-using InternshipProgressTracker.Repositories.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,15 +13,15 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     /// </summary>
     public class InternshipStreamService : IInternshipStreamService
     {
-        private readonly IInternshipStreamRepository _internshipStreamRepository;
+        private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IStudentService _studentService;
 
-        public InternshipStreamService(IInternshipStreamRepository internshipStreamRepository, 
+        public InternshipStreamService(InternshipProgressTrackerDbContext dbContext, 
             IMapper mapper,
             IStudentService studentService)
         {
-            _internshipStreamRepository = internshipStreamRepository;
+            _dbContext = dbContext;
             _mapper = mapper;
             _studentService = studentService;
         }
@@ -43,7 +43,11 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// </summary>
         public async Task<IReadOnlyCollection<InternshipStream>> Get()
         {
-            return await _internshipStreamRepository.Get();
+            var internshipStreams = await _dbContext
+                .InternshipStreams
+                .ToListAsync();
+
+            return internshipStreams.AsReadOnly();
         }
 
         /// <summary>
@@ -52,7 +56,9 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task<InternshipStream> Get(int id)
         {
-            return await _internshipStreamRepository.Get(id);
+            return await _dbContext
+                .InternshipStreams
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
         
         /// <summary>
@@ -62,9 +68,10 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         public async Task<int> Create(CreateInternshipStreamDto createDto)
         {
             var internshipStream = _mapper.Map<CreateInternshipStreamDto, InternshipStream>(createDto);
-            var id = await _internshipStreamRepository.Add(internshipStream);
+            _dbContext.InternshipStreams.Add(internshipStream);
+            await _dbContext.SaveChangesAsync();
 
-            return id;
+            return internshipStream.Id;
         }
         
         /// <summary>
@@ -74,11 +81,10 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="updateDto">New data</param>
         public async Task Update(int id, UpdateInternshipStreamDto updateDto)
         {
-            var internshipStream = await _internshipStreamRepository.Get(id);
-
+            var internshipStream = await Get(id);
             _mapper.Map(updateDto, internshipStream);
-
-            await _internshipStreamRepository.Update(internshipStream);
+            _dbContext.Entry(internshipStream).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -87,7 +93,9 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task Delete(int id)
         {
-            await _internshipStreamRepository.Delete(id);
+            var toRemove = Get(id);
+            _dbContext.Remove(toRemove);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

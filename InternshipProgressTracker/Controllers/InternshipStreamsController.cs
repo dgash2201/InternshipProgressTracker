@@ -24,7 +24,7 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Binds student with InternshipStream
         /// </summary>
-        [HttpPost]
+        [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent(int streamId, int studentId)
         {
             try

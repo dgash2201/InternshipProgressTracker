@@ -1,5 +1,5 @@
 ﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Repositories.Students;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Students
@@ -9,11 +9,11 @@ namespace InternshipProgressTracker.Services.Students
     /// </summary>
     public class StudentService : IStudentService
     {
-        private readonly IStudentRepository _studentRepository;
+        private readonly InternshipProgressTrackerDbContext _dbContext;
         
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(InternshipProgressTrackerDbContext dbContext)
         {
-            _studentRepository = studentRepository;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -22,7 +22,9 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="id">Student id</param>
         public async Task<Student> Get(int id)
         {
-            return await _studentRepository.Get(id);
+            return await _dbContext
+                .Students
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         /// <summary>
@@ -37,7 +39,8 @@ namespace InternshipProgressTracker.Services.Students
                 User = user,
             };
 
-            await _studentRepository.Add(student);
+            _dbContext.Students.Add(student);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -46,7 +49,8 @@ namespace InternshipProgressTracker.Services.Students
         public async Task SetStreamId(Student student, int streamId)
         {
             student.Id = streamId;
-            await _studentRepository.Update(student);
+            _dbContext.Entry(student).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
