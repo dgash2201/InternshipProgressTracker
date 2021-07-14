@@ -1,5 +1,6 @@
 ﻿using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Controller for working with InternshipStream entities
     /// </summary>
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]")]
     [ApiController]
     public class InternshipStreamsController : Controller
