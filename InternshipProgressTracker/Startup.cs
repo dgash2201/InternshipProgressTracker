@@ -14,9 +14,7 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
-using InternshipProgressTracker.Repositories.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
-using InternshipProgressTracker.Repositories.Students;
 
 namespace InternshipProgressTracker
 {
@@ -44,13 +42,9 @@ namespace InternshipProgressTracker
                 .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services
                 .AddScoped<IInternshipStreamService, InternshipStreamService>();
-            services
-                .AddScoped<IInternshipStreamRepository, InternshipStreamRepository>();
 
             services
                 .AddScoped<IStudentService, StudentService>();
-            services
-                .AddScoped<IStudentRepository, StudentRepository>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>

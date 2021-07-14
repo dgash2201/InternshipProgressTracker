@@ -93,8 +93,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task Delete(int id)
         {
-            var toRemove = Get(id);
-            _dbContext.Remove(toRemove);
+            _dbContext.Remove(_dbContext.FindTracked<InternshipStream>(id) ?? new InternshipStream { Id = id });
             await _dbContext.SaveChangesAsync();
         }
     }
