@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Utils;
+using InternshipProgressTracker.Services.Students;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -14,15 +15,20 @@ namespace InternshipProgressTracker.Services.Users
     public class UserService : IUserService
     {
         private readonly string _avatarsPath = Directory.GetCurrentDirectory() + "/SourceData/Avatars/";
-        private UserManager<User> _userManager;
-        private SignInManager<User> _signInManager;
-        private IJwtTokenGenerator _tokenGenerator;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IJwtTokenGenerator _tokenGenerator;
+        private readonly IStudentService _studentService;
 
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtTokenGenerator tokenGenerator)
+        public UserService(UserManager<User> userManager, 
+            SignInManager<User> signInManager, 
+            IJwtTokenGenerator tokenGenerator,
+            IStudentService studentService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
+            _studentService = studentService;
         }
 
         /// <summary>
@@ -50,7 +56,7 @@ namespace InternshipProgressTracker.Services.Users
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<(int, int)> Register(RegisterDto registerDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -63,6 +69,11 @@ namespace InternshipProgressTracker.Services.Users
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new System.Exception("Failed to create a user");
+            }
 
             if (registerDto.Avatar != null)
             {
@@ -81,7 +92,9 @@ namespace InternshipProgressTracker.Services.Users
                 await _userManager.UpdateAsync(user);
             }
 
-            return user.Id;
+            var studentId = await _studentService.Create(user);
+
+            return (user.Id, studentId);
         }
     }
 }

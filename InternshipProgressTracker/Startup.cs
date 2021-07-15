@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
+using InternshipProgressTracker.Services.InternshipStreams;
+using InternshipProgressTracker.Services.Students;
 
 namespace InternshipProgressTracker
 {
@@ -33,9 +35,16 @@ namespace InternshipProgressTracker
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services
                 .AddScoped<IUserService, UserService>()
                 .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services
+                .AddScoped<IInternshipStreamService, InternshipStreamService>();
+
+            services
+                .AddScoped<IStudentService, StudentService>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>
