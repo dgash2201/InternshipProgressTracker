@@ -14,7 +14,6 @@ namespace InternshipProgressTracker.Services.Users
     /// </summary>
     public class UserService : IUserService
     {
-        private readonly string _avatarsPath = Directory.GetCurrentDirectory() + "/SourceData/Avatars/";
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IJwtTokenGenerator _tokenGenerator;
@@ -77,17 +76,11 @@ namespace InternshipProgressTracker.Services.Users
 
             if (registerDto.Avatar != null)
             {
-                if (!Directory.Exists(_avatarsPath))
-                    Directory.CreateDirectory(_avatarsPath);
-
-                var avatarPath = _avatarsPath + $"{user.Id}_{registerDto.Avatar.FileName}";
-
-                using(var fileStream = new FileStream(avatarPath, FileMode.Create))
+                using(var memoryStream = new MemoryStream())
                 {
-                    await registerDto.Avatar.CopyToAsync(fileStream);
+                    await registerDto.Avatar.CopyToAsync(memoryStream);
+                    user.Photo = memoryStream.ToArray();
                 }
-
-                user.PhotoLink = avatarPath;
 
                 await _userManager.UpdateAsync(user);
             }

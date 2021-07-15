@@ -14,7 +14,7 @@ namespace InternshipProgressTracker.Entities
         [Required]
         public string LastName { get; set; }
 
-        public string PhotoLink { get; set; }
+        public byte[] Photo { get; set; }
 
         public Student Student { get; set; }
 
