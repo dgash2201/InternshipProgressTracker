@@ -32,9 +32,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var (userId, studentId) = await _service.Register(registerDto, cancellationToken);
+                var id = await _service.Register(registerDto, cancellationToken);
 
-                return Ok(new { Success = true, Id = userId, StudentId = studentId });
+                return Ok(new { Success = true, Id = id });
             }
             catch(Exception ex)
             {

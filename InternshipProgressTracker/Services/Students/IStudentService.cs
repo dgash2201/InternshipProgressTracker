@@ -11,7 +11,7 @@ namespace InternshipProgressTracker.Services.Students
     {
         Task<Student> Get(int id);
         Task<IReadOnlyCollection<Student>> Get();
-        Task<int> Create(User user);
+        Task Create(User user);
         Task SetStreamId(Student student, int streamId);
     }
 }

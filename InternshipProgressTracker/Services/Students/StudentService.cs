@@ -44,7 +44,7 @@ namespace InternshipProgressTracker.Services.Students
         /// Creates a student based on the user
         /// </summary>
         /// <param name="user">User entity</param>
-        public async Task<int> Create(User user)
+        public async Task Create(User user)
         {
             var student = new Student
             {
@@ -53,8 +53,6 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync();
-
-            return student.Id;
         }
 
         /// <summary>

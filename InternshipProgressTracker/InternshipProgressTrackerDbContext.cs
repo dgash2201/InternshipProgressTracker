@@ -56,6 +56,18 @@ namespace InternshipProgressTracker
             builder
                 .Entity<User>()
                 .HasKey(e => e.Id);
+
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Student)
+                .WithOne(s => s.User)
+                .HasForeignKey<Student>(s => s.UserId);
+
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Mentor)
+                .WithOne(m => m.User)
+                .HasForeignKey<Mentor>(m => m.UserId);
         }
     }
 }
