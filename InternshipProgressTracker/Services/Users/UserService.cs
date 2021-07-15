@@ -56,7 +56,7 @@ namespace InternshipProgressTracker.Services.Users
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<(int, int)> Register(RegisterDto registerDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -69,6 +69,11 @@ namespace InternshipProgressTracker.Services.Users
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new System.Exception("Failed to create a user");
+            }
 
             if (registerDto.Avatar != null)
             {
@@ -87,9 +92,9 @@ namespace InternshipProgressTracker.Services.Users
                 await _userManager.UpdateAsync(user);
             }
 
-            await _studentService.Create(user);
+            var studentId = await _studentService.Create(user);
 
-            return user.Id;
+            return (user.Id, studentId);
         }
     }
 }

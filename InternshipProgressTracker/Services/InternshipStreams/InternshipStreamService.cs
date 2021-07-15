@@ -4,6 +4,7 @@ using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
@@ -32,9 +33,6 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         public async Task AddStudent(int streamId, int studentId)
         {
             var student = await _studentService.Get(studentId);
-            var stream = await Get(streamId);
-
-            stream.Students.Add(student);
             await _studentService.SetStreamId(student, streamId);
         }
 
@@ -47,7 +45,19 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 .InternshipStreams
                 .ToListAsync();
 
-            return internshipStreams.AsReadOnly();
+            var students = await _studentService.Get();
+
+            return internshipStreams
+                .Join(students,
+                    stream => stream.Id,
+                    student => student.InternshipStreamId,
+                    (stream, student) =>
+                    {
+                        stream.Students.Add(student);
+                        return stream;
+                    })
+                .ToList()
+                .AsReadOnly();
         }
 
         /// <summary>
@@ -56,9 +66,17 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task<InternshipStream> Get(int id)
         {
-            return await _dbContext
+            var internshipStream = await _dbContext
                 .InternshipStreams
                 .FirstOrDefaultAsync(e => e.Id == id);
+
+            var students = await _studentService.Get();
+
+            internshipStream.Students = students
+                .Where(s => s.InternshipStreamId == id)
+                .ToList();
+
+            return internshipStream;
         }
         
         /// <summary>

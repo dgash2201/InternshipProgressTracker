@@ -1,5 +1,6 @@
 ﻿using InternshipProgressTracker.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Students
@@ -17,6 +18,18 @@ namespace InternshipProgressTracker.Services.Students
         }
 
         /// <summary>
+        /// Gets the list of students
+        /// </summary>
+        public async Task<IReadOnlyCollection<Student>> Get()
+        {
+            var students = await _dbContext
+                .Students
+                .ToListAsync();
+            
+            return students.AsReadOnly();
+        }
+
+        /// <summary>
         /// Gets a student by id
         /// </summary>
         /// <param name="id">Student id</param>
@@ -31,16 +44,17 @@ namespace InternshipProgressTracker.Services.Students
         /// Creates a student based on the user
         /// </summary>
         /// <param name="user">User entity</param>
-        public async Task Create(User user)
+        public async Task<int> Create(User user)
         {
             var student = new Student
             {
-                Id = user.Id,
                 User = user,
             };
 
             _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync();
+
+            return student.Id;
         }
 
         /// <summary>
