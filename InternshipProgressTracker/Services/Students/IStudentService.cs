@@ -12,6 +12,6 @@ namespace InternshipProgressTracker.Services.Students
         Task<Student> Get(int id);
         Task<IReadOnlyCollection<Student>> Get();
         Task Create(User user);
-        Task SetStreamId(Student student, int streamId);
+        Task SetStream(int StudentId, InternshipStream stream);
     }
 }

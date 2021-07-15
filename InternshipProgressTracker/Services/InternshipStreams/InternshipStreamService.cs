@@ -28,12 +28,14 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         }
 
         /// <summary>
-        /// Adds student to the student collection
+        /// Binds student with stream
         /// </summary>
         public async Task AddStudent(int streamId, int studentId)
         {
-            var student = await _studentService.Get(studentId);
-            await _studentService.SetStreamId(student, streamId);
+            var stream = await _dbContext
+                .InternshipStreams
+                .FirstOrDefaultAsync(s => s.Id == streamId);
+            await _studentService.SetStream(studentId, stream);
         }
 
         /// <summary>
@@ -43,20 +45,10 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         {
             var internshipStreams = await _dbContext
                 .InternshipStreams
+                .Include(s => s.Students)
                 .ToListAsync();
 
-            var students = await _studentService.Get();
-
             return internshipStreams
-                .Join(students,
-                    stream => stream.Id,
-                    student => student.InternshipStreamId,
-                    (stream, student) =>
-                    {
-                        stream.Students.Add(student);
-                        return stream;
-                    })
-                .ToList()
                 .AsReadOnly();
         }
 
@@ -66,17 +58,10 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task<InternshipStream> Get(int id)
         {
-            var internshipStream = await _dbContext
+            return await _dbContext
                 .InternshipStreams
+                .Include(s => s.Students)
                 .FirstOrDefaultAsync(e => e.Id == id);
-
-            var students = await _studentService.Get();
-
-            internshipStream.Students = students
-                .Where(s => s.InternshipStreamId == id)
-                .ToList();
-
-            return internshipStream;
         }
         
         /// <summary>
