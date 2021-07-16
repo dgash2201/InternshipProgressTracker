@@ -16,6 +16,9 @@ using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Database;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
+using System.Reflection;
 
 namespace InternshipProgressTracker
 {
@@ -28,7 +31,6 @@ namespace InternshipProgressTracker
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
@@ -81,7 +83,9 @@ namespace InternshipProgressTracker
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "InternshipProgressTracker", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "InternshipProgressTracker API", Version = "v1" });
+
+                options.IncludeXmlComments(GetXmlCommentsPath());
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -109,7 +113,6 @@ namespace InternshipProgressTracker
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -130,6 +133,16 @@ namespace InternshipProgressTracker
             {
                 endpoints.MapControllers();
             });
+        }
+
+        /// <summary>
+        /// Gets path for file with xml comments
+        /// </summary>
+        private string GetXmlCommentsPath()
+        {
+            var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+            var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+            return Path.Combine(basePath, fileName);
         }
     }
 }

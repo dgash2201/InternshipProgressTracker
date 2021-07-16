@@ -24,7 +24,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Binds student with InternshipStream
+        /// Binds student with internship stream
         /// </summary>
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent(int streamId, int studentId)
@@ -42,7 +42,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Get list of InternshipStreams
+        /// Get list of internship streams
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -54,9 +54,9 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Gets an InternshipStream by id
+        /// Gets an internship stream by id
         /// </summary>
-        /// <param name="id">Id of an InternshipStream</param>
+        /// <param name="id">Id of the internship stream</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -66,11 +66,11 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Creates InternshipStream
+        /// Creates internship stream
         /// </summary>
         /// <param name="createDto">Contains data for creation</param>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateInternshipStreamDto createDto)
+        public async Task<IActionResult> Create([FromForm] CreateInternshipStreamDto createDto)
         {
             try
             {
@@ -85,12 +85,12 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Updates InternshipStream data
+        /// Updates internship stream data
         /// </summary>
-        /// <param name="id">InternshipStream id</param>
+        /// <param name="id">Id of the internship stream</param>
         /// <param name="updateDto">New data</param>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateInternshipStreamDto updateDto)
+        public async Task<IActionResult> Update(int id, UpdateInternshipStreamDto updateDto)
         {
             try
             {
@@ -105,9 +105,9 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Deletes InternshipStream
+        /// Deletes internship stream
         /// </summary>
-        /// <param name="id">IntenshipStream id</param>
+        /// <param name="id">Id of the internship stream</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
