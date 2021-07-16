@@ -113,7 +113,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.Delete(id);
+                await _internshipStreamService.SoftDelete(id);
 
                 return Ok(new { Success = true });
             } 

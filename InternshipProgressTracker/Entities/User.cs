@@ -6,7 +6,7 @@ namespace InternshipProgressTracker.Entities
     /// <summary>
     /// Represents the User entity
     /// </summary>
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<int>, ISoftDeletable
     {
         [Required]
         public string FirstName { get; set; }
@@ -19,5 +19,7 @@ namespace InternshipProgressTracker.Entities
         public Student Student { get; set; }
 
         public Mentor Mentor { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Database;
 
 namespace InternshipProgressTracker
 {

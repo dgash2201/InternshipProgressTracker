@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
@@ -84,8 +84,16 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="updateDto">New data</param>
         public async Task Update(int id, UpdateInternshipStreamDto updateDto)
         {
-            var internshipStream = await Get(id);
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
             _mapper.Map(updateDto, internshipStream);
+            _dbContext.Entry(internshipStream).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task SoftDelete(int id)
+        {
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+            internshipStream.IsDeleted = true;
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }

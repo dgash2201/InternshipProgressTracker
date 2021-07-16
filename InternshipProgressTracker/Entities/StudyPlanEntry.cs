@@ -9,7 +9,7 @@ namespace InternshipProgressTracker.Entities
     /// <summary>
     /// Represents the StudyPlanEntry entity
     /// </summary>
-    public class StudyPlanEntry
+    public class StudyPlanEntry : ISoftDeletable
     {
         [Key]
         public int Id { get; set; }
@@ -26,5 +26,7 @@ namespace InternshipProgressTracker.Entities
         public string Duration { get; set; }
 
         public ICollection<StudentStudyPlanProgress> StudentsProgresses { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

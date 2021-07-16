@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using InternshipProgressTracker.Database;
+using InternshipProgressTracker.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;

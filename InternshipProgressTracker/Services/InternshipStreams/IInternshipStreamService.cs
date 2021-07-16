@@ -15,6 +15,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         Task<InternshipStream> Get(int id);
         Task<int> Create(CreateInternshipStreamDto createDto);
         Task Update(int id, UpdateInternshipStreamDto updateDto);
+        Task SoftDelete(int id);
         Task Delete(int id);
     }
 }
