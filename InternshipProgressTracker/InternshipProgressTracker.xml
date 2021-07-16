@@ -55,14 +55,12 @@
             Receives data for registration and pass them to the user service register method
             </summary>
             <param name="registerDto">Contains signup form data</param>
-            <returns></returns>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
             Receives data for login and pass them to the user service login method
             </summary>
             <param name="loginDto">Contains login form data</param>
-            <returns></returns>
         </member>
         <member name="T:InternshipProgressTracker.Database.InternshipProgressTrackerDbContext">
             <summary>
@@ -120,6 +118,21 @@
             Represents the User entity
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Exceptions.AlreadyExistsException">
+            <summary>
+            Exception that means that an entity already exists
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Exceptions.BadRequestException">
+            <summary>
+            Exception that means that a request has incorrect data
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Exceptions.NotFoundException">
+            <summary>
+            Exception that means that an entity was not found
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
             <summary>
             Represents data from login form
@@ -168,6 +181,12 @@
             </summary>
             <param name="id">Internship stream id</param>
             <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDelete(System.Int32)">
+            <summary>
+            Marks the entity as deleted
+            </summary>
+            <param name="id">Internship stream id</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Delete(System.Int32)">
             <summary>

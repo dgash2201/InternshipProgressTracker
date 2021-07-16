@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Users;
+using InternshipProgressTracker.Exceptions;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -25,7 +26,6 @@ namespace InternshipProgressTracker.Controllers
         /// Receives data for registration and pass them to the user service register method
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromForm]RegisterDto registerDto, CancellationToken cancellationToken)
@@ -36,18 +36,20 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true, Id = id });
             }
-            catch(Exception ex)
+            catch(AlreadyExistsException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return Conflict(new { Success = false, Message = ex.Message });
             }
-
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
         /// Receives data for login and pass them to the user service login method
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
@@ -63,9 +65,17 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true, Token = token });
             }
-            catch(Exception ex)
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch(BadRequestException ex)
             {
                 return BadRequest(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
     }

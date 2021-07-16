@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Models.InternshipStreams;
+﻿using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +36,13 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             }
-            catch(Exception ex)
+            catch(NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -48,9 +53,16 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var internshipStreams = await _internshipStreamService.Get();
+            try
+            {
+                var internshipStreams = await _internshipStreamService.Get();
 
-            return Ok(internshipStreams);
+                return Ok(internshipStreams);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -60,9 +72,20 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var internshipStream = await _internshipStreamService.Get(id);
+            try
+            {
+                var internshipStream = await _internshipStreamService.Get(id);
 
-            return Ok(internshipStream);
+                return Ok(internshipStream);
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -70,7 +93,7 @@ namespace InternshipProgressTracker.Controllers
         /// </summary>
         /// <param name="createDto">Contains data for creation</param>
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateInternshipStreamDto createDto)
+        public async Task<IActionResult> Create(CreateInternshipStreamDto createDto)
         {
             try
             {
@@ -78,9 +101,9 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true, Id = id });
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return StatusCode(500);
             }
         }
 
@@ -98,9 +121,13 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -117,9 +144,13 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             } 
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
     }

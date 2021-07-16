@@ -1,5 +1,6 @@
 ﻿using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,9 +37,16 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="id">Student id</param>
         public async Task<Student> Get(int id)
         {
-            return await _dbContext
+            var student =  await _dbContext
                 .Students
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FindAsync(id);
+
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            return student;
         }
 
         /// <summary>

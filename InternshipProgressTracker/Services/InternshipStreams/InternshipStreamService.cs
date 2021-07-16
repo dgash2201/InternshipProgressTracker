@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,12 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             var stream = await _dbContext
                 .InternshipStreams
                 .FirstOrDefaultAsync(s => s.Id == streamId);
+
+            if (stream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
             await _studentService.SetStream(studentId, stream);
         }
 
@@ -58,10 +65,17 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task<InternshipStream> Get(int id)
         {
-            return await _dbContext
+            var internshipStream =  await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
                 .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            return internshipStream;
         }
         
         /// <summary>
@@ -85,14 +99,30 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         public async Task Update(int id, UpdateInternshipStreamDto updateDto)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
             _mapper.Map(updateDto, internshipStream);
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Marks the entity as deleted
+        /// </summary>
+        /// <param name="id">Internship stream id</param>
         public async Task SoftDelete(int id)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
             internshipStream.IsDeleted = true;
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
@@ -104,7 +134,14 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <param name="id">Internship stream id</param>
         public async Task Delete(int id)
         {
-            _dbContext.Remove(_dbContext.FindTracked<InternshipStream>(id) ?? new InternshipStream { Id = id });
+            var internshipStream = _dbContext.FindTracked<InternshipStream>(id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            _dbContext.Remove(_dbContext.FindTracked<InternshipStream>(id));
             await _dbContext.SaveChangesAsync();
         }
     }

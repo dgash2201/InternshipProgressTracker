@@ -6,6 +6,7 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Exceptions;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -41,12 +42,12 @@ namespace InternshipProgressTracker.Services.Users
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
-                return null;
+                throw new NotFoundException("User with this email was not found");
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             
             if (!signInResult.Succeeded)
-                return null;
+                throw new BadRequestException("Email or password is incorrect");
 
             return _tokenGenerator.Generate(user);
         }
@@ -58,6 +59,11 @@ namespace InternshipProgressTracker.Services.Users
         public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (await _userManager.FindByEmailAsync(registerDto.Email) != null)
+            {
+                throw new AlreadyExistsException("User with this email already exists");
+            }
 
             var user = new User
             {
