@@ -27,6 +27,9 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Binds student with internship stream
         /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="404">Internship stream or student was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent(int streamId, int studentId)
         {
@@ -49,7 +52,8 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Get list of internship streams
         /// </summary>
-        /// <returns></returns>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="500">Internal server error</response>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -69,6 +73,9 @@ namespace InternshipProgressTracker.Controllers
         /// Gets an internship stream by id
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -92,6 +99,8 @@ namespace InternshipProgressTracker.Controllers
         /// Creates internship stream
         /// </summary>
         /// <param name="createDto">Contains data for creation</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost]
         public async Task<IActionResult> Create(CreateInternshipStreamDto createDto)
         {
@@ -112,6 +121,9 @@ namespace InternshipProgressTracker.Controllers
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
         /// <param name="updateDto">New data</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateInternshipStreamDto updateDto)
         {
@@ -135,6 +147,9 @@ namespace InternshipProgressTracker.Controllers
         /// Deletes internship stream
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

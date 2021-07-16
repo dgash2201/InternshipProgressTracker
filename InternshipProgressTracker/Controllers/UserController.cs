@@ -26,6 +26,8 @@ namespace InternshipProgressTracker.Controllers
         /// Receives data for registration and pass them to the user service register method
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
+        /// <response code="409">User already exists</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromForm]RegisterDto registerDto, CancellationToken cancellationToken)
@@ -50,6 +52,9 @@ namespace InternshipProgressTracker.Controllers
         /// Receives data for login and pass them to the user service login method
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
+        /// <response code="400">Email or password is incorrect</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
