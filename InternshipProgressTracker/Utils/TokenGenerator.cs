@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace InternshipProgressTracker.Utils
@@ -11,11 +12,11 @@ namespace InternshipProgressTracker.Utils
     /// <summary>
     /// Class for generating JWT tokens
     /// </summary>
-    public class JwtTokenGenerator : IJwtTokenGenerator
+    public class TokenGenerator : ITokenGenerator
     {
         private readonly IConfiguration _config;
 
-        public JwtTokenGenerator(IConfiguration config)
+        public TokenGenerator(IConfiguration config)
         {
             _config = config;
         }
@@ -24,7 +25,7 @@ namespace InternshipProgressTracker.Utils
         /// Generates JWT token
         /// </summary>
         /// <param name="user">Object with user data</param>
-        public string Generate(IdentityUser<int> user, string role)
+        public string GenerateJwt(IdentityUser<int> user, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["InternshipProgressTracker:ServiceApiKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -36,11 +37,24 @@ namespace InternshipProgressTracker.Utils
             };
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(3),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        /// <summary>
+        /// Generates refresh token
+        /// </summary>
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
     }
 }

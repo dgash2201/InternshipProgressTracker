@@ -15,15 +15,15 @@ namespace InternshipProgressTracker.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private IUserService _service;
+        private IUserService _userService;
 
         public UserController(IUserService service)
         {
-            _service = service;
+            _userService = service;
         }
 
         /// <summary>
-        /// Receives data for registration and pass them to the user service register method
+        /// Registers new user
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
         /// <response code="409">User already exists</response>
@@ -34,7 +34,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _service.Register(registerDto, cancellationToken);
+                var id = await _userService.Register(registerDto, cancellationToken);
 
                 return Ok(new { Success = true, Id = id });
             }
@@ -49,7 +49,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Receives data for login and pass them to the user service login method
+        /// Checks user authenfication data
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
         /// <response code="400">Email or password is incorrect</response>
@@ -61,22 +61,47 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var token = await _service.Login(loginDto, cancellationToken);
+                var (jwt, refreshToken) = await _userService.Login(loginDto, cancellationToken);
 
-                if (token == null)
-                {
-                    return BadRequest(new { Success = false, Message = "login or password is incorrect" });
-                }
-
-                return Ok(new { Success = true, Token = token });
+                return Ok(new { Success = true, Jwt = jwt, RefreshToken = refreshToken });
+            }
+            catch(BadRequestException ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Cretes new jwt
+        /// </summary>
+        /// <response code="400">Refresh token is incorrect</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
+        [HttpGet]
+        [Route("refresh-jwt")]
+        public async Task<IActionResult> RefreshJwt(string refreshToken, int userId)
+        {
+            try
+            {
+                var (newJwt, newRefreshToken) = await _userService.RefreshJwt(refreshToken, userId);
+
+                return Ok(new { Succes = true, Jwt = newJwt, RefreshToken = newRefreshToken });
+            }
             catch(BadRequestException ex)
             {
                 return BadRequest(new { Success = false, Message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
             }
             catch
             {

@@ -73,7 +73,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
-            Receives data for registration and pass them to the user service register method
+            Registers new user
             </summary>
             <param name="registerDto">Contains signup form data</param>
             <response code="409">User already exists</response>
@@ -81,10 +81,18 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
-            Receives data for login and pass them to the user service login method
+            Checks user authenfication data
             </summary>
             <param name="loginDto">Contains login form data</param>
             <response code="400">Email or password is incorrect</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UserController.RefreshJwt(System.String,System.Int32)">
+            <summary>
+            Cretes new jwt
+            </summary>
+            <response code="400">Refresh token is incorrect</response>
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
@@ -284,21 +292,26 @@
             Creates identity roles
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Utils.IJwtTokenGenerator">
+        <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
             <summary>
             Interface for token generator
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Utils.JwtTokenGenerator">
+        <member name="T:InternshipProgressTracker.Utils.TokenGenerator">
             <summary>
             Class for generating JWT tokens
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Utils.JwtTokenGenerator.Generate(Microsoft.AspNetCore.Identity.IdentityUser{System.Int32},System.String)">
+        <member name="M:InternshipProgressTracker.Utils.TokenGenerator.GenerateJwt(Microsoft.AspNetCore.Identity.IdentityUser{System.Int32},System.String)">
             <summary>
             Generates JWT token
             </summary>
             <param name="user">Object with user data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.TokenGenerator.GenerateRefreshToken">
+            <summary>
+            Generates refresh token
+            </summary>
         </member>
     </members>
 </doc>

@@ -5,8 +5,9 @@ namespace InternshipProgressTracker.Utils
     /// <summary>
     /// Interface for token generator
     /// </summary>
-    public interface IJwtTokenGenerator
+    public interface ITokenGenerator
     {
-        public string Generate(IdentityUser<int> user, string role);
+        public string GenerateJwt(IdentityUser<int> user, string role);
+        public string GenerateRefreshToken();
     }
 }

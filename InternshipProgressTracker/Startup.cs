@@ -42,7 +42,7 @@ namespace InternshipProgressTracker
 
             services
                 .AddScoped<IUserService, UserService>()
-                .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+                .AddSingleton<ITokenGenerator, TokenGenerator>();
 
             services
                 .AddScoped<IInternshipStreamService, InternshipStreamService>();

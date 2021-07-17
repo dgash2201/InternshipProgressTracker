@@ -21,5 +21,7 @@ namespace InternshipProgressTracker.Entities
         public Mentor Mentor { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public string RefreshToken { get; set; }
     }
 }
