@@ -24,7 +24,7 @@ namespace InternshipProgressTracker.Utils
         /// Generates JWT token
         /// </summary>
         /// <param name="user">Object with user data</param>
-        public string Generate(IdentityUser<int> user)
+        public string Generate(IdentityUser<int> user, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["InternshipProgressTracker:ServiceApiKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -32,6 +32,7 @@ namespace InternshipProgressTracker.Utils
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role),
             };
             var token = new JwtSecurityToken(
                 claims: claims,

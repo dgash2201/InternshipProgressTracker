@@ -7,6 +7,7 @@ using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Exceptions;
+using System.Linq;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -49,7 +50,9 @@ namespace InternshipProgressTracker.Services.Users
             if (!signInResult.Succeeded)
                 throw new BadRequestException("Email or password is incorrect");
 
-            return _tokenGenerator.Generate(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            return _tokenGenerator.Generate(user, userRoles.FirstOrDefault());
         }
 
         /// <summary>
@@ -70,7 +73,7 @@ namespace InternshipProgressTracker.Services.Users
                 Email = registerDto.Email,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
-                UserName = $"{registerDto.FirstName}_{registerDto.LastName}",
+                UserName = registerDto.Email,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -92,6 +95,8 @@ namespace InternshipProgressTracker.Services.Users
             }
 
             await _studentService.Create(user);
+
+            await _userManager.AddToRoleAsync(user, "Student");
 
             return user.Id;
         }

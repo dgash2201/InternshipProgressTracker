@@ -43,6 +43,7 @@ namespace InternshipProgressTracker
             services
                 .AddScoped<IUserService, UserService>()
                 .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
             services
                 .AddScoped<IInternshipStreamService, InternshipStreamService>();
 
@@ -113,7 +114,7 @@ namespace InternshipProgressTracker
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -133,6 +134,8 @@ namespace InternshipProgressTracker
             {
                 endpoints.MapControllers();
             });
+
+            CreateRoles(provider);
         }
 
         /// <summary>
@@ -143,6 +146,27 @@ namespace InternshipProgressTracker
             var basePath = PlatformServices.Default.Application.ApplicationBasePath;
             var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
             return Path.Combine(basePath, fileName);
+        }
+
+        /// <summary>
+        /// Creates identity roles
+        /// </summary>
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleNames = new [] { "Admin", "Lead", "Mentor", "Student" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExists = RoleManager.RoleExistsAsync(roleName);
+                roleExists.Wait();
+
+                if (!roleExists.Result)
+                {
+                    RoleManager.CreateAsync(new IdentityRole<int>(roleName)).Wait();
+                }
+            }
         }
     }
 }

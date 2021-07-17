@@ -7,6 +7,6 @@ namespace InternshipProgressTracker.Utils
     /// </summary>
     public interface IJwtTokenGenerator
     {
-        public string Generate(IdentityUser<int> user);
+        public string Generate(IdentityUser<int> user, string role);
     }
 }
