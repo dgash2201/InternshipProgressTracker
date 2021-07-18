@@ -6,12 +6,12 @@
     <members>
         <member name="T:InternshipProgressTracker.Controllers.InternshipStreamsController">
             <summary>
-            Controller for working with InternshipStream entities
+            Represents Web API of Internship Streams
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
             <summary>
-            Binds student with internship stream
+            Bind student with internship stream
             </summary>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
@@ -28,7 +28,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Int32)">
             <summary>
-            Gets an internship stream by id
+            Get an internship stream by id
             </summary>
             <param name="id">Id of the internship stream</param>
             <response code="401">Authorization token is invalid</response>
@@ -38,7 +38,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
             <summary>
-            Creates internship stream
+            Create internship stream
             </summary>
             <param name="createDto">Contains data for creation</param>
             <response code="401">Authorization token is invalid</response>
@@ -47,7 +47,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
             <summary>
-            Updates internship stream data
+            Update internship stream data
             </summary>
             <param name="id">Id of the internship stream</param>
             <param name="updateDto">New data</param>
@@ -58,7 +58,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32)">
             <summary>
-            Deletes internship stream
+            Mark internship stream as deleted
             </summary>
             <param name="id">Id of the internship stream</param>
             <response code="401">Authorization token is invalid</response>
@@ -66,14 +66,57 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="T:InternshipProgressTracker.Controllers.StudyPlansController">
+            <summary>
+            Represents Web API of Study Plans
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get">
+            <summary>
+            Get list of study plans
+            </summary>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Int32)">
+            <summary>
+            Get study plan by id
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
+            <summary>
+            Create study plan
+            </summary>
+            <param name="createDto">Data for creation</param>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
+            <summary>
+            Update study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="updateDto">New data</param>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32)">
+            <summary>
+            Mark study plan as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.UserController">
             <summary>
-            Controller for authentication and working with User entities
+            Represents Web API of Users
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
-            Registers new user
+            Register new user
             </summary>
             <param name="registerDto">Contains signup form data</param>
             <response code="409">User already exists</response>
@@ -81,7 +124,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
-            Checks user authenfication data
+            Authentificate user
             </summary>
             <param name="loginDto">Contains login form data</param>
             <response code="400">Email or password is incorrect</response>
@@ -90,7 +133,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.RefreshJwt(System.String,System.Int32)">
             <summary>
-            Cretes new jwt
+            Create new JWT
             </summary>
             <response code="400">Refresh token is incorrect</response>
             <response code="404">User was not found</response>
@@ -165,6 +208,16 @@
         <member name="T:InternshipProgressTracker.Exceptions.NotFoundException">
             <summary>
             Exception that means that an entity was not found
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto">
+            <summary>
+            Contains data for creating a study plan
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto">
+            <summary>
+            Contains data for updating a study plan
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
@@ -259,6 +312,53 @@
             <summary>
             Binds student with internship stream
             </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlans.IStudyPlanService">
+            <summary>
+            Interface of study plan service
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlans.StudyPlanService">
+            <summary>
+            Service for working with study plans
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Get">
+            <summary>
+            Gets all study plans
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Get(System.Int32)">
+            <summary>
+            Gets study plan by id
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Create(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
+            <summary>
+            Creates study plan
+            </summary>
+            <param name="createDto">Data for creation</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
+            <summary>
+            Updates study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDelete(System.Int32)">
+            <summary>
+            Marks study plan as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Delete(System.Int32)">
+            <summary>
+            Deletes study plan
+            </summary>
+            <param name="id">Id of study plan</param>
         </member>
         <member name="T:InternshipProgressTracker.Services.Users.IUserService">
             <summary>

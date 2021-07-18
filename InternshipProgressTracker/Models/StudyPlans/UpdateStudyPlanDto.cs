@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Models.StudyPlans
 {
+    /// <summary>
+    /// Contains data for updating a study plan
+    /// </summary>
     public class UpdateStudyPlanDto
     {
         public string Title { get; set; }

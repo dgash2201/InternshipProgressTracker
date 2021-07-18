@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace InternshipProgressTracker.Controllers
 {
     /// <summary>
-    /// Controller for working with InternshipStream entities
+    /// Represents Web API of Internship Streams
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]")]
@@ -25,7 +25,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Binds student with internship stream
+        /// Bind student with internship stream
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
@@ -74,7 +74,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Gets an internship stream by id
+        /// Get an internship stream by id
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
         /// <response code="401">Authorization token is invalid</response>
@@ -102,7 +102,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Creates internship stream
+        /// Create internship stream
         /// </summary>
         /// <param name="createDto">Contains data for creation</param>
         /// <response code="401">Authorization token is invalid</response>
@@ -125,7 +125,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Updates internship stream data
+        /// Update internship stream data
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
         /// <param name="updateDto">New data</param>
@@ -154,7 +154,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Deletes internship stream
+        /// Mark internship stream as deleted
         /// </summary>
         /// <param name="id">Id of the internship stream</param>
         /// <response code="401">Authorization token is invalid</response>

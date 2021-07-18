@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
+    /// <summary>
+    /// Represents Web API of Study Plans
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class StudyPlansController : Controller
@@ -17,8 +20,10 @@ namespace InternshipProgressTracker.Controllers
             _studyPlanService = studyPlanService;
         }
 
-
-        // GET: api/<StudyPlanController>
+        /// <summary>
+        /// Get list of study plans
+        /// </summary>
+        /// <response code="500">Internal server error</response>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -34,7 +39,12 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
-        // GET api/<StudyPlanController>/5
+        /// <summary>
+        /// Get study plan by id
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        /// <response code="404">Study plan was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -54,7 +64,11 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
-        // POST api/<StudyPlanController>
+        /// <summary>
+        /// Create study plan
+        /// </summary>
+        /// <param name="createDto">Data for creation</param>
+        /// <response code="500">Internal server error</response>
         [HttpPost]
         public async Task<IActionResult> Create(CreateStudyPlanDto createDto)
         {
@@ -70,7 +84,13 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
-        // PUT api/<StudyPlanController>/5
+        /// <summary>
+        /// Update study plan data
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        /// <param name="updateDto">New data</param>
+        /// <response code="404">Study plan was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateStudyPlanDto updateDto)
         {
@@ -90,7 +110,12 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
-        // DELETE api/<StudyPlanController>/5
+        /// <summary>
+        /// Mark study plan as deleted
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        /// <response code="404">Study plan was not found</response>
+        /// <response code="500">Internal server error</response>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

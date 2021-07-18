@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.StudyPlans
 {
+    /// <summary>
+    /// Interface of study plan service
+    /// </summary>
     public interface IStudyPlanService
     {
         Task<IReadOnlyCollection<StudyPlan>> Get();
