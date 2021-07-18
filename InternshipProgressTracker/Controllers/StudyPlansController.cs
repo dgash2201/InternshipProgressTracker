@@ -1,8 +1,7 @@
 ﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.StudyPlans;
-using InternshipProgressTracker.Services;
+using InternshipProgressTracker.Services.StudyPlans;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers

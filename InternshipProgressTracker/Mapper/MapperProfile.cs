@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
+using InternshipProgressTracker.Models.StudyPlans;
 
 namespace InternshipProgressTracker.Mapper
 {
@@ -9,6 +10,7 @@ namespace InternshipProgressTracker.Mapper
         public MapperProfile()
         {
            CreateMap<CreateInternshipStreamDto, InternshipStream>();
+            CreateMap<CreateStudyPlanDto, StudyPlan>();
         }
     }
 }

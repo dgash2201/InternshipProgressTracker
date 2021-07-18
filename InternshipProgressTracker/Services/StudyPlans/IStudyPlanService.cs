@@ -3,7 +3,7 @@ using InternshipProgressTracker.Models.StudyPlans;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace InternshipProgressTracker.Services
+namespace InternshipProgressTracker.Services.StudyPlans
 {
     public interface IStudyPlanService
     {
