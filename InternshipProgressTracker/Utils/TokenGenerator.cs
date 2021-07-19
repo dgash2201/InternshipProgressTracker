@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InternshipProgressTracker.Settings;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,11 +15,13 @@ namespace InternshipProgressTracker.Utils
     /// </summary>
     public class TokenGenerator : ITokenGenerator
     {
-        private readonly IConfiguration _config;
+        private readonly InternshipProgressTrackerSecrets _secrets;
 
-        public TokenGenerator(IConfiguration config)
+        public TokenGenerator(IConfiguration configuration)
         {
-            _config = config;
+            _secrets = configuration
+                .GetSection("InternshipProgressTracker")
+                .Get<InternshipProgressTrackerSecrets>();
         }
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace InternshipProgressTracker.Utils
         /// <param name="user">Object with user data</param>
         public string GenerateJwt(IdentityUser<int> user, string role)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["InternshipProgressTracker:ServiceApiKey"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secrets.ServiceApiKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {

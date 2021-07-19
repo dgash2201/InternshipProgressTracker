@@ -282,6 +282,11 @@
             </summary>
             <param name="registerDto">Contains signup form data</param>
         </member>
+        <member name="T:InternshipProgressTracker.Settings.InternshipProgressTrackerSecrets">
+            <summary>
+            Contains secrets of application
+            </summary>
+        </member>
         <member name="M:InternshipProgressTracker.Startup.GetXmlCommentsPath">
             <summary>
             Gets path for file with xml comments
@@ -290,6 +295,11 @@
         <member name="M:InternshipProgressTracker.Startup.CreateRoles(System.IServiceProvider)">
             <summary>
             Creates identity roles
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Startup.CreateAdmin(System.IServiceProvider)">
+            <summary>
+            Creates default admin
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">

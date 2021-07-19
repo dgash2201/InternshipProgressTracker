@@ -19,14 +19,18 @@ using InternshipProgressTracker.Database;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
 using System.Reflection;
+using InternshipProgressTracker.Settings;
 
 namespace InternshipProgressTracker
 {
     public class Startup
     {
+        private readonly InternshipProgressTrackerSecrets _secrets;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _secrets = Configuration.GetSection("InternshipProgressTracker").Get<InternshipProgressTrackerSecrets>();
         }
 
         public IConfiguration Configuration { get; }
@@ -70,7 +74,7 @@ namespace InternshipProgressTracker
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["InternshipProgressTracker:ServiceApiKey"])),
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secrets.ServiceApiKey)),
                     };
                 });
             services.AddAuthorization();
@@ -136,6 +140,7 @@ namespace InternshipProgressTracker
             });
 
             CreateRoles(provider);
+            CreateAdmin(provider);
         }
 
         /// <summary>
@@ -153,18 +158,48 @@ namespace InternshipProgressTracker
         /// </summary>
         private void CreateRoles(IServiceProvider serviceProvider)
         {
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
             var roleNames = new [] { "Admin", "Lead", "Mentor", "Student" };
-            IdentityResult roleResult;
 
             foreach (var roleName in roleNames)
             {
-                var roleExists = RoleManager.RoleExistsAsync(roleName);
+                var roleExists = roleManager.RoleExistsAsync(roleName);
                 roleExists.Wait();
 
                 if (!roleExists.Result)
                 {
-                    RoleManager.CreateAsync(new IdentityRole<int>(roleName)).Wait();
+                    roleManager.CreateAsync(new IdentityRole<int>(roleName)).Wait();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates default admin
+        /// </summary>
+        private void CreateAdmin(IServiceProvider serviceProvider)
+        {
+            var adminEmail = Configuration["Admin:Email"];
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var findUser = userManager.FindByEmailAsync(adminEmail);
+
+            findUser.Wait();
+
+            if (findUser.Result == null)
+            {
+                var admin = new User
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    FirstName = Configuration["Admin:FirstName"],
+                    LastName = Configuration["Admin:LastName"],
+                };
+
+                var createAdmin = userManager.CreateAsync(admin, _secrets.AdminPassword);
+                createAdmin.Wait();
+
+                if (createAdmin.Result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(admin, "Admin").Wait();
                 }
             }
         }
