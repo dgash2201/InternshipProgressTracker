@@ -75,6 +75,8 @@
             <summary>
             Get list of study plans
             </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Int32)">
@@ -82,6 +84,8 @@
             Get study plan by id
             </summary>
             <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
@@ -90,6 +94,8 @@
             Create study plan
             </summary>
             <param name="createDto">Data for creation</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
@@ -98,6 +104,8 @@
             </summary>
             <param name="id">Id of study plan</param>
             <param name="updateDto">New data</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
@@ -106,6 +114,8 @@
             Mark study plan as deleted
             </summary>
             <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
