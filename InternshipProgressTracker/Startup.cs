@@ -15,19 +15,26 @@ using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Database;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
+using System.Reflection;
+using InternshipProgressTracker.Settings;
 
 namespace InternshipProgressTracker
 {
     public class Startup
     {
+        private readonly InternshipProgressTrackerSecrets _secrets;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _secrets = Configuration.GetSection("InternshipProgressTracker").Get<InternshipProgressTrackerSecrets>();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
@@ -39,7 +46,8 @@ namespace InternshipProgressTracker
 
             services
                 .AddScoped<IUserService, UserService>()
-                .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+                .AddSingleton<ITokenGenerator, TokenGenerator>();
+
             services
                 .AddScoped<IInternshipStreamService, InternshipStreamService>();
 
@@ -66,16 +74,23 @@ namespace InternshipProgressTracker
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["InternshipProgressTracker:ServiceApiKey"])),
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secrets.ServiceApiKey)),
                     };
                 });
             services.AddAuthorization();
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "InternshipProgressTracker", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "InternshipProgressTracker API", Version = "v1" });
+
+                options.IncludeXmlComments(GetXmlCommentsPath());
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -103,8 +118,7 @@ namespace InternshipProgressTracker
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -124,6 +138,70 @@ namespace InternshipProgressTracker
             {
                 endpoints.MapControllers();
             });
+
+            CreateRoles(provider);
+            CreateAdmin(provider);
+        }
+
+        /// <summary>
+        /// Gets path for file with xml comments
+        /// </summary>
+        private string GetXmlCommentsPath()
+        {
+            var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+            var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+            return Path.Combine(basePath, fileName);
+        }
+
+        /// <summary>
+        /// Creates identity roles
+        /// </summary>
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleNames = new [] { "Admin", "Lead", "Mentor", "Student" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExists = roleManager.RoleExistsAsync(roleName);
+                roleExists.Wait();
+
+                if (!roleExists.Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole<int>(roleName)).Wait();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates default admin
+        /// </summary>
+        private void CreateAdmin(IServiceProvider serviceProvider)
+        {
+            var adminEmail = Configuration["Admin:Email"];
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var findUser = userManager.FindByEmailAsync(adminEmail);
+
+            findUser.Wait();
+
+            if (findUser.Result == null)
+            {
+                var admin = new User
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    FirstName = Configuration["Admin:FirstName"],
+                    LastName = Configuration["Admin:LastName"],
+                };
+
+                var createAdmin = userManager.CreateAsync(admin, _secrets.AdminPassword);
+                createAdmin.Wait();
+
+                if (createAdmin.Result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(admin, "Admin").Wait();
+                }
+            }
         }
     }
 }

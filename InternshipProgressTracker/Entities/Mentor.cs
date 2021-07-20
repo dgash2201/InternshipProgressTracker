@@ -18,7 +18,7 @@ namespace InternshipProgressTracker.Entities
     /// <summary>
     /// Represents the Mentor entity
     /// </summary>
-    public class Mentor
+    public class Mentor : ISoftDeletable
     {
         [Key]
         public int Id { get; set; }
@@ -32,8 +32,12 @@ namespace InternshipProgressTracker.Entities
         [Required]
         public int InternshipStreamId { get; set; }
 
+        public int UserId { get; set; }
+
         public User User { get; set; }
 
         public ICollection<StudentStudyPlanProgress> StudentStudyPlanProgresses { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

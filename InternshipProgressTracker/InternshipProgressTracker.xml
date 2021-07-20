@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InternshipProgressTracker</name>
+    </assembly>
+    <members>
+        <member name="T:InternshipProgressTracker.Controllers.InternshipStreamsController">
+            <summary>
+            Controller for working with InternshipStream entities
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
+            <summary>
+            Binds student with internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or student was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get">
+            <summary>
+            Get list of internship streams
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Int32)">
+            <summary>
+            Gets an internship stream by id
+            </summary>
+            <param name="id">Id of the internship stream</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+            <summary>
+            Creates internship stream
+            </summary>
+            <param name="createDto">Contains data for creation</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+            <summary>
+            Updates internship stream data
+            </summary>
+            <param name="id">Id of the internship stream</param>
+            <param name="updateDto">New data</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32)">
+            <summary>
+            Deletes internship stream
+            </summary>
+            <param name="id">Id of the internship stream</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="T:InternshipProgressTracker.Controllers.UserController">
+            <summary>
+            Controller for authentication and working with User entities
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UserController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+            <summary>
+            Registers new user
+            </summary>
+            <param name="registerDto">Contains signup form data</param>
+            <response code="409">User already exists</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
+            <summary>
+            Checks user authenfication data
+            </summary>
+            <param name="loginDto">Contains login form data</param>
+            <response code="400">Email or password is incorrect</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UserController.RefreshJwt(System.String,System.Int32)">
+            <summary>
+            Cretes new jwt
+            </summary>
+            <response code="400">Refresh token is incorrect</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="T:InternshipProgressTracker.Database.InternshipProgressTrackerDbContext">
+            <summary>
+            Class for working with InternshipProgressTracker database
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Database.InternshipProgressTrackerDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Method for configuring relationships between entities by Fluent API
+            </summary>
+            <param name="builder">Builder to construct a model for a context</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.InternshipStreamStatus">
+            <summary>
+            Contains statuses of Internship Stream
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.InternshipStream">
+            <summary>
+            Represents the InternshipStream entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.MentorRole">
+            <summary>
+            Contains roles of a mentor
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.Mentor">
+            <summary>
+            Represents the Mentor entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.Student">
+            <summary>
+            Represents the Student entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.StudentStudyPlanProgress">
+            <summary>
+            Represents the StudentStudyPlanProgress entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.StudyPlan">
+            <summary>
+            Represents the StudyPlan entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.StudyPlanEntry">
+            <summary>
+            Represents the StudyPlanEntry entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.User">
+            <summary>
+            Represents the User entity
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Exceptions.AlreadyExistsException">
+            <summary>
+            Exception that means that an entity already exists
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Exceptions.BadRequestException">
+            <summary>
+            Exception that means that a request has incorrect data
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Exceptions.NotFoundException">
+            <summary>
+            Exception that means that an entity was not found
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
+            <summary>
+            Represents data from login form
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Users.RegisterDto">
+            <summary>
+            Represents data from signup form
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.InternshipStreams.IInternshipStreamService">
+            <summary>
+            Internship stream service interface
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService">
+            <summary>
+            Logic service which works with internship streams
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudent(System.Int32,System.Int32)">
+            <summary>
+            Binds student with stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get">
+            <summary>
+            Gets list of internship streams
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get(System.Int32)">
+            <summary>
+            Gets internship stream by id
+            </summary>
+            <param name="id">Internship stream id</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+            <summary>
+            Creates internship stream from createDto
+            </summary>
+            <param name="createDto">Data for creation</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+            <summary>
+            Updates data in internship stream
+            </summary>
+            <param name="id">Internship stream id</param>
+            <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDelete(System.Int32)">
+            <summary>
+            Marks the entity as deleted
+            </summary>
+            <param name="id">Internship stream id</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Delete(System.Int32)">
+            <summary>
+            Deletes internship stream by id
+            </summary>
+            <param name="id">Internship stream id</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Students.IStudentService">
+            <summary>
+            Student service interface
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Students.StudentService">
+            <summary>
+            Logic service which works with students
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get">
+            <summary>
+            Gets the list of students
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get(System.Int32)">
+            <summary>
+            Gets a student by id
+            </summary>
+            <param name="id">Student id</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Create(InternshipProgressTracker.Entities.User)">
+            <summary>
+            Creates a student based on the user
+            </summary>
+            <param name="user">User entity</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStream(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
+            <summary>
+            Binds student with internship stream
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Users.IUserService">
+            <summary>
+            Interface for user service
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Users.UserService">
+            <summary>
+            Service for authorization and 
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
+            <summary>
+            Checks login data and returns generated token
+            </summary>
+            <param name="loginDto">Contains login form data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+            <summary>
+            Creates user entity and saves it in the database
+            </summary>
+            <param name="registerDto">Contains signup form data</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Settings.InternshipProgressTrackerSecrets">
+            <summary>
+            Contains secrets of application
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Startup.GetXmlCommentsPath">
+            <summary>
+            Gets path for file with xml comments
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Startup.CreateRoles(System.IServiceProvider)">
+            <summary>
+            Creates identity roles
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Startup.CreateAdmin(System.IServiceProvider)">
+            <summary>
+            Creates default admin
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
+            <summary>
+            Interface for token generator
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Utils.TokenGenerator">
+            <summary>
+            Class for generating JWT tokens
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.TokenGenerator.GenerateJwt(Microsoft.AspNetCore.Identity.IdentityUser{System.Int32},System.String)">
+            <summary>
+            Generates JWT token
+            </summary>
+            <param name="user">Object with user data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.TokenGenerator.GenerateRefreshToken">
+            <summary>
+            Generates refresh token
+            </summary>
+        </member>
+    </members>
+</doc>

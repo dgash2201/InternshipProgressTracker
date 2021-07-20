@@ -9,7 +9,8 @@ namespace InternshipProgressTracker.Services.Users
     /// </summary>
     public interface IUserService
     {
-        Task<(int, int)> Register(RegisterDto registerDto, CancellationToken cancellationToken);
-        Task<string> Login(LoginDto loginDto, CancellationToken cancellationToken);
+        Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken);
+        Task<(string, string)> Login(LoginDto loginDto, CancellationToken cancellationToken);
+        Task<(string, string)> RefreshJwt(string refreshToken, int id);
     }
 }

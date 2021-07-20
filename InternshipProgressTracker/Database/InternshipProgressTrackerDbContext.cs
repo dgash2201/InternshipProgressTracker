@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using InternshipProgressTracker.Entities;
 
-
-namespace InternshipProgressTracker
+namespace InternshipProgressTracker.Database
 {
     /// <summary>
     /// Class for working with InternshipProgressTracker database
@@ -56,6 +55,27 @@ namespace InternshipProgressTracker
             builder
                 .Entity<User>()
                 .HasKey(e => e.Id);
+
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Student)
+                .WithOne(s => s.User)
+                .HasForeignKey<Student>(s => s.UserId);
+
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Mentor)
+                .WithOne(m => m.User)
+                .HasForeignKey<Mentor>(m => m.UserId);
+
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                //other automated configurations left out
+                if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
+                {
+                    entityType.AddSoftDeleteQueryFilter();
+                }
+            }
         }
     }
 }

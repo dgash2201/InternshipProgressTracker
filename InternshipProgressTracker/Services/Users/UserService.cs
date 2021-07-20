@@ -6,6 +6,8 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Exceptions;
+using System.Linq;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -14,15 +16,14 @@ namespace InternshipProgressTracker.Services.Users
     /// </summary>
     public class UserService : IUserService
     {
-        private readonly string _avatarsPath = Directory.GetCurrentDirectory() + "/SourceData/Avatars/";
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IJwtTokenGenerator _tokenGenerator;
+        private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
 
         public UserService(UserManager<User> userManager, 
             SignInManager<User> signInManager, 
-            IJwtTokenGenerator tokenGenerator,
+            ITokenGenerator tokenGenerator,
             IStudentService studentService)
         {
             _userManager = userManager;
@@ -35,37 +36,53 @@ namespace InternshipProgressTracker.Services.Users
         /// Checks login data and returns generated token
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        public async Task<string> Login(LoginDto loginDto, CancellationToken cancellationToken)
+        public async Task<(string, string)> Login(LoginDto loginDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
-                return null;
+            {
+                throw new NotFoundException("User with this email was not found");
+            }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             
             if (!signInResult.Succeeded)
-                return null;
+            {
+                throw new BadRequestException("Email or password is incorrect");
+            }
 
-            return _tokenGenerator.Generate(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var jwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
+            var refreshToken = _tokenGenerator.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return (jwt, refreshToken);
         }
 
         /// <summary>
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<(int, int)> Register(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (await _userManager.FindByEmailAsync(registerDto.Email) != null)
+            {
+                throw new AlreadyExistsException("User with this email already exists");
+            }
 
             var user = new User
             {
                 Email = registerDto.Email,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
-                UserName = $"{registerDto.FirstName}_{registerDto.LastName}",
+                UserName = registerDto.Email,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -77,24 +94,43 @@ namespace InternshipProgressTracker.Services.Users
 
             if (registerDto.Avatar != null)
             {
-                if (!Directory.Exists(_avatarsPath))
-                    Directory.CreateDirectory(_avatarsPath);
-
-                var avatarPath = _avatarsPath + $"{user.Id}_{registerDto.Avatar.FileName}";
-
-                using(var fileStream = new FileStream(avatarPath, FileMode.Create))
+                using(var memoryStream = new MemoryStream())
                 {
-                    await registerDto.Avatar.CopyToAsync(fileStream);
+                    await registerDto.Avatar.CopyToAsync(memoryStream);
+                    user.Photo = memoryStream.ToArray();
                 }
-
-                user.PhotoLink = avatarPath;
 
                 await _userManager.UpdateAsync(user);
             }
 
-            var studentId = await _studentService.Create(user);
+            await _studentService.Create(user);
+            await _userManager.AddToRoleAsync(user, "Student");
 
-            return (user.Id, studentId);
+            return user.Id;
+        }
+
+        public async Task<(string, string)> RefreshJwt(string refreshToken, int userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User was not found");
+            }
+
+            if (user.RefreshToken != refreshToken)
+            {
+                throw new BadRequestException("Refresh token is incorrect");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var newJwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
+            var newRefreshToken = _tokenGenerator.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return (newJwt, newRefreshToken);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using InternshipProgressTracker.Database;
+using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,16 +37,23 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="id">Student id</param>
         public async Task<Student> Get(int id)
         {
-            return await _dbContext
+            var student =  await _dbContext
                 .Students
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FindAsync(id);
+
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            return student;
         }
 
         /// <summary>
         /// Creates a student based on the user
         /// </summary>
         /// <param name="user">User entity</param>
-        public async Task<int> Create(User user)
+        public async Task Create(User user)
         {
             var student = new Student
             {
@@ -53,16 +62,15 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync();
-
-            return student.Id;
         }
 
         /// <summary>
         /// Binds student with internship stream
         /// </summary>
-        public async Task SetStreamId(Student student, int streamId)
+        public async Task SetStream(int studentId, InternshipStream stream)
         {
-            student.Id = streamId;
+            var student = await Get(studentId);
+            student.InternshipStream = stream;
             _dbContext.Entry(student).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }

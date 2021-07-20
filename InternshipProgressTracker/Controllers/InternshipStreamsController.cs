@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Models.InternshipStreams;
+﻿using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +25,13 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Binds student with InternshipStream
+        /// Binds student with internship stream
         /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream or student was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent(int streamId, int studentId)
         {
@@ -35,42 +41,76 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             }
-            catch(Exception ex)
+            catch(NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
         /// <summary>
-        /// Get list of InternshipStreams
+        /// Get list of internship streams
         /// </summary>
-        /// <returns></returns>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var internshipStreams = await _internshipStreamService.Get();
+            try
+            {
+                var internshipStreams = await _internshipStreamService.Get();
 
-            return Ok(internshipStreams);
+                return Ok(internshipStreams);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
-        /// Gets an InternshipStream by id
+        /// Gets an internship stream by id
         /// </summary>
-        /// <param name="id">Id of an InternshipStream</param>
+        /// <param name="id">Id of the internship stream</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var internshipStream = await _internshipStreamService.Get(id);
+            try
+            {
+                var internshipStream = await _internshipStreamService.Get(id);
 
-            return Ok(internshipStream);
+                return Ok(internshipStream);
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
-        /// Creates InternshipStream
+        /// Creates internship stream
         /// </summary>
         /// <param name="createDto">Contains data for creation</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateInternshipStreamDto createDto)
+        public async Task<IActionResult> Create(CreateInternshipStreamDto createDto)
         {
             try
             {
@@ -78,19 +118,24 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true, Id = id });
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return StatusCode(500);
             }
         }
 
         /// <summary>
-        /// Updates InternshipStream data
+        /// Updates internship stream data
         /// </summary>
-        /// <param name="id">InternshipStream id</param>
+        /// <param name="id">Id of the internship stream</param>
         /// <param name="updateDto">New data</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateInternshipStreamDto updateDto)
+        public async Task<IActionResult> Update(int id, UpdateInternshipStreamDto updateDto)
         {
             try
             {
@@ -98,28 +143,41 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
         /// <summary>
-        /// Deletes InternshipStream
+        /// Deletes internship stream
         /// </summary>
-        /// <param name="id">IntenshipStream id</param>
+        /// <param name="id">Id of the internship stream</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _internshipStreamService.Delete(id);
+                await _internshipStreamService.SoftDelete(id);
 
                 return Ok(new { Success = true });
             } 
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
     }
