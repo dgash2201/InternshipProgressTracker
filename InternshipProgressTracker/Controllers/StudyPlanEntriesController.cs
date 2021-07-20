@@ -1,6 +1,6 @@
 ﻿using InternshipProgressTracker.Exceptions;
-using InternshipProgressTracker.Models.StudyPlans;
-using InternshipProgressTracker.Services.StudyPlans;
+using InternshipProgressTracker.Models.StudyPlanEntries;
+using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 namespace InternshipProgressTracker.Controllers
 {
     /// <summary>
-    /// Represents Web API of Study Plans
+    /// Represents Web API of Study Plan Entries
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]")]
     [ApiController]
-    public class StudyPlansController : ControllerBase
+    public class StudyPlansEntriesController : ControllerBase
     {
-        private readonly IStudyPlanService _studyPlanService;
+        private readonly IStudyPlanEntryService _studyPlanEntryService;
 
-        public StudyPlansController(IStudyPlanService studyPlanService)
+        public StudyPlansEntriesController(IStudyPlanEntryService studyPlanEntryService)
         {
-            _studyPlanService = studyPlanService;
+            _studyPlanEntryService = studyPlanEntryService;
         }
 
         /// <summary>
-        /// Get list of study plans
+        /// Get list of study plan entries
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
@@ -34,9 +34,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var studyPlans = await _studyPlanService.Get();
+                var studyPlanEntries = await _studyPlanEntryService.Get();
 
-                return Ok(new { Success = true, StudyPlans = studyPlans });
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
             }
             catch
             {
@@ -45,12 +45,12 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Get study plan by id
+        /// Get study plan entry by id
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Study plan was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
@@ -58,9 +58,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var studyPlan = await _studyPlanService.Get(id);
+                var studyPlanEntry = await _studyPlanEntryService.Get(id);
 
-                return Ok(new { Success = true, StudyPlan = studyPlan });
+                return Ok(new { Success = true, StudyPlanEntry = studyPlanEntry });
             }
             catch(NotFoundException ex)
             {
@@ -73,7 +73,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Create study plan
+        /// Create study plan entry
         /// </summary>
         /// <param name="createDto">Data for creation</param>
         /// <response code="401">Authorization token is invalid</response>
@@ -81,11 +81,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateStudyPlanDto createDto)
+        public async Task<IActionResult> Create(CreateStudyPlanEntryDto createDto)
         {
             try
             {
-                var id = await _studyPlanService.Create(createDto);
+                var id = await _studyPlanEntryService.Create(createDto);
 
                 return Ok(new { Success = true, Id = id });
             }
@@ -96,21 +96,21 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Update study plan data
+        /// Update study plan entry data
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="updateDto">New data</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Study plan was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateStudyPlanDto updateDto)
+        public async Task<IActionResult> Update(int id, UpdateStudyPlanEntryDto updateDto)
         {
             try
             {
-                await _studyPlanService.Update(id, updateDto);
+                await _studyPlanEntryService.Update(id, updateDto);
 
                 return Ok(new { Success = true });
             }
@@ -125,12 +125,12 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Mark study plan as deleted
+        /// Mark study plan entry as deleted
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Study plan was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpDelete("{id}")]
@@ -138,7 +138,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanService.SoftDelete(id);
+                await _studyPlanEntryService.SoftDelete(id);
 
                 return Ok(new { Success = true });
             }

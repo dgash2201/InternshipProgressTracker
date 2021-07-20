@@ -21,6 +21,8 @@ using System.IO;
 using System.Reflection;
 using InternshipProgressTracker.Settings;
 using System.Threading.Tasks;
+using InternshipProgressTracker.Services.StudyPlanEntries;
+using InternshipProgressTracker.Services.StudyPlans;
 
 namespace InternshipProgressTracker
 {
@@ -54,6 +56,12 @@ namespace InternshipProgressTracker
 
             services
                 .AddScoped<IStudentService, StudentService>();
+
+            services
+                .AddScoped<IStudyPlanService, StudyPlanService>();
+
+            services
+                .AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>
