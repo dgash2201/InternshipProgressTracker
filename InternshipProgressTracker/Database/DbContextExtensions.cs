@@ -2,8 +2,16 @@
 
 namespace Microsoft.EntityFrameworkCore
 {
+    /// <summary>
+    /// Extensions for the database context
+    /// </summary>
     public static partial class DbContextExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context">Database context</param>
+        /// <param name="keyValues">Keys for search</param>
         public static TEntity FindTracked<TEntity>(this DbContext context, params object[] keyValues)
             where TEntity : class
         {
