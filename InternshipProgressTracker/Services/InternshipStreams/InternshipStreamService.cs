@@ -53,6 +53,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             var internshipStreams = await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
+                .Include(s => s.StudyPlans)
                 .ToListAsync();
 
             return internshipStreams
@@ -68,6 +69,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             var internshipStream =  await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
+                .Include(s => s.StudyPlans)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (internshipStream == null)

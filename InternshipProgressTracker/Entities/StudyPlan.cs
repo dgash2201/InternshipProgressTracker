@@ -22,6 +22,8 @@ namespace InternshipProgressTracker.Entities
         [Required]
         public int InternshipStreamId { get; set; }
 
+        public InternshipStream InternshipStream { get; set; }
+
         public ICollection<StudyPlanEntry> Entries { get; set; }
 
         public bool IsDeleted { get; set; }

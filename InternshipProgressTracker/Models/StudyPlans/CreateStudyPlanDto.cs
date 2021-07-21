@@ -11,5 +11,8 @@ namespace InternshipProgressTracker.Models.StudyPlans
         public string Title { get; set; }
 
         public string Description { get; set; }
+
+        [Required]
+        public int InternshipStreamId { get; set; }
     }
 }

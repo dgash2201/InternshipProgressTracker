@@ -78,6 +78,7 @@ namespace InternshipProgressTracker.Controllers
         /// <param name="createDto">Data for creation</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Related internship stream was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
@@ -88,6 +89,10 @@ namespace InternshipProgressTracker.Controllers
                 var id = await _studyPlanService.Create(createDto);
 
                 return Ok(new { Success = true, Id = id });
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = true, Message = ex.Message });
             }
             catch
             {
