@@ -10,11 +10,11 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
     /// </summary>
     public interface IStudyPlanEntryService
     {
-        Task<IReadOnlyCollection<StudyPlanEntry>> Get();
-        Task<StudyPlanEntry> Get(int id);
-        Task<int> Create(CreateStudyPlanEntryDto createDto);
-        Task Update(int id, UpdateStudyPlanEntryDto updateDto);
-        Task SoftDelete(int id);
-        Task Delete(int id);
+        Task<IReadOnlyCollection<StudyPlanEntry>> GetAsync();
+        Task<StudyPlanEntry> GetAsync(int id);
+        Task<int> CreateAsync(CreateStudyPlanEntryDto createDto);
+        Task UpdateAsync(int id, UpdateStudyPlanEntryDto updateDto);
+        Task SoftDeleteAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

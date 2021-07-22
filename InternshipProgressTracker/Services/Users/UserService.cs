@@ -103,7 +103,7 @@ namespace InternshipProgressTracker.Services.Users
                 await _userManager.UpdateAsync(user);
             }
 
-            await _studentService.Create(user);
+            await _studentService.CreateAsync(user);
             await _userManager.AddToRoleAsync(user, "Student");
 
             return user.Id;

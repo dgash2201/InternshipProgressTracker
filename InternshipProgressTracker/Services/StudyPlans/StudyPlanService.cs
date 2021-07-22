@@ -29,7 +29,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets all study plans
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<StudyPlan>> Get()
+        public async Task<IReadOnlyCollection<StudyPlan>> GetAsync()
         {
             var studyPlans = await _dbContext
                 .StudyPlans
@@ -43,7 +43,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets study plan by id
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task<StudyPlan> Get(int id)
+        public async Task<StudyPlan> GetAsync(int id)
         {
             var studyPlan = await _dbContext
                 .StudyPlans
@@ -62,7 +62,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Creates study plan
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> Create(CreateStudyPlanDto createDto)
+        public async Task<int> CreateAsync(CreateStudyPlanDto createDto)
         {
             var stream = await _dbContext
                 .InternshipStreams
@@ -88,7 +88,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="updateDto">New data</param>
-        public async Task Update(int id, UpdateStudyPlanDto updateDto)
+        public async Task UpdateAsync(int id, UpdateStudyPlanDto updateDto)
         {
             var studyPlan = await _dbContext.StudyPlans.FindAsync(id);
 
@@ -106,7 +106,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Marks study plan as deleted
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task SoftDelete(int id)
+        public async Task SoftDeleteAsync(int id)
         {
             var stydyPlan = await _dbContext.StudyPlans.FindAsync(id);
 
@@ -124,7 +124,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Deletes study plan
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var studyPlan = _dbContext.FindTracked<StudyPlan>(id);
 

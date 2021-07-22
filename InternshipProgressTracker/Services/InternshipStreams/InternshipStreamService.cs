@@ -31,7 +31,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <summary>
         /// Binds student with stream
         /// </summary>
-        public async Task AddStudent(int streamId, int studentId)
+        public async Task AddStudentAsync(int streamId, int studentId)
         {
             var stream = await _dbContext
                 .InternshipStreams
@@ -42,13 +42,13 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 throw new NotFoundException("Internship stream with this id was not found");
             }
 
-            await _studentService.SetStream(studentId, stream);
+            await _studentService.SetStreamAsync(studentId, stream);
         }
 
         /// <summary>
         /// Gets list of internship streams
         /// </summary>
-        public async Task<IReadOnlyCollection<InternshipStream>> Get()
+        public async Task<IReadOnlyCollection<InternshipStream>> GetAsync()
         {
             var internshipStreams = await _dbContext
                 .InternshipStreams
@@ -65,7 +65,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Gets internship stream by id
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task<InternshipStream> Get(int id)
+        public async Task<InternshipStream> GetAsync(int id)
         {
             var internshipStream =  await _dbContext
                 .InternshipStreams
@@ -85,7 +85,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Creates internship stream from createDto
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> Create(CreateInternshipStreamDto createDto)
+        public async Task<int> CreateAsync(CreateInternshipStreamDto createDto)
         {
             var internshipStream = _mapper.Map<CreateInternshipStreamDto, InternshipStream>(createDto);
             _dbContext.InternshipStreams.Add(internshipStream);
@@ -99,7 +99,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// </summary>
         /// <param name="id">Internship stream id</param>
         /// <param name="updateDto">New data</param>
-        public async Task Update(int id, UpdateInternshipStreamDto updateDto)
+        public async Task UpdateAsync(int id, UpdateInternshipStreamDto updateDto)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
 
@@ -117,7 +117,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Marks the entity as deleted
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task SoftDelete(int id)
+        public async Task SoftDeleteAsync(int id)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
 
@@ -135,7 +135,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Deletes internship stream by id
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var internshipStream = _dbContext.FindTracked<InternshipStream>(id);
 

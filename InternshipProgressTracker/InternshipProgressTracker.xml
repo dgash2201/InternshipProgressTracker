@@ -320,42 +320,42 @@
             Logic service which works with internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudent(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32)">
             <summary>
             Binds student with stream
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync">
             <summary>
             Gets list of internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Int32)">
             <summary>
             Gets internship stream by id
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
             <summary>
             Creates internship stream from createDto
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
             <summary>
             Updates data in internship stream
             </summary>
             <param name="id">Internship stream id</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDeleteAsync(System.Int32)">
             <summary>
             Marks the entity as deleted
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.DeleteAsync(System.Int32)">
             <summary>
             Deletes internship stream by id
             </summary>
@@ -371,24 +371,24 @@
             Logic service which works with students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync">
             <summary>
             Gets the list of students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Int32)">
             <summary>
             Gets a student by id
             </summary>
             <param name="id">Student id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Create(InternshipProgressTracker.Entities.User)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.CreateAsync(InternshipProgressTracker.Entities.User)">
             <summary>
             Creates a student based on the user
             </summary>
             <param name="user">User entity</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStream(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStreamAsync(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
             <summary>
             Binds student with internship stream
             </summary>
@@ -403,38 +403,38 @@
             Service for working with study plan entries
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.Get">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync">
             <summary>
             Gets all study plan entries
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync(System.Int32)">
             <summary>
             Gets study plan entry by id
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.Create(InternshipProgressTracker.Models.StudyPlanEntries.CreateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.CreateStudyPlanEntryDto)">
             <summary>
             Creates study plan entry
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.UpdateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.UpdateStudyPlanEntryDto)">
             <summary>
             Updates study plan entry data
             </summary>
             <param name="id">Id of study plan entry</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDeleteAsync(System.Int32)">
             <summary>
             Marks study plan entry as deleted
             </summary>
             <param name="id">Id of study plan entry</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.DeleteAsync(System.Int32)">
             <summary>
             Deletes study plan entry
             </summary>
@@ -450,38 +450,38 @@
             Service for working with study plans
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Get">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync">
             <summary>
             Gets all study plans
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync(System.Int32)">
             <summary>
             Gets study plan by id
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Create(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
             <summary>
             Creates study plan
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
             <summary>
             Updates study plan data
             </summary>
             <param name="id">Id of study plan</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDeleteAsync(System.Int32)">
             <summary>
             Marks study plan as deleted
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.DeleteAsync(System.Int32)">
             <summary>
             Deletes study plan
             </summary>

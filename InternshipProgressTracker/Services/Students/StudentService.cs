@@ -22,7 +22,7 @@ namespace InternshipProgressTracker.Services.Students
         /// <summary>
         /// Gets the list of students
         /// </summary>
-        public async Task<IReadOnlyCollection<Student>> Get()
+        public async Task<IReadOnlyCollection<Student>> GetAsync()
         {
             var students = await _dbContext
                 .Students
@@ -35,7 +35,7 @@ namespace InternshipProgressTracker.Services.Students
         /// Gets a student by id
         /// </summary>
         /// <param name="id">Student id</param>
-        public async Task<Student> Get(int id)
+        public async Task<Student> GetAsync(int id)
         {
             var student =  await _dbContext
                 .Students
@@ -53,7 +53,7 @@ namespace InternshipProgressTracker.Services.Students
         /// Creates a student based on the user
         /// </summary>
         /// <param name="user">User entity</param>
-        public async Task Create(User user)
+        public async Task CreateAsync(User user)
         {
             var student = new Student
             {
@@ -67,9 +67,9 @@ namespace InternshipProgressTracker.Services.Students
         /// <summary>
         /// Binds student with internship stream
         /// </summary>
-        public async Task SetStream(int studentId, InternshipStream stream)
+        public async Task SetStreamAsync(int studentId, InternshipStream stream)
         {
-            var student = await Get(studentId);
+            var student = await GetAsync(studentId);
             student.InternshipStream = stream;
             _dbContext.Entry(student).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();

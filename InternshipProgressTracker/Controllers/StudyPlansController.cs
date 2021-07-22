@@ -34,7 +34,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var studyPlans = await _studyPlanService.Get();
+                var studyPlans = await _studyPlanService.GetAsync();
 
                 return Ok(new { Success = true, StudyPlans = studyPlans });
             }
@@ -58,7 +58,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var studyPlan = await _studyPlanService.Get(id);
+                var studyPlan = await _studyPlanService.GetAsync(id);
 
                 return Ok(new { Success = true, StudyPlan = studyPlan });
             }
@@ -86,7 +86,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _studyPlanService.Create(createDto);
+                var id = await _studyPlanService.CreateAsync(createDto);
 
                 return Ok(new { Success = true, Id = id });
             }
@@ -115,7 +115,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanService.Update(id, updateDto);
+                await _studyPlanService.UpdateAsync(id, updateDto);
 
                 return Ok(new { Success = true });
             }
@@ -143,7 +143,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanService.SoftDelete(id);
+                await _studyPlanService.SoftDeleteAsync(id);
 
                 return Ok(new { Success = true });
             }

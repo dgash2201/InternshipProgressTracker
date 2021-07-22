@@ -9,9 +9,9 @@ namespace InternshipProgressTracker.Services.Students
     /// </summary>
     public interface IStudentService
     {
-        Task<Student> Get(int id);
-        Task<IReadOnlyCollection<Student>> Get();
-        Task Create(User user);
-        Task SetStream(int StudentId, InternshipStream stream);
+        Task<Student> GetAsync(int id);
+        Task<IReadOnlyCollection<Student>> GetAsync();
+        Task CreateAsync(User user);
+        Task SetStreamAsync(int StudentId, InternshipStream stream);
     }
 }
