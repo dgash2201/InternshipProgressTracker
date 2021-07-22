@@ -61,7 +61,17 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// <param name="createDto">Data for creation</param>
         public async Task<int> Create(CreateStudyPlanEntryDto createDto)
         {
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .FindAsync(createDto.StudyPlanId);
+
+            if (studyPlan == null)
+            {
+                throw new NotFoundException("Related study plan was not found");
+            }
+
             var studyPlanEntry = _mapper.Map<CreateStudyPlanEntryDto, StudyPlanEntry>(createDto);
+            studyPlanEntry.StudyPlan = studyPlan;
 
             _dbContext.StudyPlanEntries.Add(studyPlanEntry);
             await _dbContext.SaveChangesAsync();

@@ -13,11 +13,11 @@ namespace InternshipProgressTracker.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]")]
     [ApiController]
-    public class StudyPlansEntriesController : ControllerBase
+    public class StudyPlanEntriesController : ControllerBase
     {
         private readonly IStudyPlanEntryService _studyPlanEntryService;
 
-        public StudyPlansEntriesController(IStudyPlanEntryService studyPlanEntryService)
+        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService)
         {
             _studyPlanEntryService = studyPlanEntryService;
         }
@@ -78,6 +78,7 @@ namespace InternshipProgressTracker.Controllers
         /// <param name="createDto">Data for creation</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Related study plan was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
@@ -88,6 +89,10 @@ namespace InternshipProgressTracker.Controllers
                 var id = await _studyPlanEntryService.Create(createDto);
 
                 return Ok(new { Success = true, Id = id });
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
             }
             catch
             {

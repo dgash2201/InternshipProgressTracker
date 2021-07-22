@@ -33,6 +33,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         {
             var studyPlans = await _dbContext
                 .StudyPlans
+                .Include(p => p.Entries)
                 .ToListAsync();
 
             return studyPlans.AsReadOnly();
@@ -44,7 +45,10 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// <param name="id">Id of study plan</param>
         public async Task<StudyPlan> Get(int id)
         {
-            var studyPlan = await _dbContext.StudyPlans.FindAsync(id);
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .Include(p => p.Entries)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (studyPlan == null)
             {
@@ -62,7 +66,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FirstOrDefaultAsync(s => s.Id == createDto.InternshipStreamId);
+                .FindAsync(createDto.InternshipStreamId);
 
             if (stream == null)
             {

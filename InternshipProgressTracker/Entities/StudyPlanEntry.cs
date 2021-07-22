@@ -17,6 +17,8 @@ namespace InternshipProgressTracker.Entities
         [Required]
         public int StudyPlanId { get; set; }
 
+        public StudyPlan StudyPlan { get; set; }
+
         [Required]
         public string Title { get; set; }
 

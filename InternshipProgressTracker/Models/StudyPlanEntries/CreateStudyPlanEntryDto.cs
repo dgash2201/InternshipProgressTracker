@@ -4,10 +4,6 @@ namespace InternshipProgressTracker.Models.StudyPlanEntries
 {
     public class CreateStudyPlanEntryDto
     {
-        public int Id { get; set; }
-
-        public int StudyPlanId { get; set; }
-
         [Required]
         public string Title { get; set; }
 
@@ -15,5 +11,8 @@ namespace InternshipProgressTracker.Models.StudyPlanEntries
 
         [Required]
         public string Duration { get; set; }
+        
+        [Required]
+        public int StudyPlanId { get; set; }
     }
 }

@@ -54,6 +54,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 .InternshipStreams
                 .Include(s => s.Students)
                 .Include(s => s.StudyPlans)
+                .ThenInclude(s => s.Entries)
                 .ToListAsync();
 
             return internshipStreams
