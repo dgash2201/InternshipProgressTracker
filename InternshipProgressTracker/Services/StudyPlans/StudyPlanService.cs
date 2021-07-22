@@ -30,21 +30,22 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets all study plans
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<StudyPlan>> GetAsync()
+        public async Task<IReadOnlyCollection<StudyPlanResponseDto>> GetAsync()
         {
-            var studyPlans = await _dbContext
+            var studyPlanDtos = await _dbContext
                 .StudyPlans
                 .Include(p => p.Entries)
+                .Select(p => _mapper.Map<StudyPlan, StudyPlanResponseDto>(p))
                 .ToListAsync();
 
-            return studyPlans.AsReadOnly();
+            return studyPlanDtos.AsReadOnly();
         }
 
         /// <summary>
         /// Gets study plan by id
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task<StudyPlan> GetAsync(int id)
+        public async Task<StudyPlanResponseDto> GetAsync(int id)
         {
             var studyPlan = await _dbContext
                 .StudyPlans
@@ -56,7 +57,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
                 throw new NotFoundException("Study plan with this id was not found");
             }
 
-            return studyPlan;
+            return _mapper.Map<StudyPlan, StudyPlanResponseDto>(studyPlan);
         }
 
         /// <summary>
