@@ -1,5 +1,6 @@
 ﻿using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.StudyPlans;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,8 +13,9 @@ namespace InternshipProgressTracker.Services.StudyPlans
     {
         Task<IReadOnlyCollection<StudyPlan>> GetAsync();
         Task<StudyPlan> GetAsync(int id);
-        Task<int> CreateAsync(CreateStudyPlanDto createDto);
-        Task UpdateAsync(int id, UpdateStudyPlanDto updateDto);
+        Task<int> CreateAsync(StudyPlanDto createDto);
+        Task UpdateAsync(int id, StudyPlanDto updateDto);
+        Task UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument);
         Task SoftDeleteAsync(int id);
         Task DeleteAsync(int id);
     }

@@ -2,7 +2,7 @@
 
 namespace InternshipProgressTracker.Models.StudyPlanEntries
 {
-    public class CreateStudyPlanEntryDto
+    public class StudyPlanEntryDto
     {
         [Required]
         public string Title { get; set; }

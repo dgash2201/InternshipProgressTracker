@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -82,7 +83,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateStudyPlanEntryDto createDto)
+        public async Task<IActionResult> Create(StudyPlanEntryDto createDto)
         {
             try
             {
@@ -111,7 +112,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateStudyPlanEntryDto updateDto)
+        public async Task<IActionResult> Update(int id, StudyPlanEntryDto updateDto)
         {
             try
             {
@@ -120,6 +121,35 @@ namespace InternshipProgressTracker.Controllers
                 return Ok(new { Success = true });
             }
             catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Patch study plan entry data
+        /// </summary>
+        /// <param name="id">Id of study plan entry </param>
+        /// <param name="patchDocument">JsonPatch operations</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Study plan entry or related study plan was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument)
+        {
+            try
+            {
+                await _studyPlanEntryService.UpdateAsync(id, patchDocument);
+
+                return Ok(new { Succes = true });
+            }
+            catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }

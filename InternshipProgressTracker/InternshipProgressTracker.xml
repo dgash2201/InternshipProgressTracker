@@ -89,7 +89,7 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Create(InternshipProgressTracker.Models.StudyPlanEntries.CreateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Create(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
             <summary>
             Create study plan entry
             </summary>
@@ -99,7 +99,7 @@
             <response code="404">Related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.UpdateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
             <summary>
             Update study plan entry data
             </summary>
@@ -108,6 +108,17 @@
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
             <response code="404">Study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+            <summary>
+            Patch study plan entry data
+            </summary>
+            <param name="id">Id of study plan entry </param>
+            <param name="patchDocument">JsonPatch operations</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan entry or related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Delete(System.Int32)">
@@ -143,7 +154,7 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
             <summary>
             Create study plan
             </summary>
@@ -153,7 +164,7 @@
             <response code="404">Related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
             <summary>
             Update study plan data
             </summary>
@@ -161,7 +172,18 @@
             <param name="updateDto">New data</param>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
-            <response code="404">Study plan was not found</response>
+            <response code="404">Study plan or related internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+            <summary>
+            Patch study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="patchDocument">JsonPatch operations</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan or related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32)">
@@ -290,14 +312,14 @@
             Exception that means that an entity was not found
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto">
+        <member name="T:InternshipProgressTracker.Mapper.MapperProfile">
             <summary>
-            Contains data for creating a study plan
+            Contains settings for AutoMapper
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto">
+        <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
             <summary>
-            Contains data for updating a study plan
+            Contains data for creating a study plan
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
@@ -415,18 +437,25 @@
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.CreateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
             <summary>
             Creates study plan entry
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.UpdateStudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
             <summary>
             Updates study plan entry data
             </summary>
             <param name="id">Id of study plan entry</param>
             <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+            <summary>
+            Patches study plan
+            </summary>
+            <param name="id">Id of study plan entry</param>
+            <param name="patchDocument">Json Patch operations</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDeleteAsync(System.Int32)">
             <summary>
@@ -462,18 +491,25 @@
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.CreateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
             <summary>
             Creates study plan
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.UpdateStudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
             <summary>
             Updates study plan data
             </summary>
             <param name="id">Id of study plan</param>
             <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+            <summary>
+            Patches study plan
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="patchDocument">Json Patch operations</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDeleteAsync(System.Int32)">
             <summary>

@@ -1,7 +1,9 @@
-﻿using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Services.StudyPlans;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -82,7 +84,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateStudyPlanDto createDto)
+        public async Task<IActionResult> Create(StudyPlanDto createDto)
         {
             try
             {
@@ -107,17 +109,46 @@ namespace InternshipProgressTracker.Controllers
         /// <param name="updateDto">New data</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Study plan was not found</response>
+        /// <response code="404">Study plan or related internship stream was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateStudyPlanDto updateDto)
+        public async Task<IActionResult> Update(int id, StudyPlanDto updateDto)
         {
             try
             {
                 await _studyPlanService.UpdateAsync(id, updateDto);
 
                 return Ok(new { Success = true });
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Patch study plan data
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        /// <param name="patchDocument">JsonPatch operations</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Study plan or related internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanDto> patchDocument)
+        {
+            try
+            {
+                await _studyPlanService.UpdateAsync(id, patchDocument);
+
+                return Ok(new { Succes = true });
             }
             catch(NotFoundException ex)
             {

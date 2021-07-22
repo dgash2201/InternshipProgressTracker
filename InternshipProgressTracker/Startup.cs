@@ -1,5 +1,9 @@
 using System;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,17 +14,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.PlatformAbstractions;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Database;
-using Microsoft.Extensions.PlatformAbstractions;
-using System.IO;
-using System.Reflection;
 using InternshipProgressTracker.Settings;
-using System.Threading.Tasks;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlans;
 
@@ -89,7 +93,10 @@ namespace InternshipProgressTracker
             services.AddAuthorization();
 
             services
-                .AddControllers()
+                .AddControllers(options => 
+                {
+                    options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+                })
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -149,6 +156,23 @@ namespace InternshipProgressTracker
             });
 
             SeedDatabase(serviceProvider);
+        }
+
+        private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
+        {
+            var builder = new ServiceCollection()
+                .AddLogging()
+                .AddMvc()
+                .AddNewtonsoftJson()
+                .Services
+                .BuildServiceProvider();
+
+            return builder
+                .GetRequiredService<IOptions<MvcOptions>>()
+                .Value
+                .InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>()
+                .First();
         }
 
         /// <summary>

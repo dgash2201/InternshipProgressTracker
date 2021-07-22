@@ -4,6 +4,7 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Models.StudyPlans;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// Creates study plan entry
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(CreateStudyPlanEntryDto createDto)
+        public async Task<int> CreateAsync(StudyPlanEntryDto createDto)
         {
             var studyPlan = await _dbContext
                 .StudyPlans
@@ -70,7 +71,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
                 throw new NotFoundException("Related study plan was not found");
             }
 
-            var studyPlanEntry = _mapper.Map<CreateStudyPlanEntryDto, StudyPlanEntry>(createDto);
+            var studyPlanEntry = _mapper.Map<StudyPlanEntryDto, StudyPlanEntry>(createDto);
             studyPlanEntry.StudyPlan = studyPlan;
 
             _dbContext.StudyPlanEntries.Add(studyPlanEntry);
@@ -84,7 +85,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// </summary>
         /// <param name="id">Id of study plan entry</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, UpdateStudyPlanEntryDto updateDto)
+        public async Task UpdateAsync(int id, StudyPlanEntryDto updateDto)
         {
             var studyPlanEntry = await _dbContext.StudyPlanEntries.FindAsync(id);
 
@@ -93,7 +94,51 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
                 throw new NotFoundException("Study plan entry with this id was not found");
             }
 
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .FindAsync(updateDto.StudyPlanId);
+
+            if (studyPlan == null)
+            {
+                throw new NotFoundException("Related study plan was not found");
+            }
+
             _mapper.Map(updateDto, studyPlanEntry);
+            studyPlanEntry.StudyPlan = studyPlan;
+
+            _dbContext.Entry(studyPlanEntry).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Patches study plan
+        /// </summary>
+        /// <param name="id">Id of study plan entry</param>
+        /// <param name="patchDocument">Json Patch operations</param>
+        public async Task UpdateAsync(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument)
+        {
+            var studyPlanEntry = await _dbContext.StudyPlanEntries.FindAsync(id);
+
+            if (studyPlanEntry == null)
+            {
+                throw new NotFoundException("Study plan entry with this id was not found");
+            }
+
+            var studyPlanEntryDto = _mapper.Map<StudyPlanEntryDto>(studyPlanEntry);
+            patchDocument.ApplyTo(studyPlanEntryDto);
+
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .FindAsync(studyPlanEntryDto.StudyPlanId);
+
+            if (studyPlan == null)
+            {
+                throw new NotFoundException("Related study plan was not found");
+            }
+
+            _mapper.Map(studyPlanEntryDto, studyPlanEntry);
+            studyPlanEntry.StudyPlan = studyPlan;
+
             _dbContext.Entry(studyPlanEntry).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
