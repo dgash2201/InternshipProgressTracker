@@ -34,16 +34,9 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                var studyPlans = await _studyPlanService.GetAsync();
+            var studyPlans = await _studyPlanService.GetAsync();
 
-                return Ok(new { Success = true, StudyPlans = studyPlans });
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            return Ok(new { Success = true, StudyPlans = studyPlans });
         }
 
         /// <summary>

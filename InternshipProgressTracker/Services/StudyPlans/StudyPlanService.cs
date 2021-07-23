@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.StudyPlans;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +35,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
             var studyPlanDtos = await _dbContext
                 .StudyPlans
                 .Include(p => p.Entries)
-                .Select(p => _mapper.Map<StudyPlan, StudyPlanResponseDto>(p))
+                .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return studyPlanDtos.AsReadOnly();
@@ -47,17 +47,19 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// <param name="id">Id of study plan</param>
         public async Task<StudyPlanResponseDto> GetAsync(int id)
         {
-            var studyPlan = await _dbContext
+            var studyPlanDto = await _dbContext
                 .StudyPlans
                 .Include(p => p.Entries)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (studyPlan == null)
+            if (studyPlanDto == null)
             {
                 throw new NotFoundException("Study plan with this id was not found");
             }
 
-            return _mapper.Map<StudyPlan, StudyPlanResponseDto>(studyPlan);
+            return studyPlanDto;
         }
 
         /// <summary>

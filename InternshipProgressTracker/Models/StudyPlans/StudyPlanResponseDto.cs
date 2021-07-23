@@ -1,4 +1,4 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using InternshipProgressTracker.Models.StudyPlanEntries;
 using System.Collections.Generic;
 
 namespace InternshipProgressTracker.Models.StudyPlans
@@ -13,6 +13,6 @@ namespace InternshipProgressTracker.Models.StudyPlans
 
         public int InternshipStreamId { get; set; }
 
-        public IReadOnlyCollection<StudyPlanEntry> Entries { get; set; }
+        public IReadOnlyCollection<StudyPlanEntryResponseDto> Entries { get; set; }
     }
 }

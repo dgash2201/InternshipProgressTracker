@@ -20,10 +20,10 @@ namespace InternshipProgressTracker.Mapper
             CreateMap<StudyPlanEntryDto, StudyPlanEntry>().ReverseMap();
             CreateMap<StudyPlan, StudyPlanResponseDto>()
                 .ForMember(dest => dest.Entries, 
-                    options => options.MapFrom(source => source.Entries.ToList().AsReadOnly()));
+                    options => options.MapFrom(source => source.Entries.ToList()));
             CreateMap<StudyPlanEntry, StudyPlanEntryResponseDto>()
                 .ForMember(dest => dest.StudentProgresses, 
-                    options => options.MapFrom(source => source.StudentsProgresses.ToList().AsReadOnly()));
+                    options => options.MapFrom(source => source.StudentsProgresses.ToList()));
         }
     }
 }
