@@ -10,12 +10,12 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     /// </summary>
     public interface IInternshipStreamService
     {
-        Task AddStudent(int streamId, int studentId);
-        Task<IReadOnlyCollection<InternshipStream>> Get();
-        Task<InternshipStream> Get(int id);
-        Task<int> Create(CreateInternshipStreamDto createDto);
-        Task Update(int id, UpdateInternshipStreamDto updateDto);
-        Task SoftDelete(int id);
-        Task Delete(int id);
+        Task AddStudentAsync(int streamId, int studentId);
+        Task<IReadOnlyCollection<InternshipStream>> GetAsync();
+        Task<InternshipStream> GetAsync(int id);
+        Task<int> CreateAsync(CreateInternshipStreamDto createDto);
+        Task UpdateAsync(int id, UpdateInternshipStreamDto updateDto);
+        Task SoftDeleteAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

@@ -9,7 +9,7 @@ using InternshipProgressTracker.Exceptions;
 namespace InternshipProgressTracker.Controllers
 {
     /// <summary>
-    /// Controller for authentication and working with User entities
+    /// Represents Web API of Users
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -23,7 +23,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Registers new user
+        /// Register new user
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
         /// <response code="409">User already exists</response>
@@ -49,7 +49,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Checks user authenfication data
+        /// Authentificate user
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
         /// <response code="400">Email or password is incorrect</response>
@@ -80,7 +80,7 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Cretes new jwt
+        /// Create new JWT
         /// </summary>
         /// <response code="400">Refresh token is incorrect</response>
         /// <response code="404">User was not found</response>

@@ -70,7 +70,6 @@ namespace InternshipProgressTracker.Database
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {
-                //other automated configurations left out
                 if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
                 {
                     entityType.AddSoftDeleteQueryFilter();

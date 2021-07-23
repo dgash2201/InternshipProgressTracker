@@ -1,5 +1,9 @@
 using System;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,16 +14,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.PlatformAbstractions;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Database;
-using Microsoft.Extensions.PlatformAbstractions;
-using System.IO;
-using System.Reflection;
 using InternshipProgressTracker.Settings;
+using InternshipProgressTracker.Services.StudyPlanEntries;
+using InternshipProgressTracker.Services.StudyPlans;
 
 namespace InternshipProgressTracker
 {
@@ -55,6 +62,12 @@ namespace InternshipProgressTracker
                 .AddScoped<IStudentService, StudentService>();
 
             services
+                .AddScoped<IStudyPlanService, StudyPlanService>();
+
+            services
+                .AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
+
+            services
                 .AddIdentity<User, IdentityRole<int>>(options =>
                 {
                     options.Password.RequireNonAlphanumeric = false;
@@ -80,7 +93,10 @@ namespace InternshipProgressTracker
             services.AddAuthorization();
 
             services
-                .AddControllers()
+                .AddControllers(options => 
+                {
+                    options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+                })
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -118,7 +134,7 @@ namespace InternshipProgressTracker
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -139,8 +155,24 @@ namespace InternshipProgressTracker
                 endpoints.MapControllers();
             });
 
-            CreateRoles(provider);
-            CreateAdmin(provider);
+            SeedDatabase(serviceProvider);
+        }
+
+        private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
+        {
+            var builder = new ServiceCollection()
+                .AddLogging()
+                .AddMvc()
+                .AddNewtonsoftJson()
+                .Services
+                .BuildServiceProvider();
+
+            return builder
+                .GetRequiredService<IOptions<MvcOptions>>()
+                .Value
+                .InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>()
+                .First();
         }
 
         /// <summary>
@@ -153,22 +185,27 @@ namespace InternshipProgressTracker
             return Path.Combine(basePath, fileName);
         }
 
+        private void SeedDatabase(IServiceProvider serviceProvider)
+        {
+            CreateRoles(serviceProvider).Wait();
+            CreateAdmin(serviceProvider).Wait();
+        }
+
         /// <summary>
         /// Creates identity roles
         /// </summary>
-        private void CreateRoles(IServiceProvider serviceProvider)
+        private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
             var roleNames = new [] { "Admin", "Lead", "Mentor", "Student" };
 
             foreach (var roleName in roleNames)
             {
-                var roleExists = roleManager.RoleExistsAsync(roleName);
-                roleExists.Wait();
+                var roleExists = await roleManager.RoleExistsAsync(roleName);
 
-                if (!roleExists.Result)
+                if (!roleExists)
                 {
-                    roleManager.CreateAsync(new IdentityRole<int>(roleName)).Wait();
+                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
                 }
             }
         }
@@ -176,15 +213,13 @@ namespace InternshipProgressTracker
         /// <summary>
         /// Creates default admin
         /// </summary>
-        private void CreateAdmin(IServiceProvider serviceProvider)
+        private async Task CreateAdmin(IServiceProvider serviceProvider)
         {
             var adminEmail = Configuration["Admin:Email"];
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var findUser = userManager.FindByEmailAsync(adminEmail);
+            var user = await userManager.FindByEmailAsync(adminEmail);
 
-            findUser.Wait();
-
-            if (findUser.Result == null)
+            if (user == null)
             {
                 var admin = new User
                 {
@@ -194,10 +229,9 @@ namespace InternshipProgressTracker
                     LastName = Configuration["Admin:LastName"],
                 };
 
-                var createAdmin = userManager.CreateAsync(admin, _secrets.AdminPassword);
-                createAdmin.Wait();
+                var creationResult = await userManager.CreateAsync(admin, _secrets.AdminPassword);
 
-                if (createAdmin.Result.Succeeded)
+                if (creationResult.Succeeded)
                 {
                     userManager.AddToRoleAsync(admin, "Admin").Wait();
                 }

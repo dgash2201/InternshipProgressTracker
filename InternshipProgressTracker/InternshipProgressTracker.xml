@@ -6,12 +6,12 @@
     <members>
         <member name="T:InternshipProgressTracker.Controllers.InternshipStreamsController">
             <summary>
-            Controller for working with InternshipStream entities
+            Represents Web API of Internship Streams
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
             <summary>
-            Binds student with internship stream
+            Bind student with internship stream
             </summary>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
@@ -28,7 +28,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Int32)">
             <summary>
-            Gets an internship stream by id
+            Get an internship stream by id
             </summary>
             <param name="id">Id of the internship stream</param>
             <response code="401">Authorization token is invalid</response>
@@ -38,7 +38,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
             <summary>
-            Creates internship stream
+            Create internship stream
             </summary>
             <param name="createDto">Contains data for creation</param>
             <response code="401">Authorization token is invalid</response>
@@ -47,7 +47,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
             <summary>
-            Updates internship stream data
+            Update internship stream data
             </summary>
             <param name="id">Id of the internship stream</param>
             <param name="updateDto">New data</param>
@@ -58,7 +58,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32)">
             <summary>
-            Deletes internship stream
+            Mark internship stream as deleted
             </summary>
             <param name="id">Id of the internship stream</param>
             <response code="401">Authorization token is invalid</response>
@@ -66,14 +66,144 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="T:InternshipProgressTracker.Controllers.StudyPlanEntriesController">
+            <summary>
+            Represents Web API of Study Plan Entries
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get">
+            <summary>
+            Get list of study plan entries
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get(System.Int32)">
+            <summary>
+            Get study plan entry by id
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Create(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+            <summary>
+            Create study plan entry
+            </summary>
+            <param name="createDto">Data for creation</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Related study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+            <summary>
+            Update study plan entry data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="updateDto">New data</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+            <summary>
+            Patch study plan entry data
+            </summary>
+            <param name="id">Id of study plan entry </param>
+            <param name="patchDocument">JsonPatch operations</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan entry or related study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Delete(System.Int32)">
+            <summary>
+            Mark study plan entry as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="T:InternshipProgressTracker.Controllers.StudyPlansController">
+            <summary>
+            Represents Web API of Study Plans
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get">
+            <summary>
+            Get list of study plans
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Int32)">
+            <summary>
+            Get study plan by id
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+            <summary>
+            Create study plan
+            </summary>
+            <param name="createDto">Data for creation</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Related internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+            <summary>
+            Update study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="updateDto">New data</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan or related internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+            <summary>
+            Patch study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="patchDocument">JsonPatch operations</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan or related internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32)">
+            <summary>
+            Mark study plan as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.UserController">
             <summary>
-            Controller for authentication and working with User entities
+            Represents Web API of Users
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
-            Registers new user
+            Register new user
             </summary>
             <param name="registerDto">Contains signup form data</param>
             <response code="409">User already exists</response>
@@ -81,7 +211,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
-            Checks user authenfication data
+            Authentificate user
             </summary>
             <param name="loginDto">Contains login form data</param>
             <response code="400">Email or password is incorrect</response>
@@ -90,7 +220,7 @@
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UserController.RefreshJwt(System.String,System.Int32)">
             <summary>
-            Cretes new jwt
+            Create new JWT
             </summary>
             <response code="400">Refresh token is incorrect</response>
             <response code="404">User was not found</response>
@@ -106,6 +236,21 @@
             Method for configuring relationships between entities by Fluent API
             </summary>
             <param name="builder">Builder to construct a model for a context</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Database.SoftDeleteQueryExtension">
+            <summary>
+            Contains extension method, which adds a filter for entities marked as deleted
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Database.SoftDeleteQueryExtension.AddSoftDeleteQueryFilter(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType)">
+            <summary>
+            Adds soft deleted entities filter for this entity type
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Database.SoftDeleteQueryExtension.GetSoftDeleteFilter``1">
+            <summary>
+            Filters entities marked as deleted
+            </summary>
         </member>
         <member name="T:InternshipProgressTracker.Entities.InternshipStreamStatus">
             <summary>
@@ -167,6 +312,16 @@
             Exception that means that an entity was not found
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Mapper.MapperProfile">
+            <summary>
+            Contains settings for AutoMapper
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
+            <summary>
+            Contains data for creating a study plan
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
             <summary>
             Represents data from login form
@@ -187,42 +342,42 @@
             Logic service which works with internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudent(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32)">
             <summary>
             Binds student with stream
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync">
             <summary>
             Gets list of internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Int32)">
             <summary>
             Gets internship stream by id
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
             <summary>
             Creates internship stream from createDto
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
             <summary>
             Updates data in internship stream
             </summary>
             <param name="id">Internship stream id</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDeleteAsync(System.Int32)">
             <summary>
             Marks the entity as deleted
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.DeleteAsync(System.Int32)">
             <summary>
             Deletes internship stream by id
             </summary>
@@ -238,27 +393,135 @@
             Logic service which works with students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync">
             <summary>
             Gets the list of students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Int32)">
             <summary>
             Gets a student by id
             </summary>
             <param name="id">Student id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.Create(InternshipProgressTracker.Entities.User)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.CreateAsync(InternshipProgressTracker.Entities.User)">
             <summary>
             Creates a student based on the user
             </summary>
             <param name="user">User entity</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStream(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStreamAsync(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
             <summary>
             Binds student with internship stream
             </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlanEntries.IStudyPlanEntryService">
+            <summary>
+            Interface of study plan entry service
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService">
+            <summary>
+            Service for working with study plan entries
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync">
+            <summary>
+            Gets all study plan entries
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync(System.Int32)">
+            <summary>
+            Gets study plan entry by id
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+            <summary>
+            Creates study plan entry
+            </summary>
+            <param name="createDto">Data for creation</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+            <summary>
+            Updates study plan entry data
+            </summary>
+            <param name="id">Id of study plan entry</param>
+            <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+            <summary>
+            Patches study plan
+            </summary>
+            <param name="id">Id of study plan entry</param>
+            <param name="patchDocument">Json Patch operations</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDeleteAsync(System.Int32)">
+            <summary>
+            Marks study plan entry as deleted
+            </summary>
+            <param name="id">Id of study plan entry</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.DeleteAsync(System.Int32)">
+            <summary>
+            Deletes study plan entry
+            </summary>
+            <param name="id">Id of study plan entry</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlans.IStudyPlanService">
+            <summary>
+            Interface of study plan service
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.StudyPlans.StudyPlanService">
+            <summary>
+            Service for working with study plans
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync">
+            <summary>
+            Gets all study plans
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync(System.Int32)">
+            <summary>
+            Gets study plan by id
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+            <summary>
+            Creates study plan
+            </summary>
+            <param name="createDto">Data for creation</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+            <summary>
+            Updates study plan data
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+            <summary>
+            Patches study plan
+            </summary>
+            <param name="id">Id of study plan</param>
+            <param name="patchDocument">Json Patch operations</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDeleteAsync(System.Int32)">
+            <summary>
+            Marks study plan as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.DeleteAsync(System.Int32)">
+            <summary>
+            Deletes study plan
+            </summary>
+            <param name="id">Id of study plan</param>
         </member>
         <member name="T:InternshipProgressTracker.Services.Users.IUserService">
             <summary>
@@ -322,6 +585,18 @@
             <summary>
             Generates refresh token
             </summary>
+        </member>
+        <member name="T:Microsoft.EntityFrameworkCore.DbContextExtensions">
+            <summary>
+            Extensions for the database context
+            </summary>
+        </member>
+        <member name="M:Microsoft.EntityFrameworkCore.DbContextExtensions.FindTracked``1(Microsoft.EntityFrameworkCore.DbContext,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="context">Database context</param>
+            <param name="keyValues">Keys for search</param>
         </member>
     </members>
 </doc>

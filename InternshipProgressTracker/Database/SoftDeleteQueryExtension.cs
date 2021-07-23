@@ -7,8 +7,14 @@ using System.Reflection;
 
 namespace InternshipProgressTracker.Database
 {
+    /// <summary>
+    /// Contains extension method, which adds a filter for entities marked as deleted
+    /// </summary>
     public static class SoftDeleteQueryExtension
     {
+        /// <summary>
+        /// Adds soft deleted entities filter for this entity type
+        /// </summary>
         public static void AddSoftDeleteQueryFilter(this IMutableEntityType entityData)
         {
             var methodToCall = typeof(SoftDeleteQueryExtension)
@@ -22,6 +28,9 @@ namespace InternshipProgressTracker.Database
                  FindProperty(nameof(ISoftDeletable.IsDeleted)));
         }
 
+        /// <summary>
+        /// Filters entities marked as deleted
+        /// </summary>
         private static LambdaExpression GetSoftDeleteFilter<TEntity>()
             where TEntity : class, ISoftDeletable
         {

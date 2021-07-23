@@ -1,58 +1,30 @@
 ﻿using InternshipProgressTracker.Exceptions;
-using InternshipProgressTracker.Models.InternshipStreams;
-using InternshipProgressTracker.Services.InternshipStreams;
+using InternshipProgressTracker.Models.StudyPlanEntries;
+using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
     /// <summary>
-    /// Represents Web API of Internship Streams
+    /// Represents Web API of Study Plan Entries
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]")]
     [ApiController]
-    public class InternshipStreamsController : Controller
+    public class StudyPlanEntriesController : ControllerBase
     {
-        private readonly IInternshipStreamService _internshipStreamService;
+        private readonly IStudyPlanEntryService _studyPlanEntryService;
 
-        public InternshipStreamsController(IInternshipStreamService internshipStreamService)
+        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService)
         {
-            _internshipStreamService = internshipStreamService;
+            _studyPlanEntryService = studyPlanEntryService;
         }
 
         /// <summary>
-        /// Bind student with internship stream
-        /// </summary>
-        /// <response code="401">Authorization token is invalid</response>
-        /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Internship stream or student was not found</response>
-        /// <response code="500">Internal server error</response>
-        [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPost("add-student")]
-        public async Task<IActionResult> AddStudent(int streamId, int studentId)
-        {
-            try
-            {
-                await _internshipStreamService.AddStudentAsync(streamId, studentId);
-
-                return Ok(new { Success = true });
-            }
-            catch(NotFoundException ex)
-            {
-                return NotFound(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
-
-        /// <summary>
-        /// Get list of internship streams
+        /// Get list of study plan entries
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
@@ -63,9 +35,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var internshipStreams = await _internshipStreamService.GetAsync();
+                var studyPlanEntries = await _studyPlanEntryService.GetAsync();
 
-                return Ok(internshipStreams);
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
             }
             catch
             {
@@ -74,12 +46,12 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Get an internship stream by id
+        /// Get study plan entry by id
         /// </summary>
-        /// <param name="id">Id of the internship stream</param>
+        /// <param name="id">Id of study plan</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Internship stream was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
@@ -87,9 +59,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var internshipStream = await _internshipStreamService.GetAsync(id);
+                var studyPlanEntry = await _studyPlanEntryService.GetAsync(id);
 
-                return Ok(internshipStream);
+                return Ok(new { Success = true, StudyPlanEntry = studyPlanEntry });
             }
             catch(NotFoundException ex)
             {
@@ -102,21 +74,26 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Create internship stream
+        /// Create study plan entry
         /// </summary>
-        /// <param name="createDto">Contains data for creation</param>
+        /// <param name="createDto">Data for creation</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Related study plan was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateInternshipStreamDto createDto)
+        public async Task<IActionResult> Create(StudyPlanEntryDto createDto)
         {
             try
             {
-                var id = await _internshipStreamService.CreateAsync(createDto);
+                var id = await _studyPlanEntryService.CreateAsync(createDto);
 
                 return Ok(new { Success = true, Id = id });
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
             }
             catch
             {
@@ -125,23 +102,52 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Update internship stream data
+        /// Update study plan entry data
         /// </summary>
-        /// <param name="id">Id of the internship stream</param>
+        /// <param name="id">Id of study plan</param>
         /// <param name="updateDto">New data</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Internship stream was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateInternshipStreamDto updateDto)
+        public async Task<IActionResult> Update(int id, StudyPlanEntryDto updateDto)
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(id, updateDto);
+                await _studyPlanEntryService.UpdateAsync(id, updateDto);
 
                 return Ok(new { Success = true });
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Patch study plan entry data
+        /// </summary>
+        /// <param name="id">Id of study plan entry </param>
+        /// <param name="patchDocument">JsonPatch operations</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Study plan entry or related study plan was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument)
+        {
+            try
+            {
+                await _studyPlanEntryService.UpdateAsync(id, patchDocument);
+
+                return Ok(new { Succes = true });
             }
             catch (NotFoundException ex)
             {
@@ -154,12 +160,12 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
-        /// Mark internship stream as deleted
+        /// Mark study plan entry as deleted
         /// </summary>
-        /// <param name="id">Id of the internship stream</param>
+        /// <param name="id">Id of study plan</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
-        /// <response code="404">Internship stream was not found</response>
+        /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpDelete("{id}")]
@@ -167,11 +173,11 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.SoftDeleteAsync(id);
+                await _studyPlanEntryService.SoftDeleteAsync(id);
 
                 return Ok(new { Success = true });
-            } 
-            catch (NotFoundException ex)
+            }
+            catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
