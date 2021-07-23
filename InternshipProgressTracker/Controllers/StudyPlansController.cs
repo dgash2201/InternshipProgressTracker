@@ -61,10 +61,6 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -88,10 +84,6 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = true, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
 
@@ -118,10 +110,6 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -147,10 +135,6 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -174,10 +158,6 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
     }
