@@ -49,8 +49,8 @@ namespace InternshipProgressTracker.Services.StudyPlans
         {
             var studyPlanDto = await _dbContext
                 .StudyPlans
-                .Include(p => p.Entries)
                 .Where(p => p.Id == id)
+                .Include(p => p.Entries)
                 .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 

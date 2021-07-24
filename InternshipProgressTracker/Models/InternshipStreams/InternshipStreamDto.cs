@@ -3,7 +3,7 @@ using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker.Models.InternshipStreams
 {
-    public class CreateInternshipStreamDto
+    public class InternshipStreamDto
     {
         [Required]
         public string Title { get; set; }

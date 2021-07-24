@@ -36,7 +36,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
             <summary>
             Create internship stream
             </summary>
@@ -45,7 +45,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamResponseDto)">
             <summary>
             Update internship stream data
             </summary>
@@ -358,13 +358,13 @@
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.CreateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
             <summary>
             Creates internship stream from createDto
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.UpdateInternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamResponseDto)">
             <summary>
             Updates data in internship stream
             </summary>
