@@ -15,7 +15,7 @@ namespace InternshipProgressTracker.Mapper
 
         public MapperProfile()
         {
-            CreateMap<InternshipStreamDto, InternshipStream>();
+            CreateMap<InternshipStreamDto, InternshipStream>().ReverseMap();
             CreateMap<StudyPlanDto, StudyPlan>().ReverseMap();
             CreateMap<StudyPlanEntryDto, StudyPlanEntry>().ReverseMap();
 

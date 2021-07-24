@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -119,6 +120,31 @@ namespace InternshipProgressTracker.Controllers
             try
             {
                 await _internshipStreamService.UpdateAsync(id, updateDto);
+
+                return Ok(new { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Patch internship stream data
+        /// </summary>
+        /// <param name="id">Id of internship stream</param>
+        /// <param name="patchDocument">JsonPatch operations</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        {
+            try
+            {
+                await _internshipStreamService.UpdateAsync(id, patchDocument);
 
                 return Ok(new { Success = true });
             }

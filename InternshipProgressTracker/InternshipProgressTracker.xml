@@ -56,6 +56,17 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+            <summary>
+            Patch internship stream data
+            </summary>
+            <param name="id">Id of internship stream</param>
+            <param name="patchDocument">JsonPatch operations</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32)">
             <summary>
             Mark internship stream as deleted
@@ -370,6 +381,13 @@
             </summary>
             <param name="id">Internship stream id</param>
             <param name="updateDto">New data</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+            <summary>
+            Patches internship stream
+            </summary>
+            <param name="id">Id of internship stream</param>
+            <param name="patchDocument">Json Patch operations</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDeleteAsync(System.Int32)">
             <summary>

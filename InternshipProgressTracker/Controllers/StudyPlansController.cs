@@ -129,7 +129,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _studyPlanService.UpdateAsync(id, patchDocument);
 
-                return Ok(new { Succes = true });
+                return Ok(new { Success = true });
             }
             catch(NotFoundException ex)
             {

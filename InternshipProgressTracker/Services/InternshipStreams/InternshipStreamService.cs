@@ -5,6 +5,7 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,6 +115,29 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             _mapper.Map(updateDto, internshipStream);
+            _dbContext.Entry(internshipStream).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Patches internship stream
+        /// </summary>
+        /// <param name="id">Id of internship stream</param>
+        /// <param name="patchDocument">Json Patch operations</param>
+        public async Task UpdateAsync(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        {
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            var internshipStreamDto = _mapper.Map<InternshipStreamDto>(internshipStream);
+            patchDocument.ApplyTo(internshipStreamDto);
+
+            _mapper.Map(internshipStreamDto, internshipStream);
+
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
