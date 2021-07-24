@@ -273,11 +273,6 @@
             Represents the InternshipStream entity
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Entities.MentorRole">
-            <summary>
-            Contains roles of a mentor
-            </summary>
-        </member>
         <member name="T:InternshipProgressTracker.Entities.Mentor">
             <summary>
             Represents the Mentor entity
@@ -427,11 +422,6 @@
             Creates a student based on the user
             </summary>
             <param name="user">User entity</param>
-        </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStreamAsync(System.Int32,InternshipProgressTracker.Entities.InternshipStream)">
-            <summary>
-            Binds student with internship stream
-            </summary>
         </member>
         <member name="T:InternshipProgressTracker.Services.StudyPlanEntries.IStudyPlanEntryService">
             <summary>

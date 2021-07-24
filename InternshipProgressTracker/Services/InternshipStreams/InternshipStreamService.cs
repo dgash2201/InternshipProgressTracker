@@ -8,6 +8,7 @@ using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,15 +21,11 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IStudentService _studentService;
 
-        public InternshipStreamService(InternshipProgressTrackerDbContext dbContext, 
-            IMapper mapper,
-            IStudentService studentService)
+        public InternshipStreamService(InternshipProgressTrackerDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _studentService = studentService;
         }
 
         /// <summary>
@@ -38,14 +35,29 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FirstOrDefaultAsync(s => s.Id == streamId);
+                .FindAsync(streamId);
+
+            var student = await _dbContext
+                .Students
+                .FindAsync(studentId);
 
             if (stream == null)
             {
                 throw new NotFoundException("Internship stream with this id was not found");
             }
 
-            await _studentService.SetStreamAsync(studentId, stream);
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            if (stream.Students == null)
+            {
+                stream.Students = new Collection<Student>();
+            }
+
+            stream.Students.Add(student);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>

@@ -11,10 +11,6 @@ namespace InternshipProgressTracker.Entities
         [Key]
         public int Id { get; set; }
 
-        public int? InternshipStreamId { get; set; }
-
-        public InternshipStream InternshipStream { get; set; }
-
         public int? CurrentGrade { get; set; }
 
         public int UserId { get; set; }
@@ -22,6 +18,8 @@ namespace InternshipProgressTracker.Entities
         public User User { get; set; }
 
         public ICollection<StudentStudyPlanProgress> StudyPlanProgresses { get; set; }
+
+        public ICollection<InternshipStream> InternshipStreams { get; set; }
 
         public bool IsDeleted { get; set; }
     }
