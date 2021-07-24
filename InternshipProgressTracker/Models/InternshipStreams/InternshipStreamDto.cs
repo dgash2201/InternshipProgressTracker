@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using InternshipProgressTracker.Entities;
 
 namespace InternshipProgressTracker.Models.InternshipStreams
@@ -12,5 +13,13 @@ namespace InternshipProgressTracker.Models.InternshipStreams
 
         [Required]
         public InternshipStreamStatus Status { get; set; }
+
+        public DateTime PlanStartDate { get; set; }
+
+        public DateTime FactStartDate { get; set; }
+
+        public DateTime PlanEndDate { get; set; }
+
+        public DateTime FactEndDate { get; set; }
     }
 }
