@@ -541,13 +541,13 @@
             Service for authorization and 
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Users.UserService.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.LoginAsync(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
             Checks login data and returns generated token
             </summary>
             <param name="loginDto">Contains login form data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Users.UserService.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.RegisterAsync(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
             Creates user entity and saves it in the database
             </summary>

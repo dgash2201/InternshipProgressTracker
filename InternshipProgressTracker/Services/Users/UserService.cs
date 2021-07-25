@@ -36,7 +36,7 @@ namespace InternshipProgressTracker.Services.Users
         /// Checks login data and returns generated token
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        public async Task<(string, string)> Login(LoginDto loginDto, CancellationToken cancellationToken)
+        public async Task<(string, string)> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -68,7 +68,7 @@ namespace InternshipProgressTracker.Services.Users
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> Register(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -109,7 +109,7 @@ namespace InternshipProgressTracker.Services.Users
             return user.Id;
         }
 
-        public async Task<(string, string)> RefreshJwt(string refreshToken, int userId)
+        public async Task<(string, string)> RefreshJwtAsync(string refreshToken, int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
