@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,6 +38,11 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="id">Student id</param>
         public async Task<Student> GetAsync(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException($"id = {id} is negative (should be positive)");
+            }
+
             var student =  await _dbContext
                 .Students
                 .FindAsync(id);
