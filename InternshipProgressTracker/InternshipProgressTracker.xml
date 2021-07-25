@@ -4,6 +4,30 @@
         <name>InternshipProgressTracker</name>
     </assembly>
     <members>
+        <member name="T:InternshipProgressTracker.Controllers.AdminsController">
+            <summary>
+            Represents Web API of Admins
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.GetAllUsers">
+            <summary>
+            Get list of all users
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.SetUserRole(System.Int32,System.String)">
+            <summary>
+            Set user role
+            </summary>
+            <param name="userId">Id of user</param>
+            <param name="role">Name of role</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.InternshipStreamsController">
             <summary>
             Represents Web API of Internship Streams
@@ -336,6 +360,30 @@
         <member name="T:InternshipProgressTracker.Models.Users.RegisterDto">
             <summary>
             Represents data from signup form
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Admins.AdminService">
+            <summary>
+            Service for admins
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.GetAllUsersAsync">
+            <summary>
+            Gets list of all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.SetUserRoleAsync(System.Int32,System.String)">
+            <summary>
+            Sets role to user
+            </summary>
+            <param name="userId"></param>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Admins.IAdminService">
+            <summary>
+            Interface for user service
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Services.InternshipStreams.IInternshipStreamService">
