@@ -27,6 +27,7 @@ using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Settings;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlans;
+using InternshipProgressTracker.Services.Admins;
 
 namespace InternshipProgressTracker
 {
@@ -66,6 +67,9 @@ namespace InternshipProgressTracker
 
             services
                 .AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
+
+            services
+                .AddScoped<IAdminService, AdminService>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>

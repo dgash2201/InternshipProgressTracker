@@ -9,9 +9,9 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of Admins
     /// </summary>
-    [Authorize(Roles = "Admin")]
-    [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     [Route("[controller]")]
+    [ApiController]
     public class AdminsController : ControllerBase
     {
         private readonly IAdminService _adminService; 
