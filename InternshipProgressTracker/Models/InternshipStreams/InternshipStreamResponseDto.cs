@@ -15,13 +15,13 @@ namespace InternshipProgressTracker.Models.InternshipStreams
 
         public InternshipStreamStatus Status { get; set; }
 
-        public DateTime PlanStartDate { get; set; }
+        public DateTime? PlanStartDate { get; set; }
 
-        public DateTime FactStartDate { get; set; }
+        public DateTime? FactStartDate { get; set; }
 
-        public DateTime PlanEndDate { get; set; }
+        public DateTime? PlanEndDate { get; set; }
 
-        public DateTime FactEndDate { get; set; }
+        public DateTime? FactEndDate { get; set; }
 
         public IReadOnlyCollection<StudyPlanResponseDto> StudyPlans { get; set; }
 
