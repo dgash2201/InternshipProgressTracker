@@ -15,15 +15,21 @@ namespace InternshipProgressTracker.Mapper
 
         public MapperProfile()
         {
-            CreateMap<CreateInternshipStreamDto, InternshipStream>();
+            CreateMap<InternshipStreamDto, InternshipStream>().ReverseMap();
             CreateMap<StudyPlanDto, StudyPlan>().ReverseMap();
             CreateMap<StudyPlanEntryDto, StudyPlanEntry>().ReverseMap();
+
+            CreateMap<InternshipStream, InternshipStreamResponseDto>()
+                .ForMember(dto => dto.StudyPlans,
+                    options => options.MapFrom(entity => entity.StudyPlans.ToList()));
+
             CreateMap<StudyPlan, StudyPlanResponseDto>()
-                .ForMember(dest => dest.Entries, 
-                    options => options.MapFrom(source => source.Entries.ToList().AsReadOnly()));
+                .ForMember(dto => dto.Entries, 
+                    options => options.MapFrom(entity => entity.Entries.ToList()));
+
             CreateMap<StudyPlanEntry, StudyPlanEntryResponseDto>()
-                .ForMember(dest => dest.StudentProgresses, 
-                    options => options.MapFrom(source => source.StudentsProgresses.ToList().AsReadOnly()));
+                .ForMember(dto => dto.StudentProgresses, 
+                    options => options.MapFrom(entity => entity.StudentsProgresses.ToList()));
         }
     }
 }

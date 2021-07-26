@@ -34,17 +34,13 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _userService.Register(registerDto, cancellationToken);
+                var id = await _userService.RegisterAsync(registerDto, cancellationToken);
 
                 return Ok(new { Success = true, Id = id });
             }
             catch(AlreadyExistsException ex)
             {
                 return Conflict(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
 
@@ -61,7 +57,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var (jwt, refreshToken) = await _userService.Login(loginDto, cancellationToken);
+                var (jwt, refreshToken) = await _userService.LoginAsync(loginDto, cancellationToken);
 
                 return Ok(new { Success = true, Jwt = jwt, RefreshToken = refreshToken });
             }
@@ -72,10 +68,6 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
 
@@ -91,7 +83,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var (newJwt, newRefreshToken) = await _userService.RefreshJwt(refreshToken, userId);
+                var (newJwt, newRefreshToken) = await _userService.RefreshJwtAsync(refreshToken, userId);
 
                 return Ok(new { Succes = true, Jwt = newJwt, RefreshToken = newRefreshToken });
             }
@@ -102,10 +94,6 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
     }

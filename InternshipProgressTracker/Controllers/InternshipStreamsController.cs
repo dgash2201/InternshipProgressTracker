@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -45,10 +46,6 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -61,16 +58,10 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                var internshipStreams = await _internshipStreamService.GetAsync();
 
-                return Ok(internshipStreams);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var internshipStreams = await _internshipStreamService.GetAsync();
+
+            return Ok(internshipStreams);
         }
 
         /// <summary>
@@ -95,10 +86,6 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -110,18 +97,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateInternshipStreamDto createDto)
+        public async Task<IActionResult> Create(InternshipStreamDto createDto)
         {
-            try
-            {
-                var id = await _internshipStreamService.CreateAsync(createDto);
+            var id = await _internshipStreamService.CreateAsync(createDto);
 
-                return Ok(new { Success = true, Id = id });
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            return Ok(new { Success = true, Id = id });
         }
 
         /// <summary>
@@ -135,7 +115,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateInternshipStreamDto updateDto)
+        public async Task<IActionResult> Update(int id, InternshipStreamResponseDto updateDto)
         {
             try
             {
@@ -147,9 +127,30 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
-            catch
+        }
+
+        /// <summary>
+        /// Patch internship stream data
+        /// </summary>
+        /// <param name="id">Id of internship stream</param>
+        /// <param name="patchDocument">JsonPatch operations</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        {
+            try
             {
-                return StatusCode(500);
+                await _internshipStreamService.UpdateAsync(id, patchDocument);
+
+                return Ok(new { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
             }
         }
 
@@ -174,10 +175,6 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
-            }
-            catch
-            {
-                return StatusCode(500);
             }
         }
     }

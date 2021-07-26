@@ -12,6 +12,5 @@ namespace InternshipProgressTracker.Services.Students
         Task<Student> GetAsync(int id);
         Task<IReadOnlyCollection<Student>> GetAsync();
         Task CreateAsync(User user);
-        Task SetStreamAsync(int StudentId, InternshipStream stream);
     }
 }

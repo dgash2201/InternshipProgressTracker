@@ -63,16 +63,5 @@ namespace InternshipProgressTracker.Services.Students
             _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync();
         }
-
-        /// <summary>
-        /// Binds student with internship stream
-        /// </summary>
-        public async Task SetStreamAsync(int studentId, InternshipStream stream)
-        {
-            var student = await GetAsync(studentId);
-            student.InternshipStream = stream;
-            _dbContext.Entry(student).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-        }
     }
 }

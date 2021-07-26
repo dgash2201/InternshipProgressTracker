@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Students;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
@@ -17,15 +21,11 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IStudentService _studentService;
 
-        public InternshipStreamService(InternshipProgressTrackerDbContext dbContext, 
-            IMapper mapper,
-            IStudentService studentService)
+        public InternshipStreamService(InternshipProgressTrackerDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _studentService = studentService;
         }
 
         /// <summary>
@@ -35,59 +35,77 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FirstOrDefaultAsync(s => s.Id == streamId);
+                .FindAsync(streamId);
+
+            var student = await _dbContext
+                .Students
+                .FindAsync(studentId);
 
             if (stream == null)
             {
                 throw new NotFoundException("Internship stream with this id was not found");
             }
 
-            await _studentService.SetStreamAsync(studentId, stream);
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            if (stream.Students == null)
+            {
+                stream.Students = new Collection<Student>();
+            }
+
+            stream.Students.Add(student);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Gets list of internship streams
         /// </summary>
-        public async Task<IReadOnlyCollection<InternshipStream>> GetAsync()
+        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync()
         {
-            var internshipStreams = await _dbContext
+            var internshipStreamDtos = await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
                 .Include(s => s.StudyPlans)
-                .ThenInclude(s => s.Entries)
+                .ThenInclude(p => p.Entries)
+                .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            return internshipStreams
-                .AsReadOnly();
+            return internshipStreamDtos.AsReadOnly();
         }
 
         /// <summary>
         /// Gets internship stream by id
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task<InternshipStream> GetAsync(int id)
+        public async Task<InternshipStreamResponseDto> GetAsync(int id)
         {
-            var internshipStream =  await _dbContext
+            var internshipStreamDto = await _dbContext
                 .InternshipStreams
+                .Where(e => e.Id == id)
                 .Include(s => s.Students)
                 .Include(s => s.StudyPlans)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .ThenInclude(p => p.Entries)
+                .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (internshipStream == null)
+            if (internshipStreamDto == null)
             {
                 throw new NotFoundException("Internship stream with this id was not found");
             }
 
-            return internshipStream;
+            return internshipStreamDto;
         }
         
         /// <summary>
         /// Creates internship stream from createDto
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(CreateInternshipStreamDto createDto)
+        public async Task<int> CreateAsync(InternshipStreamDto createDto)
         {
-            var internshipStream = _mapper.Map<CreateInternshipStreamDto, InternshipStream>(createDto);
+            var internshipStream = _mapper.Map<InternshipStreamDto, InternshipStream>(createDto);
             _dbContext.InternshipStreams.Add(internshipStream);
             await _dbContext.SaveChangesAsync();
 
@@ -99,7 +117,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// </summary>
         /// <param name="id">Internship stream id</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, UpdateInternshipStreamDto updateDto)
+        public async Task UpdateAsync(int id, InternshipStreamResponseDto updateDto)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
 
@@ -109,6 +127,29 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             _mapper.Map(updateDto, internshipStream);
+            _dbContext.Entry(internshipStream).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Patches internship stream
+        /// </summary>
+        /// <param name="id">Id of internship stream</param>
+        /// <param name="patchDocument">Json Patch operations</param>
+        public async Task UpdateAsync(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        {
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+
+            if (internshipStream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            var internshipStreamDto = _mapper.Map<InternshipStreamDto>(internshipStream);
+            patchDocument.ApplyTo(internshipStreamDto);
+
+            _mapper.Map(internshipStreamDto, internshipStream);
+
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
