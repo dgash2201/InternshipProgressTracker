@@ -25,6 +25,21 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
+        /// Get all study plans including soft deleted (only for admin)
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetWithSoftDeleted()
+        {
+            var studyPlans = await _studyPlanService.GetWithSoftDeletedAsync();
+
+            return Ok(new { Success = true, StudyPlans = studyPlans });
+        }
+
+        /// <summary>
         /// Get list of study plans
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
@@ -156,6 +171,30 @@ namespace InternshipProgressTracker.Controllers
                 return Ok(new { Success = true });
             }
             catch(NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Delete study plan (only for admin)
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Study plan was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("hard-delete/{id}")]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            try
+            {
+                await _studyPlanService.DeleteAsync(id);
+
+                return Ok(new { Success = true });
+            }
+            catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }

@@ -10,6 +10,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
     /// </summary>
     public interface IStudyPlanEntryService
     {
+        Task<IReadOnlyCollection<StudyPlanEntryResponseDto>> GetWithSoftDeletedAsync();
         Task<IReadOnlyCollection<StudyPlanEntryResponseDto>> GetAsync();
         Task<StudyPlanEntryResponseDto> GetAsync(int id);
         Task<int> CreateAsync(StudyPlanEntryDto createDto);
