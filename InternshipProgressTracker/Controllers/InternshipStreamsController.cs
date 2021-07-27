@@ -4,6 +4,7 @@ using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,10 +20,12 @@ namespace InternshipProgressTracker.Controllers
     public class InternshipStreamsController : Controller
     {
         private readonly IInternshipStreamService _internshipStreamService;
+        private readonly ILogger<IInternshipStreamService> _logger;
 
-        public InternshipStreamsController(IInternshipStreamService internshipStreamService)
+        public InternshipStreamsController(IInternshipStreamService internshipStreamService, ILogger<InternshipStreamService> logger)
         {
             _internshipStreamService = internshipStreamService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,9 +38,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetWithSoftDeleted()
         {
-            var internshipStreams = await _internshipStreamService.GetWithSoftDeletedAsync();
+            try
+            {
+                var internshipStreams = await _internshipStreamService.GetWithSoftDeletedAsync();
 
-            return Ok(new { Success = true, IntenshipStreams = internshipStreams });
+                return Ok(new { Success = true, IntenshipStreams = internshipStreams });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -61,6 +72,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -73,10 +89,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            try
+            {
+                var internshipStreams = await _internshipStreamService.GetAsync();
 
-            var internshipStreams = await _internshipStreamService.GetAsync();
-
-            return Ok(internshipStreams);
+                return Ok(internshipStreams);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -101,6 +124,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -114,9 +142,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(InternshipStreamDto createDto)
         {
-            var id = await _internshipStreamService.CreateAsync(createDto);
+            try
+            {
+                var id = await _internshipStreamService.CreateAsync(createDto);
 
-            return Ok(new { Success = true, Id = id });
+                return Ok(new { Success = true, Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -141,6 +177,11 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
@@ -167,6 +208,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -191,6 +237,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -214,6 +265,11 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

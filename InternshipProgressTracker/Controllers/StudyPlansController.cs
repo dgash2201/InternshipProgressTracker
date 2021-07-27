@@ -5,6 +5,8 @@ using InternshipProgressTracker.Services.StudyPlans;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -18,10 +20,12 @@ namespace InternshipProgressTracker.Controllers
     public class StudyPlansController : ControllerBase
     {
         private readonly IStudyPlanService _studyPlanService;
+        private readonly ILogger<StudyPlansController> _logger;
 
-        public StudyPlansController(IStudyPlanService studyPlanService)
+        public StudyPlansController(IStudyPlanService studyPlanService, ILogger<StudyPlansController> logger)
         {
             _studyPlanService = studyPlanService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,9 +38,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetWithSoftDeleted()
         {
-            var studyPlans = await _studyPlanService.GetWithSoftDeletedAsync();
+            try
+            { 
+                var studyPlans = await _studyPlanService.GetWithSoftDeletedAsync();
 
-            return Ok(new { Success = true, StudyPlans = studyPlans });
+                return Ok(new { Success = true, StudyPlans = studyPlans });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -49,9 +61,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var studyPlans = await _studyPlanService.GetAsync();
+            try
+            {
+                var studyPlans = await _studyPlanService.GetAsync();
 
-            return Ok(new { Success = true, StudyPlans = studyPlans });
+                return Ok(new { Success = true, StudyPlans = studyPlans });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -76,6 +96,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -99,6 +124,11 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = true, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
@@ -125,6 +155,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -150,6 +185,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -174,6 +214,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -197,6 +242,11 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

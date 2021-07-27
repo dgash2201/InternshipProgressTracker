@@ -4,6 +4,8 @@ using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -17,10 +19,12 @@ namespace InternshipProgressTracker.Controllers
     public class StudyPlanEntriesController : ControllerBase
     {
         private readonly IStudyPlanEntryService _studyPlanEntryService;
+        private readonly ILogger<StudyPlanEntriesController> _logger;
 
-        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService)
+        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService, ILogger<StudyPlanEntriesController> logger)
         {
             _studyPlanEntryService = studyPlanEntryService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -33,9 +37,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetWithSoftDeleted()
         {
-            var studyPlanEntries = await _studyPlanEntryService.GetWithSoftDeletedAsync();
+            try
+            {
+                var studyPlanEntries = await _studyPlanEntryService.GetWithSoftDeletedAsync();
 
-            return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -48,9 +60,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var studyPlanEntries = await _studyPlanEntryService.GetAsync();
+            try
+            {
+                var studyPlanEntries = await _studyPlanEntryService.GetAsync();
 
-            return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -75,6 +95,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -98,6 +123,11 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
@@ -124,6 +154,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -149,6 +184,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -173,6 +213,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -196,6 +241,11 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

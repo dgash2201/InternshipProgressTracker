@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -15,11 +16,13 @@ namespace InternshipProgressTracker.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, ILogger<UserController> logger)
         {
             _userService = service;
+            _logger = logger;
         }
 
         /// <summary>
@@ -41,6 +44,11 @@ namespace InternshipProgressTracker.Controllers
             catch(AlreadyExistsException ex)
             {
                 return Conflict(new { Success = false, Message = ex.Message });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
@@ -69,6 +77,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -94,6 +107,11 @@ namespace InternshipProgressTracker.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

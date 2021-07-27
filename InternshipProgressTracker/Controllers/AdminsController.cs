@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Services.Admins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -14,11 +15,13 @@ namespace InternshipProgressTracker.Controllers
     [ApiController]
     public class AdminsController : ControllerBase
     {
-        private readonly IAdminService _adminService; 
+        private readonly IAdminService _adminService;
+        private readonly ILogger<AdminsController> _logger;
 
-        public AdminsController(IAdminService adminService)
+        public AdminsController(IAdminService adminService, ILogger<AdminsController> logger)
         {
             _adminService = adminService;
+            _logger = logger;
         }
 
         /// <summary>
