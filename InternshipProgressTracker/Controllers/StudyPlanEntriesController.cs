@@ -4,6 +4,8 @@ using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -17,10 +19,35 @@ namespace InternshipProgressTracker.Controllers
     public class StudyPlanEntriesController : ControllerBase
     {
         private readonly IStudyPlanEntryService _studyPlanEntryService;
+        private readonly ILogger<StudyPlanEntriesController> _logger;
 
-        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService)
+        public StudyPlanEntriesController(IStudyPlanEntryService studyPlanEntryService, ILogger<StudyPlanEntriesController> logger)
         {
             _studyPlanEntryService = studyPlanEntryService;
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// Get all study plan entries including soft deleted (only for admin)
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetWithSoftDeleted()
+        {
+            try
+            {
+                var studyPlanEntries = await _studyPlanEntryService.GetWithSoftDeletedAsync();
+
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -33,9 +60,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var studyPlanEntries = await _studyPlanEntryService.GetAsync();
+            try
+            {
+                var studyPlanEntries = await _studyPlanEntryService.GetAsync();
 
-            return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+                return Ok(new { Success = true, StudyPlanEntries = studyPlanEntries });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -60,6 +95,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -83,6 +123,11 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
@@ -109,6 +154,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -134,6 +184,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -157,6 +212,40 @@ namespace InternshipProgressTracker.Controllers
             catch(NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Delete study plan entry (only for admin)
+        /// </summary>
+        /// <param name="id">Id of study plan entry</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Study plan was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("hard-delete/{id}")]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            try
+            {
+                await _studyPlanEntryService.DeleteAsync(id);
+
+                return Ok(new { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

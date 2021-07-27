@@ -61,6 +61,23 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         }
 
         /// <summary>
+        /// Gets all internship streams
+        /// </summary>
+        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync()
+        {
+            var internshipStreamDtos = await _dbContext
+                .InternshipStreams
+                .Include(s => s.Students)
+                .Include(s => s.StudyPlans)
+                .ThenInclude(p => p.Entries)
+                .IgnoreQueryFilters()
+                .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return internshipStreamDtos.AsReadOnly();
+        }
+
+        /// <summary>
         /// Gets list of internship streams
         /// </summary>
         public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync()

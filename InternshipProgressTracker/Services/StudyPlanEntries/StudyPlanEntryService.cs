@@ -30,6 +30,21 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// Gets all study plan entries
         /// </summary>
         /// <returns></returns>
+        public async Task<IReadOnlyCollection<StudyPlanEntryResponseDto>> GetWithSoftDeletedAsync()
+        {
+            var studyPlanEntries = await _dbContext
+                .StudyPlanEntries
+                .IgnoreQueryFilters()
+                .ProjectTo<StudyPlanEntryResponseDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return studyPlanEntries.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Gets list of study plan entries
+        /// </summary>
+        /// <returns></returns>
         public async Task<IReadOnlyCollection<StudyPlanEntryResponseDto>> GetAsync()
         {
             var studyPlanEntries = await _dbContext

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using InternshipProgressTracker.Models.InternshipStreams;
+﻿using InternshipProgressTracker.Models.InternshipStreams;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
 {
@@ -11,6 +11,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     public interface IInternshipStreamService
     {
         Task AddStudentAsync(int streamId, int studentId);
+        Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync();
         Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync();
         Task<InternshipStreamResponseDto> GetAsync(int id);
         Task<int> CreateAsync(InternshipStreamDto createDto);

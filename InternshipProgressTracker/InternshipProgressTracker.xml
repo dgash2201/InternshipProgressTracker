@@ -4,10 +4,42 @@
         <name>InternshipProgressTracker</name>
     </assembly>
     <members>
+        <member name="T:InternshipProgressTracker.Controllers.AdminsController">
+            <summary>
+            Represents Web API of Admins
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.GetAllUsers">
+            <summary>
+            Get list of all users
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.SetUserRole(System.Int32,System.String)">
+            <summary>
+            Set user role
+            </summary>
+            <param name="userId">Id of user</param>
+            <param name="role">Name of role</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.InternshipStreamsController">
             <summary>
             Represents Web API of Internship Streams
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.GetWithSoftDeleted">
+            <summary>
+            Get all internship stream including soft deleted (only for admin)
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
             <summary>
@@ -77,10 +109,28 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.HardDelete(System.Int32)">
+            <summary>
+            Delete internship stream (only for admin)
+            </summary>
+            <param name="id">Id of internship stream</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.StudyPlanEntriesController">
             <summary>
             Represents Web API of Study Plan Entries
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.GetWithSoftDeleted">
+            <summary>
+            Get all study plan entries including soft deleted (only for admin)
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get">
             <summary>
@@ -142,10 +192,28 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.HardDelete(System.Int32)">
+            <summary>
+            Delete study plan entry (only for admin)
+            </summary>
+            <param name="id">Id of study plan entry</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.StudyPlansController">
             <summary>
             Represents Web API of Study Plans
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.GetWithSoftDeleted">
+            <summary>
+            Get all study plans including soft deleted (only for admin)
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get">
             <summary>
@@ -200,6 +268,16 @@
         <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32)">
             <summary>
             Mark study plan as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Study plan was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.HardDelete(System.Int32)">
+            <summary>
+            Delete study plan (only for admin)
             </summary>
             <param name="id">Id of study plan</param>
             <response code="401">Authorization token is invalid</response>
@@ -338,6 +416,30 @@
             Represents data from signup form
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Services.Admins.AdminService">
+            <summary>
+            Service for admins
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.GetAllUsersAsync">
+            <summary>
+            Gets list of all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.SetUserRoleAsync(System.Int32,System.String)">
+            <summary>
+            Sets role to user
+            </summary>
+            <param name="userId"></param>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Admins.IAdminService">
+            <summary>
+            Interface for user service
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Services.InternshipStreams.IInternshipStreamService">
             <summary>
             Internship stream service interface
@@ -351,6 +453,11 @@
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32)">
             <summary>
             Binds student with stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetWithSoftDeletedAsync">
+            <summary>
+            Gets all internship streams
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync">
@@ -433,9 +540,15 @@
             Service for working with study plan entries
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetWithSoftDeletedAsync">
             <summary>
             Gets all study plan entries
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync">
+            <summary>
+            Gets list of study plan entries
             </summary>
             <returns></returns>
         </member>
@@ -487,9 +600,15 @@
             Service for working with study plans
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetWithSoftDeletedAsync">
             <summary>
             Gets all study plans
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync">
+            <summary>
+            Gets list of study plans
             </summary>
             <returns></returns>
         </member>
