@@ -72,7 +72,7 @@ namespace InternshipProgressTracker.Tests
             var internshipStreamId = 1;
             _dbContext.InternshipStreams.Add(new InternshipStream
             {
-                Id = 1,
+                Id = internshipStreamId,
             });
 
             var studyPlanTitle = "Study plan";
