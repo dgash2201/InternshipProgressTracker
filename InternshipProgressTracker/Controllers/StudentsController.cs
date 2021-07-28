@@ -52,5 +52,35 @@ namespace InternshipProgressTracker.Controllers
                 throw;
             }
         }
+
+        /// <summary>
+        /// Mark study plan entry as started
+        /// </summary>
+        /// <param name="studentId">Id of student</param>
+        /// <param name="entryId">Id of study plan entry</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Student or study plan entry was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
+        [HttpPost("start-study-plan-entry")]
+        public async Task<IActionResult> StartStudyPlanEntry(int studentId, int entryId)
+        {
+            try
+            {
+                await _studentService.StartStudyPlanEntryAsync(studentId, entryId);
+
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
     }
 }
