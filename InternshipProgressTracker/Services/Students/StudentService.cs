@@ -124,5 +124,45 @@ namespace InternshipProgressTracker.Services.Students
             _dbContext.StudentStudyPlanProgresses.Add(studentProgress);
             await _dbContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Mark study plan entry as finished by student
+        /// </summary>
+        /// <param name="studentId">Id of student</param>
+        /// <param name="entryId">Id of study plan entry</param>
+        public async Task FinishStudyPlanEntryAsync(int studentId, int entryId)
+        {
+            var studentExists = await _dbContext
+                .Students
+                .AnyAsync(s => s.Id == studentId);
+
+            if (!studentExists)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            var entryExists = await _dbContext
+                .StudyPlanEntries
+                .AnyAsync(e => e.Id == entryId);
+
+            if (!entryExists)
+            {
+                throw new NotFoundException("Study plan entry with this id was not found");
+            }
+
+            var studentProgress = await _dbContext
+                .StudentStudyPlanProgresses
+                .FindAsync(studentId, entryId);
+
+            if (studentProgress == null || studentProgress.StartTime == null)
+            {
+                throw new BadRequestException("Study plan entry was not started by this student");
+            }
+
+            studentProgress.FinishTime = DateTime.Now;
+
+            _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -19,13 +19,13 @@ namespace InternshipProgressTracker.Entities
 
         public StudyPlanEntry StudyPlanEntry { get; set; }
 
-        public int Grade { get; set; }
+        public int? Grade { get; set; }
 
-        public int GradingMentorId { get; set; }
+        public int? GradingMentorId { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
-        public DateTime FinishTime { get; set; }
+        public DateTime? FinishTime { get; set; }
 
         public string StudentNotes { get; set; }
 

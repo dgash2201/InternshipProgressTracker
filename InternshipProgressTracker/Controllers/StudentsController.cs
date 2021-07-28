@@ -82,5 +82,30 @@ namespace InternshipProgressTracker.Controllers
                 throw;
             }
         }
+
+        /// <summary>
+        /// Mark study plan entry as finished
+        /// </summary>
+        /// <param name="studentId">Id of student</param>
+        /// <param name="entryId">Id of study plan entry</param>
+        /// <returns></returns>
+        public async Task<IActionResult> FinishStudyPlanEntry(int studentId, int entryId)
+        {
+            try
+            {
+                await _studentService.FinishStudyPlanEntryAsync(studentId, entryId);
+
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace InternshipProgressTracker.Services.Students
         Task CreateAsync(User user);
         Task SetStudentGradeAsync(int studentId, StudentGrade grade);
         Task StartStudyPlanEntryAsync(int studentId, int entryId);
+        Task FinishStudyPlanEntryAsync(int studentId, int entryId);
     }
 }

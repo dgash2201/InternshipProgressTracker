@@ -131,6 +131,17 @@
             <param name="studentId">Id of student</param>
             <param name="grade">Student current grade</param>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(System.Int32,System.Int32)">
+            <summary>
+            Mark study plan entry as started
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="entryId">Id of study plan entry</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Student or study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.StudyPlanEntriesController">
             <summary>
             Represents Web API of Study Plan Entries
@@ -544,6 +555,20 @@
             <param name="studentId"></param>
             <param name="grade"></param>
             <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.StartStudyPlanEntryAsync(System.Int32,System.Int32)">
+            <summary>
+            Mark study plan entry as started by student
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="entryId">Id of study plan entry</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.FinishStudyPlanEntryAsync(System.Int32,System.Int32)">
+            <summary>
+            Mark study plan entry as finished by student
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="entryId">Id of study plan entry</param>
         </member>
         <member name="T:InternshipProgressTracker.Services.StudyPlanEntries.IStudyPlanEntryService">
             <summary>
