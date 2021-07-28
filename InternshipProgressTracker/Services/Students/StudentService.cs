@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
