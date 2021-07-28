@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Tests
 {
+    /// <summary>
+    /// Tests for internship stream service
+    /// </summary>
     class InternshipStreamServiceTests
     {
         private InternshipProgressTrackerDbContext _dbContext;
@@ -38,6 +41,9 @@ namespace InternshipProgressTracker.Tests
             _dbContext.DisposeDbContext();
         }
 
+        /// <summary>
+        /// Checks that AddStudentAsync throws not found exception for unexisted internship stream id
+        /// </summary>
         [Test]
         public async Task InternshipStreamService_AddStudentAsync_ThrowsForUnexistedStudentId()
         {
@@ -55,6 +61,9 @@ namespace InternshipProgressTracker.Tests
             Assert.ThrowsAsync<NotFoundException>(() => _internshipStreamService.AddStudentAsync(streamId, studentId));
         }
 
+        /// <summary>
+        /// Checks that AddStudentAsync throws not found exception for unexisted internship stream id
+        /// </summary>
         [Test]
         public async Task InternshipStreamService_AddStudentAsync_ThrowsForUnexistedStreamId()
         {
@@ -72,6 +81,9 @@ namespace InternshipProgressTracker.Tests
             Assert.ThrowsAsync<NotFoundException>(() => _internshipStreamService.AddStudentAsync(streamId, studentId));
         }
 
+        /// <summary>
+        /// Checks that AddStudentAsync successfully adds student to internship stream
+        /// </summary>
         [Test]
         public async Task InternshipStreamService_AddStudentAsync_AddsStudentSuccessfully()
         {
@@ -106,6 +118,9 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(student.Id, studentId);
         }
 
+        /// <summary>
+        /// Checks that GetAsync returns internship stream successfully
+        /// </summary>
         [Test]
         public async Task InternshipStreamService_GetAsync_ReturnsSuccessfullyById()
         {
@@ -127,12 +142,18 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(title, internshipStreamResponseDto.Title);
         }
 
+        /// <summary>
+        /// Checks that GetAsync throws not found exception for unexisted internship stream id
+        /// </summary>
         [Test]
         public void InternshipStreamService_GetAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _internshipStreamService.GetAsync(1));
         }
 
+        /// <summary>
+        /// Checks that CreateAsync creates internship stream successfully
+        /// </summary>
         [Test]
         public async Task InternshipStreamService_CreateAsync_CreatesSuccessfully()
         {
@@ -156,12 +177,18 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(status, responseDto.Status);
         }
 
+        /// <summary>
+        /// Checks that SoftDeleteAsync throws not found exception for unexisted internship stream id
+        /// </summary>
         [Test]
         public void InternshipStreamService_SoftDeleteAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _internshipStreamService.SoftDeleteAsync(1));
         }
 
+        /// <summary>
+        /// Checks that DeleteAsync throws not found exception for unexisted internship stream id
+        /// </summary>
         [Test]
         public void InternshipStreamService_DeleteAsync_ThrowsForUnexistedId()
         {

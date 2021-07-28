@@ -38,11 +38,6 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="id">Student id</param>
         public async Task<Student> GetAsync(int id)
         {
-            if (id <= 0)
-            {
-                throw new ArgumentException($"id = {id} is negative (should be positive)");
-            }
-
             var student =  await _dbContext
                 .Students
                 .FindAsync(id);

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Tests
 {
+    /// <summary>
+    /// Tests for student service
+    /// </summary>
     public class StudentServiceTests
     {
         private InternshipProgressTrackerDbContext _dbContext;
@@ -26,6 +29,9 @@ namespace InternshipProgressTracker.Tests
             _dbContext.DisposeDbContext();
         }
 
+        /// <summary>
+        /// Checks get async returns student successfully by id
+        /// </summary>
         [Test]
         public async Task StudentService_GetAsync_ReturnsSuccessfully()
         {
@@ -41,22 +47,13 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(1, dbStudent.Id);
         }
 
+        /// <summary>
+        /// Checks GetAsync throws not found exception for unexisted student id
+        /// </summary>
         [Test]
         public void StudentService_GetAsync_ThrowsForUnexistedId()
         {
-            // Arrange
-
-            // Act & Assert
             Assert.ThrowsAsync<NotFoundException>(() => _studentService.GetAsync(1));
-        }
-
-        [Test]
-        public void StudentService_GetAsync_ThrowsForNegativeId()
-        {
-            // Arrange
-
-            // Act & Assert
-            Assert.ThrowsAsync<ArgumentException>(() => _studentService.GetAsync(-1));
         }
     }
 }

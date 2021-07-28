@@ -4,9 +4,7 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Mapper;
 using InternshipProgressTracker.Models.StudyPlanEntries;
-using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Services.StudyPlanEntries;
-using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -14,7 +12,10 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Tests
 {
-    class StudyPlanEntityServiceTests
+    /// <summary>
+    /// Tests for study plan entry service
+    /// </summary>
+    class StudyPlanEntryServiceTests
     {
         private InternshipProgressTrackerDbContext _dbContext;
         private IStudyPlanEntryService _studyPlanEntryService;
@@ -60,12 +61,18 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(title, responseDto.Title);
         }
 
+        /// <summary>
+        /// Checks that GetAsync throws not found exception for unexisted study plan entry id
+        /// </summary>
         [Test]
         public void StudyPlanEntryService_GetAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanEntryService.GetAsync(1));
         }
 
+        /// <summary>
+        /// Checks that CreateAsync creates study plan entry successfully
+        /// </summary>
         [Test]
         public async Task StudyPlanEntryService_CreateAsync_CreatesSuccessfully()
         {
@@ -93,6 +100,9 @@ namespace InternshipProgressTracker.Tests
             Assert.AreEqual(studyPlanEntryTitle, responseDto.Title);
         }
 
+        /// <summary>
+        /// Checks that CreateAsync throws not found exception for unexisted study plan id
+        /// </summary>
         [Test]
         public void StudyPlanEntryService_CreateAsync_ThrowsForUnexistedStudyPlanId()
         {
@@ -105,12 +115,18 @@ namespace InternshipProgressTracker.Tests
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanEntryService.CreateAsync(createDto));
         }
 
+        /// <summary>
+        /// Checks that SoftDeleteAsync throws not found exception for unexisted study plan entry id
+        /// </summary>
         [Test]
         public void StudyPlanEntryService_SoftDeleteAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanEntryService.SoftDeleteAsync(1));
         }
 
+        /// <summary>
+        /// Checks that DeleteAsync throws not found exception for unexisted study plan entry id
+        /// </summary>
         [Test]
         public void StudyPlanEntryService_DeleteAsync_ThrowsForUnexistedId()
         {
