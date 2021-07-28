@@ -3,6 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace InternshipProgressTracker.Entities
 {
+    public enum StudentGrade
+    {
+        Junior,
+        Middle,
+        Senior
+    }
+
+
     /// <summary>
     /// Represents the Student entity
     /// </summary>
@@ -11,7 +19,7 @@ namespace InternshipProgressTracker.Entities
         [Key]
         public int Id { get; set; }
 
-        public int? CurrentGrade { get; set; }
+        public StudentGrade? CurrentGrade { get; set; }
 
         public int UserId { get; set; }
 

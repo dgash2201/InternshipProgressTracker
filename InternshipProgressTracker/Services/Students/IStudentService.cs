@@ -9,8 +9,9 @@ namespace InternshipProgressTracker.Services.Students
     /// </summary>
     public interface IStudentService
     {
-        Task<Student> GetAsync(int id);
         Task<IReadOnlyCollection<Student>> GetAsync();
+        Task<Student> GetAsync(int id);
         Task CreateAsync(User user);
+        Task SetStudentGradeAsync(int studentId, StudentGrade grade);
     }
 }

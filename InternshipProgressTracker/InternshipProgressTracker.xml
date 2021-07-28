@@ -119,6 +119,18 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="T:InternshipProgressTracker.Controllers.StudentsController">
+            <summary>
+            Represents Web API of students
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(System.Int32,InternshipProgressTracker.Entities.StudentGrade)">
+            <summary>
+            Set student grade
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="grade">Student current grade</param>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.StudyPlanEntriesController">
             <summary>
             Represents Web API of Study Plan Entries
@@ -396,11 +408,6 @@
             Exception that means that an entity was not found
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Mapper.MapperProfile">
-            <summary>
-            Contains settings for AutoMapper
-            </summary>
-        </member>
         <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
             <summary>
             Contains data for creating a study plan
@@ -529,6 +536,14 @@
             Creates a student based on the user
             </summary>
             <param name="user">User entity</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.StudentGrade)">
+            <summary>
+            Sets student grade
+            </summary>
+            <param name="studentId"></param>
+            <param name="grade"></param>
+            <returns></returns>
         </member>
         <member name="T:InternshipProgressTracker.Services.StudyPlanEntries.IStudyPlanEntryService">
             <summary>
@@ -690,6 +705,11 @@
         <member name="M:InternshipProgressTracker.Startup.CreateAdmin(System.IServiceProvider)">
             <summary>
             Creates default admin
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Utils.Mapper.MapperProfile">
+            <summary>
+            Contains settings for AutoMapper
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">

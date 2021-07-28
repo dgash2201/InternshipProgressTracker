@@ -64,5 +64,27 @@ namespace InternshipProgressTracker.Services.Students
             _dbContext.Students.Add(student);
             await _dbContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Sets student grade
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <param name="grade"></param>
+        /// <returns></returns>
+        public async Task SetStudentGradeAsync(int studentId, StudentGrade grade)
+        {
+            var student = await _dbContext
+                .Students
+                .FindAsync(studentId);
+
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            student.CurrentGrade = grade;
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

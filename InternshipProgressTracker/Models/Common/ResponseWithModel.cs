@@ -1,6 +1,6 @@
 ﻿namespace InternshipProgressTracker.Models.Common
 {
-    public class Response<TModel>
+    public class ResponseWithModel<TModel>
     {
         public bool Success { get; set; }
 
