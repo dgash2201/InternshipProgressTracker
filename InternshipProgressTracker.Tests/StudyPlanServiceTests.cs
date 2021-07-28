@@ -16,12 +16,13 @@ namespace InternshipProgressTracker.Tests
 {
     class StudyPlanServiceTests
     {
+        private const int ExistedStreamId = 1;
         private InternshipProgressTrackerDbContext _dbContext;
         private IStudyPlanService _studyPlanService;
         private IMapper _mapper;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {           
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -31,6 +32,13 @@ namespace InternshipProgressTracker.Tests
             _mapper = mappingConfig.CreateMapper();
             _dbContext = DbContextInitializer.CreateDbContext(); 
             _studyPlanService = new StudyPlanService(_dbContext, _mapper);
+
+            _dbContext.InternshipStreams.Add(new InternshipStream
+            {
+                Id = ExistedStreamId,
+            });
+
+            await _dbContext.SaveChangesAsync();
         }
 
         [TearDown]
@@ -69,18 +77,12 @@ namespace InternshipProgressTracker.Tests
         [Test]
         public async Task StudyPlanService_CreateAsync_CreatesSuccessfully()
         {
-            var internshipStreamId = 1;
-            _dbContext.InternshipStreams.Add(new InternshipStream
-            {
-                Id = internshipStreamId,
-            });
-
             var studyPlanTitle = "Study plan";
 
             var createDto = new StudyPlanDto
             {
                 Title = studyPlanTitle,
-                InternshipStreamId = internshipStreamId,
+                InternshipStreamId = ExistedStreamId,
             };
 
             await _studyPlanService.CreateAsync(createDto);
@@ -99,10 +101,72 @@ namespace InternshipProgressTracker.Tests
             var createDto = new StudyPlanDto
             {
                 Title = "Study plan",
-                InternshipStreamId = 1,
+                InternshipStreamId = 2,
             };
 
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.CreateAsync(createDto));
+        }
+
+        [Test] 
+        public void StudyPlanService_UpdateAsync_ThrowsForUnexistedId()
+        {
+            var updateDto = new StudyPlanDto
+            {
+                Title = "Updated study plan",
+            };
+
+            var unexistedId = 1;
+
+            Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.UpdateAsync(unexistedId, updateDto));
+        }
+
+        [Test]
+        public async Task StudyPlanService_UpdateAsync_ThrowsForUnexistedInternshipStreamId()
+        {
+            var studyPlanId = 1;
+
+            _dbContext.StudyPlans.Add(new StudyPlan
+            {
+                Id = studyPlanId,
+                Title = "Study plan",
+            });
+
+            await _dbContext.SaveChangesAsync();
+
+            var updateDto = new StudyPlanDto
+            {
+                Title = "Updated study plan",
+                InternshipStreamId = 2,
+            };
+
+            Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.UpdateAsync(studyPlanId, updateDto));
+        }
+
+        [Test]
+        public async Task StudyPlanService_UpdateAsync_UpdatesSuccessfully()
+        {
+            var studyPlanId = 1;
+
+            _dbContext.StudyPlans.Add(new StudyPlan
+            {
+                Id = studyPlanId,
+                Title = "Study plan",
+            });
+
+            await _dbContext.SaveChangesAsync();
+
+            var newTitle = "Updated study plan";
+            var updateDto = new StudyPlanDto
+            {
+                Title = newTitle,
+            };
+
+            await _studyPlanService.UpdateAsync(studyPlanId, updateDto);
+
+            var updatedStudyPlan = await _dbContext.StudyPlans.FindAsync(studyPlanId);
+
+            Assert.IsNotNull(updatedStudyPlan);
+            Assert.AreEqual(updatedStudyPlan.Title, newTitle);
         }
 
         [Test]
