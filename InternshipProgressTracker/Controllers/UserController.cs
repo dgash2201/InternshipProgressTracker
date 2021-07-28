@@ -14,7 +14,7 @@ namespace InternshipProgressTracker.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;

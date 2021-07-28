@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -68,7 +67,7 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new { Success = true });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
@@ -120,7 +119,7 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(internshipStream);
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
@@ -232,7 +231,7 @@ namespace InternshipProgressTracker.Controllers
                 await _internshipStreamService.SoftDeleteAsync(id);
 
                 return Ok(new { Success = true });
-            } 
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
