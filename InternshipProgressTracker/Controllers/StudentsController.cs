@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -64,10 +65,12 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPost("start-study-plan-entry")]
-        public async Task<IActionResult> StartStudyPlanEntry(int studentId, int entryId)
+        public async Task<IActionResult> StartStudyPlanEntry(int entryId)
         {
             try
             {
+                var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
                 await _studentService.StartStudyPlanEntryAsync(studentId, entryId);
 
                 return Ok(new Response { Success = true });
@@ -94,10 +97,12 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPut("finish-study-plan-entry")]
-        public async Task<IActionResult> FinishStudyPlanEntry(int studentId, int entryId)
+        public async Task<IActionResult> FinishStudyPlanEntry(int entryId)
         {
             try
             {
+                var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
                 await _studentService.FinishStudyPlanEntryAsync(studentId, entryId);
 
                 return Ok(new Response { Success = true });

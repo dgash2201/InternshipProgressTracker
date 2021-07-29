@@ -131,7 +131,7 @@
             <param name="studentId">Id of student</param>
             <param name="grade">Student current grade</param>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(System.Int32)">
             <summary>
             Mark study plan entry as started
             </summary>
@@ -142,7 +142,7 @@
             <response code="404">Student or study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(System.Int32)">
             <summary>
             Mark study plan entry as finished
             </summary>
