@@ -1,8 +1,12 @@
-﻿using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Services.Admins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -33,9 +37,17 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("get-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _adminService.GetAllUsersAsync();
+            try
+            {
+                var users = await _adminService.GetAllUsersAsync();
 
-            return Ok(new { Success = true, Users = users });
+                return Ok(new ResponseWithModel<IReadOnlyCollection<User>> { Success = true, Model = users });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -54,11 +66,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _adminService.SetUserRoleAsync(userId, role);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch(NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
         }
     }

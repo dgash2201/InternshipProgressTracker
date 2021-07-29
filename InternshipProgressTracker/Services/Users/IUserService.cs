@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using InternshipProgressTracker.Models.Token;
 using InternshipProgressTracker.Models.Users;
 
 namespace InternshipProgressTracker.Services.Users
@@ -10,7 +11,7 @@ namespace InternshipProgressTracker.Services.Users
     public interface IUserService
     {
         Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken);
-        Task<(string, string)> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken);
-        Task<(string, string)> RefreshJwtAsync(string refreshToken, int id);
+        Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken);
+        Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int id);
     }
 }

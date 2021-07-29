@@ -32,15 +32,15 @@ namespace InternshipProgressTracker.Controllers
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="grade">Student current grade</param>
-        [HttpPut("set-grade")]
         [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPut("set-grade")]
         public async Task<IActionResult> SetStudentGrade(int studentId, StudentGrade grade)
         {
             try
             {
                 await _studentService.SetStudentGradeAsync(studentId, grade);
 
-                return Ok();
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
@@ -70,7 +70,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _studentService.StartStudyPlanEntryAsync(studentId, entryId);
 
-                return Ok();
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
@@ -88,14 +88,19 @@ namespace InternshipProgressTracker.Controllers
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="entryId">Id of study plan entry</param>
-        /// <returns></returns>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Student or study plan entry was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
+        [HttpPut("finish-study-plan-entry")]
         public async Task<IActionResult> FinishStudyPlanEntry(int studentId, int entryId)
         {
             try
             {
                 await _studentService.FinishStudyPlanEntryAsync(studentId, entryId);
 
-                return Ok();
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {

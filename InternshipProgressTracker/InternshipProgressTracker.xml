@@ -142,6 +142,17 @@
             <response code="404">Student or study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(System.Int32,System.Int32)">
+            <summary>
+            Mark study plan entry as finished
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="entryId">Id of study plan entry</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Student or study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Controllers.StudyPlanEntriesController">
             <summary>
             Represents Web API of Study Plan Entries
@@ -424,6 +435,11 @@
             Contains data for creating a study plan
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Models.Token.TokenResponseDto">
+            <summary>
+            DTO with JWT and refresh token
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Users.LoginDto">
             <summary>
             Represents data from login form
@@ -700,17 +716,22 @@
             Service for authorization and 
             </summary>
         </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.RegisterAsync(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+            <summary>
+            Creates user entity and saves it in the database
+            </summary>
+            <param name="registerDto">Contains signup form data</param>
+        </member>
         <member name="M:InternshipProgressTracker.Services.Users.UserService.LoginAsync(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
             Checks login data and returns generated token
             </summary>
             <param name="loginDto">Contains login form data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Users.UserService.RegisterAsync(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.RefreshJwtAsync(System.String,System.Int32)">
             <summary>
-            Creates user entity and saves it in the database
+            Creates new JWT
             </summary>
-            <param name="registerDto">Contains signup form data</param>
         </member>
         <member name="T:InternshipProgressTracker.Settings.InternshipProgressTrackerSecrets">
             <summary>

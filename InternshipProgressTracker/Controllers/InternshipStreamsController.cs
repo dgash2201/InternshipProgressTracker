@@ -1,4 +1,5 @@
 ﻿using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -41,7 +43,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 var internshipStreams = await _internshipStreamService.GetWithSoftDeletedAsync();
 
-                return Ok(new { Success = true, IntenshipStreams = internshipStreams });
+                return Ok(new ResponseWithModel<IReadOnlyCollection<InternshipStreamResponseDto>> { Success = true, Model = internshipStreams });
             }
             catch (Exception ex)
             {
@@ -65,11 +67,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _internshipStreamService.AddStudentAsync(streamId, studentId);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -92,7 +94,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 var internshipStreams = await _internshipStreamService.GetAsync();
 
-                return Ok(internshipStreams);
+                return Ok(new ResponseWithModel<IReadOnlyCollection<InternshipStreamResponseDto>> { Success = true, Model = internshipStreams });
             }
             catch (Exception ex)
             {
@@ -117,11 +119,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 var internshipStream = await _internshipStreamService.GetAsync(id);
 
-                return Ok(internshipStream);
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStream });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -145,7 +147,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 var id = await _internshipStreamService.CreateAsync(createDto);
 
-                return Ok(new { Success = true, Id = id });
+                return Ok(new ResponseWithId { Success = true, Id = id });
             }
             catch (Exception ex)
             {
@@ -171,11 +173,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _internshipStreamService.UpdateAsync(id, updateDto);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -201,11 +203,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _internshipStreamService.UpdateAsync(id, patchDocument);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -230,11 +232,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _internshipStreamService.SoftDeleteAsync(id);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -259,11 +261,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 await _internshipStreamService.DeleteAsync(id);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
