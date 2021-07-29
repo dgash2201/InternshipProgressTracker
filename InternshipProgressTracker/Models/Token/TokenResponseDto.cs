@@ -10,6 +10,8 @@ namespace InternshipProgressTracker.Models.Token
     /// </summary>
     public class TokenResponseDto
     {
+        public int UserId { get; set; }
+
         public string Jwt { get; set; }
 
         public string RefreshToken { get; set; }

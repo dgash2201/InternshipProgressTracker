@@ -319,12 +319,12 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="T:InternshipProgressTracker.Controllers.UserController">
+        <member name="T:InternshipProgressTracker.Controllers.UsersController">
             <summary>
             Represents Web API of Users
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.UserController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
             Register new user
             </summary>
@@ -332,7 +332,7 @@
             <response code="409">User already exists</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.UserController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Login(InternshipProgressTracker.Models.Users.LoginDto,System.Threading.CancellationToken)">
             <summary>
             Authentificate user
             </summary>
@@ -341,7 +341,7 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.UserController.RefreshJwt(System.String,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32)">
             <summary>
             Create new JWT
             </summary>

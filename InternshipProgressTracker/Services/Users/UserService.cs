@@ -109,7 +109,7 @@ namespace InternshipProgressTracker.Services.Users
             user.RefreshToken = refreshToken;
             await _userManager.UpdateAsync(user);
 
-            return new TokenResponseDto { Jwt = jwt, RefreshToken = refreshToken };
+            return new TokenResponseDto { UserId = user.Id, Jwt = jwt, RefreshToken = refreshToken };
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace InternshipProgressTracker.Services.Users
             user.RefreshToken = newRefreshToken;
             await _userManager.UpdateAsync(user);
 
-            return new TokenResponseDto { Jwt = newJwt, RefreshToken = newRefreshToken };
+            return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
         }
     }
 }

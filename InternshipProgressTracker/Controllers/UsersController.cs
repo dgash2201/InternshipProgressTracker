@@ -8,6 +8,7 @@ using InternshipProgressTracker.Exceptions;
 using Microsoft.Extensions.Logging;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Token;
+using Microsoft.AspNetCore.Http;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -16,12 +17,12 @@ namespace InternshipProgressTracker.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
-        public UserController(IUserService service, ILogger<UserController> logger)
+        public UsersController(IUserService service, ILogger<UsersController> logger)
         {
             _userService = service;
             _logger = logger;
