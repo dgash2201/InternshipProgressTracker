@@ -1,6 +1,7 @@
 ﻿using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Common;
+using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,15 +32,13 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Set student grade
         /// </summary>
-        /// <param name="studentId">Id of student</param>
-        /// <param name="grade">Student current grade</param>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("set-grade")]
-        public async Task<IActionResult> SetStudentGrade(int studentId, StudentGrade grade)
+        public async Task<IActionResult> SetStudentGrade(StudentGradeDto gradeDto)
         {
             try
             {
-                await _studentService.SetStudentGradeAsync(studentId, grade);
+                await _studentService.SetStudentGradeAsync(gradeDto.StudentId, gradeDto.Grade);
 
                 return Ok(new Response { Success = true });
             }
@@ -57,21 +56,19 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Mark study plan entry as started
         /// </summary>
-        /// <param name="studentId">Id of student</param>
-        /// <param name="entryId">Id of study plan entry</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">Student or study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPost("start-study-plan-entry")]
-        public async Task<IActionResult> StartStudyPlanEntry(int entryId)
+        public async Task<IActionResult> StartStudyPlanEntry(ProgressDto progressDto)
         {
             try
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.StartStudyPlanEntryAsync(studentId, entryId);
+                await _studentService.StartStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId);
 
                 return Ok(new Response { Success = true });
             }
@@ -89,21 +86,19 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Mark study plan entry as finished
         /// </summary>
-        /// <param name="studentId">Id of student</param>
-        /// <param name="entryId">Id of study plan entry</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">Student or study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPut("finish-study-plan-entry")]
-        public async Task<IActionResult> FinishStudyPlanEntry(int entryId)
+        public async Task<IActionResult> FinishStudyPlanEntry(ProgressDto progressDto)
         {
             try
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.FinishStudyPlanEntryAsync(studentId, entryId);
+                await _studentService.FinishStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId);
 
                 return Ok(new Response { Success = true });
             }

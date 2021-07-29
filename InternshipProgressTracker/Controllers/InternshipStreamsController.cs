@@ -167,11 +167,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, InternshipStreamResponseDto updateDto)
+        public async Task<IActionResult> Update(PutRequestDto<InternshipStreamDto> putRequestDto)
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(id, updateDto);
+                await _internshipStreamService.UpdateAsync(putRequestDto.Id, putRequestDto.Model);
 
                 return Ok(new Response { Success = true });
             }

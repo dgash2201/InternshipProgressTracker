@@ -144,11 +144,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, StudyPlanEntryDto updateDto)
+        public async Task<IActionResult> Update(PutRequestDto<StudyPlanEntryDto> putRequestDto)
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(id, updateDto);
+                await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model);
 
                 return Ok(new Response { Success = true });
             }
@@ -174,11 +174,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument)
+        public async Task<IActionResult> Update(PatchRequestDto<StudyPlanEntryDto> patchRequestDto)
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(id, patchDocument);
+                await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument);
 
                 return Ok(new Response { Success = true });
             }

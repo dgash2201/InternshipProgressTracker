@@ -77,7 +77,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamResponseDto)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
             <summary>
             Update internship stream data
             </summary>
@@ -124,30 +124,24 @@
             Represents Web API of students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(System.Int32,InternshipProgressTracker.Entities.StudentGrade)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto)">
             <summary>
             Set student grade
             </summary>
-            <param name="studentId">Id of student</param>
-            <param name="grade">Student current grade</param>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
             <summary>
             Mark study plan entry as started
             </summary>
-            <param name="studentId">Id of student</param>
-            <param name="entryId">Id of study plan entry</param>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
             <response code="404">Student or study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
             <summary>
             Mark study plan entry as finished
             </summary>
-            <param name="studentId">Id of student</param>
-            <param name="entryId">Id of study plan entry</param>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
             <response code="404">Student or study plan entry was not found</response>
@@ -194,7 +188,7 @@
             <response code="404">Related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
             <summary>
             Update study plan entry data
             </summary>
@@ -205,7 +199,7 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
             <summary>
             Patch study plan entry data
             </summary>
@@ -277,7 +271,7 @@
             <response code="404">Related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
             <summary>
             Update study plan data
             </summary>
@@ -288,7 +282,7 @@
             <response code="404">Study plan or related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
             <summary>
             Patch study plan data
             </summary>
@@ -430,6 +424,18 @@
             Exception that means that an entity was not found
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Models.Common.PatchRequestDto`1">
+            <summary>
+            DTO for patch requests
+            </summary>
+            <typeparam name="TModel"></typeparam>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Common.PutRequestDto`1">
+            <summary>
+            DTO for put requests
+            </summary>
+            <typeparam name="TModel"></typeparam>
+        </member>
         <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
             <summary>
             Contains data for creating a study plan
@@ -511,7 +517,7 @@
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamResponseDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
             <summary>
             Updates data in internship stream
             </summary>
