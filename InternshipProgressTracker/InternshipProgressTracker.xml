@@ -48,9 +48,36 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddMentor(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto)">
+            <summary>
+            Bind mentor with internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or mentor was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto)">
             <summary>
             Bind student with internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or student was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.RemoveMentor(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto)">
+            <summary>
+            Remove mentor from internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or mentor was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.RemoveStudent(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto)">
+            <summary>
+            Remove student from internship stream
             </summary>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
@@ -475,6 +502,16 @@
             </summary>
             <typeparam name="TModel"></typeparam>
         </member>
+        <member name="T:InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto">
+            <summary>
+            Contains data for binding mentro with internship stream
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto">
+            <summary>
+            Contains data for binding student with internship stream
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Students.GradeProgressDto">
             <summary>
             Contains data for grading student progress by mentor
@@ -546,9 +583,24 @@
             Logic service which works with internship streams
             </summary>
         </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddMentorAsync(System.Int32,System.Int32)">
+            <summary>
+            Binds mentor with stream
+            </summary>
+        </member>
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32)">
             <summary>
             Binds student with stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.RemoveMentorAsync(System.Int32,System.Int32)">
+            <summary>
+            Remove mentor from internship stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.RemoveStudentAsync(System.Int32,System.Int32)">
+            <summary>
+            Remove student from internship stream
             </summary>
         </member>
         <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetWithSoftDeletedAsync">

@@ -53,6 +53,34 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
+        /// Bind mentor with internship stream
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream or mentor was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPut("add-mentor")]
+        public async Task<IActionResult> AddMentor(InternshipStreamMentorDto addMentorDto)
+        {
+            try
+            {
+                await _internshipStreamService.AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Bind student with internship stream
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
@@ -60,8 +88,8 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">Internship stream or student was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPost("add-student")]
-        public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
+        [HttpPut("add-student")]
+        public async Task<IActionResult> AddStudent(InternshipStreamStudentDto addStudentDto)
         {
             try
             {
@@ -80,21 +108,48 @@ namespace InternshipProgressTracker.Controllers
             }
         }
 
-
         /// <summary>
-        /// Bind mentor with internship stream
+        /// Remove mentor from internship stream
         /// </summary>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">Internship stream or mentor was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPost("add-mentor")]
-        public async Task<IActionResult> AddMentor(AddMentorDto addMentorDto)
+        [HttpPut("remove-mentor")]
+        public async Task<IActionResult> RemoveMentor(InternshipStreamMentorDto removeMentorDto)
         {
             try
             {
-                await _internshipStreamService.AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId);
+                await _internshipStreamService.RemoveMentorAsync(removeMentorDto.InternshipStreamId, removeMentorDto.MentorId);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Remove student from internship stream
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream or student was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPut("remove-student")]
+        public async Task<IActionResult> RemoveStudent(InternshipStreamStudentDto removeStudentDto)
+        {
+            try
+            {
+                await _internshipStreamService.RemoveStudentAsync(removeStudentDto.InternshipStreamId, removeStudentDto.StudentId);
 
                 return Ok(new Response { Success = true });
             }

@@ -8,7 +8,7 @@ namespace InternshipProgressTracker.Models.InternshipStreams
     /// <summary>
     /// Contains data for binding mentro with internship stream
     /// </summary>
-    public class AddMentorDto
+    public class InternshipStreamMentorDto
     {    
         public int InternshipStreamId { get; set; }
 

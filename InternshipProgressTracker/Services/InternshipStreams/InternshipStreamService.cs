@@ -96,6 +96,60 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         }
 
         /// <summary>
+        /// Remove mentor from internship stream
+        /// </summary>
+        public async Task RemoveMentorAsync(int streamId, int mentorId)
+        {
+            var stream = await _dbContext
+                .InternshipStreams
+                .FindAsync(streamId);
+
+            var mentor = await _dbContext
+                .Mentors
+                .FindAsync(mentorId);
+
+            if (stream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            if (mentor == null)
+            {
+                throw new NotFoundException("Mentor with this id was not found");
+            }
+
+            stream.Mentors.Remove(mentor);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Remove student from internship stream
+        /// </summary>
+        public async Task RemoveStudentAsync(int streamId, int studentId)
+        {
+            var stream = await _dbContext
+                .InternshipStreams
+                .FindAsync(streamId);
+
+            var student = await _dbContext
+                .Students
+                .FindAsync(studentId);
+
+            if (stream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            if (student == null)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            stream.Students.Remove(student);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Gets all internship streams
         /// </summary>
         public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync()
