@@ -61,11 +61,40 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost("add-student")]
-        public async Task<IActionResult> AddStudent(int streamId, int studentId)
+        public async Task<IActionResult> AddStudent(AddStudentDto addStudentDto)
         {
             try
             {
-                await _internshipStreamService.AddStudentAsync(streamId, studentId);
+                await _internshipStreamService.AddStudentAsync(addStudentDto.InternshipStreamId, addStudentDto.StudentId);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Bind mentor with internship stream
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Internship stream or mentor was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Mentor, Lead, Admin")]
+        [HttpPost("add-mentor")]
+        public async Task<IActionResult> AddMentor(AddMentorDto addMentorDto)
+        {
+            try
+            {
+                await _internshipStreamService.AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId);
 
                 return Ok(new Response { Success = true });
             }

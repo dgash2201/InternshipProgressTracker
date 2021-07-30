@@ -32,6 +32,38 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         }
 
         /// <summary>
+        /// Binds mentor with stream
+        /// </summary>
+        public async Task AddMentorAsync(int streamId, int mentorId)
+        {
+            var stream = await _dbContext
+                .InternshipStreams
+                .FindAsync(streamId);
+
+            var mentor = await _dbContext
+                .Mentors
+                .FindAsync(mentorId);
+
+            if (stream == null)
+            {
+                throw new NotFoundException("Internship stream with this id was not found");
+            }
+
+            if (mentor == null)
+            {
+                throw new NotFoundException("Mentor with this id was not found");
+            }
+
+            if (stream.Mentors == null)
+            {
+                stream.Mentors = new Collection<Mentor>();
+            }
+
+            stream.Mentors.Add(mentor);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Binds student with stream
         /// </summary>
         public async Task AddStudentAsync(int streamId, int studentId)
@@ -71,6 +103,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             var internshipStreamDtos = await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
+                .Include(s => s.Mentors)
                 .Include(s => s.StudyPlans)
                 .ThenInclude(p => p.Entries)
                 .IgnoreQueryFilters()

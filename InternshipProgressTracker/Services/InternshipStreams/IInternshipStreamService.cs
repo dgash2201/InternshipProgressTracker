@@ -10,6 +10,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     /// </summary>
     public interface IInternshipStreamService
     {
+        Task AddMentorAsync(int streamId, int studentId);
         Task AddStudentAsync(int streamId, int studentId);
         Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync();
         Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync(int? studentId, int? mentorId);
