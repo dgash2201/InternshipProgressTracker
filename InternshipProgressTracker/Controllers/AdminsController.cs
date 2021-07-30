@@ -1,8 +1,13 @@
-﻿using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Admins;
+using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Services.Admins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -33,32 +38,70 @@ namespace InternshipProgressTracker.Controllers
         [HttpGet("get-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _adminService.GetAllUsersAsync();
+            try
+            {
+                var users = await _adminService.GetAllUsersAsync();
 
-            return Ok(new { Success = true, Users = users });
+                return Ok(new ResponseWithModel<IReadOnlyCollection<User>> { Success = true, Model = users });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
-        /// Set user role
+        /// Add admin role to user
         /// </summary>
-        /// <param name="userId">Id of user</param>
-        /// <param name="role">Name of role</param>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPost("set-user-role")]
-        public async Task<IActionResult> SetUserRole(int userId, string role)
+        [HttpPost("create-admin")]
+        public async Task<IActionResult> CreateAdmin(CreateAdminDto createDto)
         {
             try
             {
-                await _adminService.SetUserRoleAsync(userId, role);
+                await _adminService.CreateAdminAsync(createDto.UserId);
 
-                return Ok(new { Success = true });
+                return Ok(new Response { Success = true });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Add mentor role to user
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
+        [HttpPost("create-mentor")]
+        public async Task<IActionResult> CreateAdmin(CreateMentorDto createDto)
+        {
+            try
+            {
+                await _adminService.CreateMentorAsync(createDto.UserId, createDto.Role);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
         }
     }

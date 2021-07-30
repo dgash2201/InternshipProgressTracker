@@ -5,14 +5,13 @@ using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Models.StudyPlans;
 using System.Linq;
 
-namespace InternshipProgressTracker.Mapper
+namespace InternshipProgressTracker.Utils.Mapper
 {        
     /// <summary>
     /// Contains settings for AutoMapper
     /// </summary>
     public class MapperProfile : Profile
     {
-
         public MapperProfile()
         {
             CreateMap<InternshipStreamDto, InternshipStream>().ReverseMap();

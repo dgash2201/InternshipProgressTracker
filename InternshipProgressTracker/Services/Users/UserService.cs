@@ -1,13 +1,14 @@
-﻿using System.IO;
+﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Token;
+using InternshipProgressTracker.Models.Users;
+using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Utils;
+using Microsoft.AspNetCore.Identity;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Models.Users;
-using InternshipProgressTracker.Utils;
-using InternshipProgressTracker.Services.Students;
-using InternshipProgressTracker.Exceptions;
-using System.Linq;
 
 namespace InternshipProgressTracker.Services.Users
 {
@@ -21,8 +22,8 @@ namespace InternshipProgressTracker.Services.Users
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
 
-        public UserService(UserManager<User> userManager, 
-            SignInManager<User> signInManager, 
+        public UserService(UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ITokenGenerator tokenGenerator,
             IStudentService studentService)
         {
@@ -32,37 +33,7 @@ namespace InternshipProgressTracker.Services.Users
             _studentService = studentService;
         }
 
-        /// <summary>
-        /// Checks login data and returns generated token
-        /// </summary>
-        /// <param name="loginDto">Contains login form data</param>
-        public async Task<(string, string)> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
 
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-
-            if (user == null)
-            {
-                throw new NotFoundException("User with this email was not found");
-            }
-
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-            
-            if (!signInResult.Succeeded)
-            {
-                throw new BadRequestException("Email or password is incorrect");
-            }
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var jwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
-            var refreshToken = _tokenGenerator.GenerateRefreshToken();
-
-            user.RefreshToken = refreshToken;
-            await _userManager.UpdateAsync(user);
-
-            return (jwt, refreshToken);
-        }
 
         /// <summary>
         /// Creates user entity and saves it in the database
@@ -94,7 +65,7 @@ namespace InternshipProgressTracker.Services.Users
 
             if (registerDto.Avatar != null)
             {
-                using(var memoryStream = new MemoryStream())
+                using (var memoryStream = new MemoryStream())
                 {
                     await registerDto.Avatar.CopyToAsync(memoryStream);
                     user.Photo = memoryStream.ToArray();
@@ -109,7 +80,42 @@ namespace InternshipProgressTracker.Services.Users
             return user.Id;
         }
 
-        public async Task<(string, string)> RefreshJwtAsync(string refreshToken, int userId)
+        /// <summary>
+        /// Checks login data and returns generated token
+        /// </summary>
+        /// <param name="loginDto">Contains login form data</param>
+        public async Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User with this email was not found");
+            }
+
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!signInResult.Succeeded)
+            {
+                throw new BadRequestException("Email or password is incorrect");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var jwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
+            var refreshToken = _tokenGenerator.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new TokenResponseDto { UserId = user.Id, Jwt = jwt, RefreshToken = refreshToken };
+        }
+
+        /// <summary>
+        /// Creates new JWT
+        /// </summary>
+        public async Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
@@ -130,7 +136,7 @@ namespace InternshipProgressTracker.Services.Users
             user.RefreshToken = newRefreshToken;
             await _userManager.UpdateAsync(user);
 
-            return (newJwt, newRefreshToken);
+            return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
         }
     }
 }

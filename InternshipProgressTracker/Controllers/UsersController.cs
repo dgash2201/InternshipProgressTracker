@@ -6,6 +6,9 @@ using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Exceptions;
 using Microsoft.Extensions.Logging;
+using InternshipProgressTracker.Models.Common;
+using InternshipProgressTracker.Models.Token;
+using Microsoft.AspNetCore.Http;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -14,12 +17,12 @@ namespace InternshipProgressTracker.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class UserController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
-        public UserController(IUserService service, ILogger<UserController> logger)
+        public UsersController(IUserService service, ILogger<UsersController> logger)
         {
             _userService = service;
             _logger = logger;
@@ -39,11 +42,11 @@ namespace InternshipProgressTracker.Controllers
             {
                 var id = await _userService.RegisterAsync(registerDto, cancellationToken);
 
-                return Ok(new { Success = true, Id = id });
+                return Ok(new ResponseWithId { Success = true, Id = id });
             }
             catch(AlreadyExistsException ex)
             {
-                return Conflict(new { Success = false, Message = ex.Message });
+                return Conflict(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch(Exception ex)
             {
@@ -65,17 +68,17 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var (jwt, refreshToken) = await _userService.LoginAsync(loginDto, cancellationToken);
+                var tokenPair = await _userService.LoginAsync(loginDto, cancellationToken);
 
-                return Ok(new { Success = true, Jwt = jwt, RefreshToken = refreshToken });
+                return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }
             catch(BadRequestException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch(NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -96,17 +99,17 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var (newJwt, newRefreshToken) = await _userService.RefreshJwtAsync(refreshToken, userId);
+                var tokenPair = await _userService.RefreshJwtAsync(refreshToken, userId);
 
-                return Ok(new { Succes = true, Jwt = newJwt, RefreshToken = newRefreshToken });
+                return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }
             catch(BadRequestException ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message });
+                return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new { Success = false, Message = ex.Message });
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {

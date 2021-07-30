@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Entities
 {
@@ -15,17 +11,17 @@ namespace InternshipProgressTracker.Entities
 
         public int StudyPlanEntryId { get; set; }
 
-        [Required]
-        public int Grade { get; set; }
+        public Student Student { get; set; }
 
-        [Required]
-        public int GradingMentorId { get; set; }
+        public StudyPlanEntry StudyPlanEntry { get; set; }
 
-        [Required]
-        public DateTime StartTime { get; set; }
+        public int? Grade { get; set; }
 
-        [Required]
-        public DateTime FinishTime { get; set; }
+        public int? GradingMentorId { get; set; }
+
+        public DateTime? StartTime { get; set; }
+
+        public DateTime? FinishTime { get; set; }
 
         public string StudentNotes { get; set; }
 

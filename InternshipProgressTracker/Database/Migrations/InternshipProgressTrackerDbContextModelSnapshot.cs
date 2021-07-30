@@ -4,21 +4,19 @@ using InternshipProgressTracker.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace InternshipProgressTracker.Migrations
+namespace InternshipProgressTracker.Database.Migrations
 {
     [DbContext(typeof(InternshipProgressTrackerDbContext))]
-    [Migration("20210715213402_SoftDeletable")]
-    partial class SoftDeletable
+    partial class InternshipProgressTrackerDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.InternshipStream", b =>
@@ -31,13 +29,26 @@ namespace InternshipProgressTracker.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("FactEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FactStartDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("PlanEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PlanStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -50,28 +61,15 @@ namespace InternshipProgressTracker.Migrations
             modelBuilder.Entity("InternshipProgressTracker.Entities.Mentor", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("InternshipStreamId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InternshipStreamId");
 
                     b.HasIndex("IsDeleted");
 
@@ -84,14 +82,9 @@ namespace InternshipProgressTracker.Migrations
             modelBuilder.Entity("InternshipProgressTracker.Entities.Student", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CurrentGrade")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InternshipStreamId")
+                    b.Property<int?>("CurrentGrade")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -101,8 +94,6 @@ namespace InternshipProgressTracker.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InternshipStreamId");
 
                     b.HasIndex("IsDeleted");
 
@@ -120,13 +111,13 @@ namespace InternshipProgressTracker.Migrations
                     b.Property<int>("StudyPlanEntryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FinishTime")
+                    b.Property<DateTime?>("FinishTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Grade")
+                    b.Property<int?>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<int>("GradingMentorId")
+                    b.Property<int?>("GradingMentorId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -135,11 +126,17 @@ namespace InternshipProgressTracker.Migrations
                     b.Property<string>("MentorNotes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("StudentId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("StudentNotes")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StudyPlanEntryId1")
+                        .HasColumnType("int");
 
                     b.HasKey("StudentId", "StudyPlanEntryId");
 
@@ -147,7 +144,11 @@ namespace InternshipProgressTracker.Migrations
 
                     b.HasIndex("IsDeleted");
 
+                    b.HasIndex("StudentId1");
+
                     b.HasIndex("StudyPlanEntryId");
+
+                    b.HasIndex("StudyPlanEntryId1");
 
                     b.ToTable("StudentStudyPlanProgresses");
                 });
@@ -272,6 +273,9 @@ namespace InternshipProgressTracker.Migrations
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -295,6 +299,36 @@ namespace InternshipProgressTracker.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("InternshipStreamMentor", b =>
+                {
+                    b.Property<int>("InternshipStreamsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MentorsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InternshipStreamsId", "MentorsId");
+
+                    b.HasIndex("MentorsId");
+
+                    b.ToTable("InternshipStreamMentor");
+                });
+
+            modelBuilder.Entity("InternshipStreamStudent", b =>
+                {
+                    b.Property<int>("InternshipStreamsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InternshipStreamsId", "StudentsId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.ToTable("InternshipStreamStudent");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -429,12 +463,6 @@ namespace InternshipProgressTracker.Migrations
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.Mentor", b =>
                 {
-                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", null)
-                        .WithMany("Mentors")
-                        .HasForeignKey("InternshipStreamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("InternshipProgressTracker.Entities.User", "User")
                         .WithOne("Mentor")
                         .HasForeignKey("InternshipProgressTracker.Entities.Mentor", "UserId")
@@ -446,17 +474,11 @@ namespace InternshipProgressTracker.Migrations
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.Student", b =>
                 {
-                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", "InternshipStream")
-                        .WithMany("Students")
-                        .HasForeignKey("InternshipStreamId");
-
                     b.HasOne("InternshipProgressTracker.Entities.User", "User")
                         .WithOne("Student")
                         .HasForeignKey("InternshipProgressTracker.Entities.Student", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("InternshipStream");
 
                     b.Navigation("User");
                 });
@@ -466,8 +488,7 @@ namespace InternshipProgressTracker.Migrations
                     b.HasOne("InternshipProgressTracker.Entities.Mentor", null)
                         .WithMany("StudentStudyPlanProgresses")
                         .HasForeignKey("GradingMentorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("InternshipProgressTracker.Entities.Student", null)
                         .WithMany("StudyPlanProgresses")
@@ -475,27 +496,73 @@ namespace InternshipProgressTracker.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("InternshipProgressTracker.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId1");
+
                     b.HasOne("InternshipProgressTracker.Entities.StudyPlanEntry", null)
                         .WithMany("StudentsProgresses")
                         .HasForeignKey("StudyPlanEntryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("InternshipProgressTracker.Entities.StudyPlanEntry", "StudyPlanEntry")
+                        .WithMany()
+                        .HasForeignKey("StudyPlanEntryId1");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("StudyPlanEntry");
                 });
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.StudyPlan", b =>
                 {
-                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", null)
+                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", "InternshipStream")
                         .WithMany("StudyPlans")
                         .HasForeignKey("InternshipStreamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("InternshipStream");
                 });
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.StudyPlanEntry", b =>
                 {
-                    b.HasOne("InternshipProgressTracker.Entities.StudyPlan", null)
+                    b.HasOne("InternshipProgressTracker.Entities.StudyPlan", "StudyPlan")
                         .WithMany("Entries")
                         .HasForeignKey("StudyPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StudyPlan");
+                });
+
+            modelBuilder.Entity("InternshipStreamMentor", b =>
+                {
+                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", null)
+                        .WithMany()
+                        .HasForeignKey("InternshipStreamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InternshipProgressTracker.Entities.Mentor", null)
+                        .WithMany()
+                        .HasForeignKey("MentorsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InternshipStreamStudent", b =>
+                {
+                    b.HasOne("InternshipProgressTracker.Entities.InternshipStream", null)
+                        .WithMany()
+                        .HasForeignKey("InternshipStreamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InternshipProgressTracker.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -553,10 +620,6 @@ namespace InternshipProgressTracker.Migrations
 
             modelBuilder.Entity("InternshipProgressTracker.Entities.InternshipStream", b =>
                 {
-                    b.Navigation("Mentors");
-
-                    b.Navigation("Students");
-
                     b.Navigation("StudyPlans");
                 });
 

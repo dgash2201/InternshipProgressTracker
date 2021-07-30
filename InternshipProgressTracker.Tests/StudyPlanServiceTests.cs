@@ -2,7 +2,7 @@
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
-using InternshipProgressTracker.Mapper;
+using InternshipProgressTracker.Utils.Mapper;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Tests.Helpers;

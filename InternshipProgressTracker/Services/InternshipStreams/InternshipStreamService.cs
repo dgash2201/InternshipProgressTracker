@@ -134,7 +134,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// </summary>
         /// <param name="id">Internship stream id</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, InternshipStreamResponseDto updateDto)
+        public async Task UpdateAsync(int id, InternshipStreamDto updateDto)
         {
             var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
 

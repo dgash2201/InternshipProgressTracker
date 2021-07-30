@@ -31,30 +31,32 @@ namespace InternshipProgressTracker.Database
 
             builder
                 .Entity<StudentStudyPlanProgress>()
-                .HasKey(e => new { e.StudentId, e.StudyPlanEntryId });
+                .HasKey(p => new { p.StudentId, p.StudyPlanEntryId });
 
             builder
                 .Entity<Student>()
-                .HasMany(e => e.StudyPlanProgresses)
+                .HasMany(s => s.StudyPlanProgresses)
                 .WithOne()
+                .HasForeignKey(p => p.StudentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .Entity<StudyPlanEntry>()
                 .HasMany(e => e.StudentsProgresses)
                 .WithOne()
+                .HasForeignKey(p => p.StudyPlanEntryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .Entity<Mentor>()
-                .HasMany(e => e.StudentStudyPlanProgresses)
+                .HasMany(m => m.StudentStudyPlanProgresses)
                 .WithOne()
                 .HasForeignKey(s => s.GradingMentorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .Entity<User>()
-                .HasKey(e => e.Id);
+                .HasKey(u => u.Id);
 
             builder
                 .Entity<User>()

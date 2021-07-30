@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 
 namespace InternshipProgressTracker.Models.InternshipStreams
 {

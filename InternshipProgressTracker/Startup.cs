@@ -1,33 +1,35 @@
-using System;
-using System.Text;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Linq;
+using InternshipProgressTracker.Database;
+using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Services.Admins;
+using InternshipProgressTracker.Services.InternshipStreams;
+using InternshipProgressTracker.Services.Mentors;
+using InternshipProgressTracker.Services.Students;
+using InternshipProgressTracker.Services.StudyPlanEntries;
+using InternshipProgressTracker.Services.StudyPlans;
+using InternshipProgressTracker.Services.Users;
+using InternshipProgressTracker.Settings;
+using InternshipProgressTracker.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
-using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Services.Users;
-using InternshipProgressTracker.Utils;
-using InternshipProgressTracker.Services.InternshipStreams;
-using InternshipProgressTracker.Services.Students;
-using InternshipProgressTracker.Database;
-using InternshipProgressTracker.Settings;
-using InternshipProgressTracker.Services.StudyPlanEntries;
-using InternshipProgressTracker.Services.StudyPlans;
-using InternshipProgressTracker.Services.Admins;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InternshipProgressTracker
 {
@@ -51,25 +53,15 @@ namespace InternshipProgressTracker
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
-            services
-                .AddScoped<IUserService, UserService>()
-                .AddSingleton<ITokenGenerator, TokenGenerator>();
-
-            services
-                .AddScoped<IInternshipStreamService, InternshipStreamService>();
-
-            services
-                .AddScoped<IStudentService, StudentService>();
-
-            services
-                .AddScoped<IStudyPlanService, StudyPlanService>();
-
-            services
-                .AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
-
-            services
-                .AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IInternshipStreamService, InternshipStreamService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IStudyPlanService, StudyPlanService>();
+            services.AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IMentorService, MentorService>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>
@@ -97,13 +89,14 @@ namespace InternshipProgressTracker
             services.AddAuthorization();
 
             services
-                .AddControllers(options => 
+                .AddControllers(options =>
                 {
                     options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
                 })
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
 
             services.AddSwaggerGen(options =>
@@ -203,7 +196,7 @@ namespace InternshipProgressTracker
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-            var roleNames = new [] { "Admin", "Lead", "Mentor", "Student" };
+            var roleNames = new[] { "Admin", "Lead", "Mentor", "Student" };
 
             foreach (var roleName in roleNames)
             {

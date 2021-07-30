@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using InternshipProgressTracker.Entities.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InternshipProgressTracker.Entities
 {
@@ -8,10 +10,10 @@ namespace InternshipProgressTracker.Entities
     /// </summary>
     public class Student : ISoftDeletable
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        public int? CurrentGrade { get; set; }
+        public StudentGrade? CurrentGrade { get; set; }
 
         public int UserId { get; set; }
 

@@ -1,19 +1,10 @@
-﻿using System;
+﻿using InternshipProgressTracker.Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace InternshipProgressTracker.Entities
 {
-    /// <summary>
-    /// Contains statuses of Internship Stream
-    /// </summary>
-    public enum InternshipStreamStatus
-    {
-        NotStarted,
-        Active,
-        Completed
-    }
-
     /// <summary>
     /// Represents the InternshipStream entity
     /// </summary>
