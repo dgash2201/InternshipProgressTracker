@@ -1,6 +1,7 @@
 ﻿using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Students;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -66,11 +67,63 @@ namespace InternshipProgressTracker.Services.Students
         }
 
         /// <summary>
+        /// Set grade to student progress
+        /// </summary>
+        public async Task GradeStudentProgress(GradeProgressDto gradeProgressDto)
+        {
+            var studentExists = await _dbContext
+                .Students
+                .AnyAsync(s => s.Id == gradeProgressDto.StudentId);
+
+            if (!studentExists)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            var entryExists = await _dbContext
+                .StudyPlanEntries
+                .AnyAsync(e => e.Id == gradeProgressDto.StudyPlanEntryId);
+
+            if (!entryExists)
+            {
+                throw new NotFoundException("Study plan entry with this id was not found");
+            }
+
+            var mentorExists = await _dbContext
+                .Mentors
+                .AnyAsync(e => e.Id == gradeProgressDto.GradingMentorId);
+
+            if (!mentorExists)
+            {
+                throw new NotFoundException("Mentor with this id was not found");
+            }
+
+            var studentProgress = await _dbContext
+                .StudentStudyPlanProgresses
+                .FindAsync(gradeProgressDto.StudentId, gradeProgressDto.StudyPlanEntryId);
+
+            if (studentProgress == null || studentProgress.FinishTime == null)
+            {
+                throw new BadRequestException("Study plan entry was not finished by this student");
+            }
+
+            if (studentProgress.Grade != null)
+            {
+                throw new AlreadyExistsException("Grade already exists");
+            }
+
+            studentProgress.Grade = gradeProgressDto.Grade;
+            studentProgress.GradingMentorId = gradeProgressDto.GradingMentorId;
+
+            _dbContext.Update(studentProgress);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Sets student grade
         /// </summary>
-        /// <param name="studentId"></param>
-        /// <param name="grade"></param>
-        /// <returns></returns>
+        /// <param name="studentId">Id of student</param>
+        /// <param name="grade">Grade of his work</param>
         public async Task SetStudentGradeAsync(int studentId, StudentGrade grade)
         {
             var student = await _dbContext

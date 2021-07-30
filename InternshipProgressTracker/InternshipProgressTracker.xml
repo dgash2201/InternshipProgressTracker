@@ -129,6 +129,7 @@
             Set student grade
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)" -->
         <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
             <summary>
             Mark study plan entry as started
@@ -436,6 +437,11 @@
             </summary>
             <typeparam name="TModel"></typeparam>
         </member>
+        <member name="T:InternshipProgressTracker.Models.Students.GradeProgressDto">
+            <summary>
+            Contains data for grading student progress by mentor
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
             <summary>
             Contains data for creating a study plan
@@ -570,13 +576,17 @@
             </summary>
             <param name="user">User entity</param>
         </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)">
+            <summary>
+            Set grade to student progress
+            </summary>
+        </member>
         <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.StudentGrade)">
             <summary>
             Sets student grade
             </summary>
-            <param name="studentId"></param>
-            <param name="grade"></param>
-            <returns></returns>
+            <param name="studentId">Id of student</param>
+            <param name="grade">Grade of his work</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.Students.StudentService.StartStudyPlanEntryAsync(System.Int32,System.Int32)">
             <summary>
