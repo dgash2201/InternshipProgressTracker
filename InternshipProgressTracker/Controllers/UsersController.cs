@@ -32,6 +32,7 @@ namespace InternshipProgressTracker.Controllers
         /// Register new user
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
+        /// <response code="400">Incorrect registration data</response>
         /// <response code="409">User already exists</response>
         /// <response code="500">Internal server error</response>
         [HttpPost]
@@ -43,6 +44,10 @@ namespace InternshipProgressTracker.Controllers
                 var id = await _userService.RegisterAsync(registerDto, cancellationToken);
 
                 return Ok(new ResponseWithId { Success = true, Id = id });
+            }
+            catch(BadRequestException ex)
+            {
+                return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch(AlreadyExistsException ex)
             {

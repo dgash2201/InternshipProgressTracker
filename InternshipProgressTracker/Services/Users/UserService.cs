@@ -60,7 +60,13 @@ namespace InternshipProgressTracker.Services.Users
 
             if (!result.Succeeded)
             {
-                throw new System.Exception("Failed to create a user");
+                var exceptionMessage = "";
+                foreach(var error in result.Errors)
+                {
+                    exceptionMessage += $"{error.Code}: {error.Description}" + System.Environment.NewLine;
+                }
+
+                throw new BadRequestException(exceptionMessage);
             }
 
             if (registerDto.Avatar != null)
