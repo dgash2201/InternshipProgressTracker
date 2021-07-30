@@ -1,4 +1,5 @@
 ﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

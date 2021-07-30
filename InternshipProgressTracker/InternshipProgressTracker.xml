@@ -17,12 +17,19 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.SetUserRole(System.Int32,System.String)">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateAdminDto)">
             <summary>
-            Set user role
+            Add admin role to user
             </summary>
-            <param name="userId">Id of user</param>
-            <param name="role">Name of role</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateMentorDto)">
+            <summary>
+            Add mentor role to user
+            </summary>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
             <response code="404">User was not found</response>
@@ -390,9 +397,19 @@
             Filters entities marked as deleted
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Entities.InternshipStreamStatus">
+        <member name="T:InternshipProgressTracker.Entities.Enums.StudentGrade">
             <summary>
-            Contains statuses of Internship Stream
+            Contains indepedent student grades
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.Enums.InternshipStreamStatus">
+            <summary>
+            Contains statuses of internship stream
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Entities.Enums.MentorRole">
+            <summary>
+            Contains roles of mentor
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Entities.InternshipStream">
@@ -498,12 +515,19 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.SetUserRoleAsync(System.Int32,System.String)">
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateAdminAsync(System.Int32)">
             <summary>
-            Sets role to user
+            Adds admin role to user
             </summary>
             <param name="userId"></param>
             <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateMentorAsync(System.Int32,InternshipProgressTracker.Entities.Enums.MentorRole)">
+            <summary>
+            Creates mentor
+            </summary>
+            <param name="userId"></param>
             <returns></returns>
         </member>
         <member name="T:InternshipProgressTracker.Services.Admins.IAdminService">
@@ -574,6 +598,16 @@
             </summary>
             <param name="id">Internship stream id</param>
         </member>
+        <member name="T:InternshipProgressTracker.Services.Mentors.MentorService">
+            <summary>
+            Logic service which works with students
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Mentors.MentorService.CreateAsync(InternshipProgressTracker.Entities.User)">
+            <summary>
+            Creates a student based on the user
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Services.Students.IStudentService">
             <summary>
             Student service interface
@@ -611,7 +645,7 @@
             Set grade to student progress
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.StudentGrade)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.Enums.StudentGrade)">
             <summary>
             Sets student grade
             </summary>

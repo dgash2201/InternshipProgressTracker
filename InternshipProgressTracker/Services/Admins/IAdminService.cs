@@ -1,4 +1,5 @@
 ﻿using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace InternshipProgressTracker.Services.Admins
     {
         Task<IReadOnlyCollection<User>> GetAllUsersAsync();
 
-        Task SetUserRoleAsync(int userId, string role);
+        Task CreateAdminAsync(int userId);
+
+        Task CreateMentorAsync(int userId, MentorRole role);
     }
 }

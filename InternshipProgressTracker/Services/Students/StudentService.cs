@@ -1,5 +1,6 @@
 ﻿using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Students;
 using Microsoft.EntityFrameworkCore;

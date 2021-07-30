@@ -1,6 +1,8 @@
 ﻿using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Services.Mentors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -15,11 +17,14 @@ namespace InternshipProgressTracker.Services.Admins
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly UserManager<User> _userManager;
+        private readonly IMentorService _mentorService;
 
-        public AdminService(InternshipProgressTrackerDbContext dbContext, UserManager<User> userManager)
+        public AdminService(InternshipProgressTrackerDbContext dbContext, 
+            UserManager<User> userManager, IMentorService mentorService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _mentorService = mentorService;
         }
 
         /// <summary>
@@ -36,12 +41,12 @@ namespace InternshipProgressTracker.Services.Admins
         }
 
         /// <summary>
-        /// Sets role to user
+        /// Adds admin role to user
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="role"></param>
         /// <returns></returns>
-        public async Task SetUserRoleAsync(int userId, string role)
+        public async Task CreateAdminAsync(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
@@ -53,7 +58,41 @@ namespace InternshipProgressTracker.Services.Admins
             var previousRoles = await _userManager.GetRolesAsync(user);
 
             await _userManager.RemoveFromRolesAsync(user, previousRoles);
-            await _userManager.AddToRoleAsync(user, role);
+            await _userManager.AddToRoleAsync(user, "Admin");
+
+            if (user.Mentor == null)
+            {
+                await _mentorService.CreateAsync(user);
+            }
+
+            await _userManager.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// Creates mentor
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task CreateMentorAsync(int userId, MentorRole role)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User with this id was not found");
+            }
+
+            var previousRoles = await _userManager.GetRolesAsync(user);
+
+            await _userManager.RemoveFromRolesAsync(user, previousRoles);
+            await _userManager.AddToRoleAsync(user, role.ToString());
+
+            if (user.Mentor != null)
+            {
+                throw new BadRequestException("User is already mentor");
+            }
+
+            await _mentorService.CreateAsync(user);
             await _userManager.UpdateAsync(user);
         }
     }

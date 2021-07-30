@@ -2,6 +2,7 @@ using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Admins;
 using InternshipProgressTracker.Services.InternshipStreams;
+using InternshipProgressTracker.Services.Mentors;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlans;
@@ -60,6 +61,7 @@ namespace InternshipProgressTracker
             services.AddScoped<IStudyPlanService, StudyPlanService>();
             services.AddScoped<IStudyPlanEntryService, StudyPlanEntryService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IMentorService, MentorService>();
 
             services
                 .AddIdentity<User, IdentityRole<int>>(options =>

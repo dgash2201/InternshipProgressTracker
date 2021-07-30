@@ -1,17 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using InternshipProgressTracker.Entities.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InternshipProgressTracker.Entities
 {
-    public enum StudentGrade
-    {
-        Junior,
-        Middle,
-        Senior
-    }
-
-
     /// <summary>
     /// Represents the Student entity
     /// </summary>
