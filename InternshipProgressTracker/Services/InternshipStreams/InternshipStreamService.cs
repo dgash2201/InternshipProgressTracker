@@ -4,12 +4,15 @@ using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.InternshipStreams;
+using InternshipProgressTracker.Services.Extensions;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
@@ -80,13 +83,27 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <summary>
         /// Gets list of internship streams
         /// </summary>
-        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync()
+        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync(int? studentId, int? mentorId)
         {
+            var filters = new List<Expression<Func<InternshipStream, bool>>>();
+
+            if (studentId != null)
+            {
+                filters.Add(stream => stream.Students.Any(student => student.Id == studentId));
+            }
+
+            if (mentorId != null)
+            {
+                filters.Add(stream => stream.Mentors.Any(mentor => mentor.Id == mentorId));
+            }
+
             var internshipStreamDtos = await _dbContext
                 .InternshipStreams
                 .Include(s => s.Students)
+                .Include(s => s.Mentors)
                 .Include(s => s.StudyPlans)
                 .ThenInclude(p => p.Entries)
+                .ApplyFilters(filters)
                 .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 

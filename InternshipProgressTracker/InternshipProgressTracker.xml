@@ -57,7 +57,7 @@
             <response code="404">Internship stream or student was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Get list of internship streams
             </summary>
@@ -95,7 +95,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
             <summary>
             Patch internship stream data
             </summary>
@@ -555,7 +555,7 @@
             Gets all internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Gets list of internship streams
             </summary>

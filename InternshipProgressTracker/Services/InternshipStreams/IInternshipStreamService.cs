@@ -12,7 +12,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
     {
         Task AddStudentAsync(int streamId, int studentId);
         Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync();
-        Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync();
+        Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync(int? studentId, int? mentorId);
         Task<InternshipStreamResponseDto> GetAsync(int id);
         Task<int> CreateAsync(InternshipStreamDto createDto);
         Task UpdateAsync(int id, InternshipStreamDto updateDto);

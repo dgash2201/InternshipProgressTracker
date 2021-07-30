@@ -88,11 +88,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int? studentId, int? mentorId)
         {
             try
             {
-                var internshipStreams = await _internshipStreamService.GetAsync();
+                var internshipStreams = await _internshipStreamService.GetAsync(studentId, mentorId);
 
                 return Ok(new ResponseWithModel<IReadOnlyCollection<InternshipStreamResponseDto>> { Success = true, Model = internshipStreams });
             }
@@ -197,11 +197,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        public async Task<IActionResult> Update(PatchRequestDto<InternshipStreamDto> patchDto)
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(id, patchDocument);
+                await _internshipStreamService.UpdateAsync(patchDto.Id, patchDto.PatchDocument);
 
                 return Ok(new Response { Success = true });
             }
