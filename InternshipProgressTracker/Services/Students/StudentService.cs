@@ -59,6 +59,7 @@ namespace InternshipProgressTracker.Services.Students
         {
             var student = new Student
             {
+                Id = user.Id,
                 User = user,
             };
 
