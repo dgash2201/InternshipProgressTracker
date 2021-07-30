@@ -67,9 +67,47 @@ namespace InternshipProgressTracker.Services.Students
         }
 
         /// <summary>
+        /// Adds student notes
+        /// </summary>
+        public async Task AddNotesAsync(int studentId, NotesDto notesDto)
+        {
+            var studentExists = await _dbContext
+                .Students
+                .AnyAsync(s => s.Id == studentId);
+
+            if (!studentExists)
+            {
+                throw new NotFoundException("Student with this id was not found");
+            }
+
+            var entryExists = await _dbContext
+                .StudyPlanEntries
+                .AnyAsync(e => e.Id == notesDto.StudyPlanEntryId);
+
+            if (!entryExists)
+            {
+                throw new NotFoundException("Study plan entry with this id was not found");
+            }
+
+            var studentProgress = await _dbContext
+                .StudentStudyPlanProgresses
+                .FindAsync(studentId, notesDto.StudyPlanEntryId);
+
+            if (studentProgress == null || studentProgress.FinishTime == null)
+            {
+                throw new BadRequestException("Study plan entry was not start by this student");
+            }
+
+            studentProgress.StudentNotes = notesDto.Notes;
+
+            _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Set grade to student progress
         /// </summary>
-        public async Task GradeStudentProgress(GradeProgressDto gradeProgressDto)
+        public async Task GradeStudentProgressAsync(GradeProgressDto gradeProgressDto)
         {
             var studentExists = await _dbContext
                 .Students

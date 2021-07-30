@@ -56,7 +56,7 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Set grade to student progress on study plan entry
         /// </summary>
-        /// <response code="400">Study plan entry was not finished by the student</reponse>
+        /// <response code="400">Study plan entry was not finished by the student</response>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">Student, mentor or study plan entry was not found</response>
@@ -68,7 +68,7 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studentService.GradeStudentProgress(gradeProgressDto);
+                await _studentService.GradeStudentProgressAsync(gradeProgressDto);
 
                 return Ok(new Response { Success = true });
             }
@@ -83,6 +83,41 @@ namespace InternshipProgressTracker.Controllers
             catch (AlreadyExistsException ex)
             {
                 return Conflict(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Add notes
+        /// </summary>
+        /// <response code="400">Study plan entry was not started by the student</response>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Studentor study plan entry was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
+        [HttpPut("add-notes")]
+        public async Task<IActionResult> AddNotes(NotesDto notesDto)
+        {
+            try
+            {
+                var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                await _studentService.AddNotesAsync(studentId, notesDto);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message});
             }
             catch (Exception ex)
             {

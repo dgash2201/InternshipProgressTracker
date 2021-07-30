@@ -129,7 +129,27 @@
             Set student grade
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)" -->
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)">
+            <summary>
+            Set grade to student progress on study plan entry
+            </summary>
+            <response code="400">Study plan entry was not finished by the student</response>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Student, mentor or study plan entry was not found</response>
+            <response code="409">Student already has grade on this study plan entry</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.AddNotes(InternshipProgressTracker.Models.Students.NotesDto)">
+            <summary>
+            Add notes
+            </summary>
+            <response code="400">Study plan entry was not started by the student</response>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Studentor study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
             <summary>
             Mark study plan entry as started
@@ -442,6 +462,11 @@
             Contains data for grading student progress by mentor
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Models.Students.NotesDto">
+            <summary>
+            Contains data for adding notes
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
             <summary>
             Contains data for creating a study plan
@@ -576,7 +601,12 @@
             </summary>
             <param name="user">User entity</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.AddNotesAsync(System.Int32,InternshipProgressTracker.Models.Students.NotesDto)">
+            <summary>
+            Adds student notes
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgressAsync(InternshipProgressTracker.Models.Students.GradeProgressDto)">
             <summary>
             Set grade to student progress
             </summary>
