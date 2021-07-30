@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Token;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -29,14 +30,38 @@ namespace InternshipProgressTracker.Controllers
         }
 
         /// <summary>
+        /// Get user by id
+        /// </summary>
+        /// <param name="id">Id of user</param>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Student, Mentor, Lead, Admin")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var responseDto = await _userService.GetAsync(id);
+
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = responseDto });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Register new user
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
         /// <response code="400">Incorrect registration data</response>
         /// <response code="409">User already exists</response>
         /// <response code="500">Internal server error</response>
-        [HttpPost]
-        [Route("register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm]RegisterDto registerDto, CancellationToken cancellationToken)
         {
             try
@@ -67,8 +92,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="400">Email or password is incorrect</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
         {
             try

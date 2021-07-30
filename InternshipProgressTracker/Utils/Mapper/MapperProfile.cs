@@ -3,6 +3,8 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Models.StudyPlans;
+using InternshipProgressTracker.Models.Users;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace InternshipProgressTracker.Utils.Mapper
@@ -29,6 +31,20 @@ namespace InternshipProgressTracker.Utils.Mapper
             CreateMap<StudyPlanEntry, StudyPlanEntryResponseDto>()
                 .ForMember(dto => dto.StudentProgresses, 
                     options => options.MapFrom(entity => entity.StudentsProgresses.ToList()));
+
+            CreateMap<User, UserResponseDto>()
+                .ForMember(dto => dto.Avatar, 
+                    options => options.MapFrom(entity => CreateAvatar(entity.Photo, entity.PhotoType)));
+        }
+
+        private FileContentResult CreateAvatar(byte[] photo, string type)
+        {
+            if (photo == null)
+            {
+                return null;
+            }
+
+            return new FileContentResult(photo, type);
         }
     }
 }

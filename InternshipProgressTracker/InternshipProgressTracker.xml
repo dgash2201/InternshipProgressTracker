@@ -373,6 +373,12 @@
             Represents Web API of Users
             </summary>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Get(System.Int32)">
+            <summary>
+            Get user by id
+            </summary>
+            <param name="id">Id of user</param>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
             Register new user
@@ -848,6 +854,12 @@
             <summary>
             Service for authorization and 
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.GetAsync(System.Int32)">
+            <summary>
+            Gets user by id
+            </summary>
+            <param name="id">Id of user</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.Users.UserService.RegisterAsync(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>

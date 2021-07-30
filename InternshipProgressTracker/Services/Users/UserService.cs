@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using AutoMapper;
+using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Token;
 using InternshipProgressTracker.Models.Users;
@@ -21,19 +22,36 @@ namespace InternshipProgressTracker.Services.Users
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
+        private readonly IMapper _mapper;
 
         public UserService(UserManager<User> userManager,
             SignInManager<User> signInManager,
             ITokenGenerator tokenGenerator,
-            IStudentService studentService)
+            IStudentService studentService,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
             _studentService = studentService;
+            _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets user by id
+        /// </summary>
+        /// <param name="id">Id of user</param>
+        public async Task<UserResponseDto> GetAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
 
+            if (user == null)
+            {
+                throw new NotFoundException("User was not found");
+            }
+
+            return _mapper.Map<UserResponseDto>(user);
+        }
 
         /// <summary>
         /// Creates user entity and saves it in the database
@@ -75,6 +93,7 @@ namespace InternshipProgressTracker.Services.Users
                 {
                     await registerDto.Avatar.CopyToAsync(memoryStream);
                     user.Photo = memoryStream.ToArray();
+                    user.PhotoType = registerDto.Avatar.ContentType;
                 }
 
                 await _userManager.UpdateAsync(user);

@@ -10,6 +10,7 @@ namespace InternshipProgressTracker.Services.Users
     /// </summary>
     public interface IUserService
     {
+        Task<UserResponseDto> GetAsync(int id);
         Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken);
         Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken);
         Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int id);
