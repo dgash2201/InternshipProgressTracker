@@ -878,16 +878,6 @@
             Creates new JWT
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Settings.InternshipProgressTrackerSecrets">
-            <summary>
-            Contains secrets of application
-            </summary>
-        </member>
-        <member name="M:InternshipProgressTracker.Startup.GetXmlCommentsPath">
-            <summary>
-            Gets path for file with xml comments
-            </summary>
-        </member>
         <member name="M:InternshipProgressTracker.Startup.CreateRoles(System.IServiceProvider)">
             <summary>
             Creates identity roles

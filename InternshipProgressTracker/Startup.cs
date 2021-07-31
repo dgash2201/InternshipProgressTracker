@@ -7,7 +7,6 @@ using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Services.Users;
-using InternshipProgressTracker.Settings;
 using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -35,12 +34,9 @@ namespace InternshipProgressTracker
 {
     public class Startup
     {
-        private readonly InternshipProgressTrackerSecrets _secrets;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _secrets = Configuration.GetSection("InternshipProgressTracker").Get<InternshipProgressTrackerSecrets>();
         }
 
         public IConfiguration Configuration { get; }
@@ -83,7 +79,7 @@ namespace InternshipProgressTracker
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secrets.ServiceApiKey)),
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ServiceApiKey"])),
                     };
                 });
             services.AddAuthorization();
@@ -103,7 +99,9 @@ namespace InternshipProgressTracker
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "InternshipProgressTracker API", Version = "v1" });
 
-                options.IncludeXmlComments(GetXmlCommentsPath());
+                options.IncludeXmlComments(Path.Combine(
+                        AppContext.BaseDirectory,
+                        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -174,16 +172,6 @@ namespace InternshipProgressTracker
                 .First();
         }
 
-        /// <summary>
-        /// Gets path for file with xml comments
-        /// </summary>
-        private string GetXmlCommentsPath()
-        {
-            var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-            var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
-            return Path.Combine(basePath, fileName);
-        }
-
         private void SeedDatabase(IServiceProvider serviceProvider)
         {
             CreateRoles(serviceProvider).Wait();
@@ -228,7 +216,7 @@ namespace InternshipProgressTracker
                     LastName = Configuration["Admin:LastName"],
                 };
 
-                var creationResult = await userManager.CreateAsync(admin, _secrets.AdminPassword);
+                var creationResult = await userManager.CreateAsync(admin, Configuration["Admin:Password"]);
 
                 if (creationResult.Succeeded)
                 {
