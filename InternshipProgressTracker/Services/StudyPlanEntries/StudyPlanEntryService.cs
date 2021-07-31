@@ -167,15 +167,27 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// <param name="id">Id of study plan entry</param>
         public async Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var stydyPlanEntry = await _dbContext.StudyPlanEntries.FindAsync(new object[] { id }, cancellationToken);
+            var studyPlanEntry = await _dbContext
+                .StudyPlanEntries
+                .Include(e => e.StudentsProgresses)
+                .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
-            if (stydyPlanEntry == null)
+            if (studyPlanEntry == null)
             {
                 throw new NotFoundException("Study plan entry with this id was not found");
             }
 
-            stydyPlanEntry.IsDeleted = true;
-            _dbContext.Entry(stydyPlanEntry).State = EntityState.Modified;
+            var isFinished = studyPlanEntry
+                .StudentsProgresses
+                .Any(p => p.FinishTime != null);
+
+            if (isFinished)
+            {
+                throw new BadRequestException("Study plan entry is already finished by one of the students");
+            }
+
+            studyPlanEntry.IsDeleted = true;
+            _dbContext.Entry(studyPlanEntry).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 

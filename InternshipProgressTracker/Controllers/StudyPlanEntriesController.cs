@@ -198,6 +198,7 @@ namespace InternshipProgressTracker.Controllers
         /// Mark study plan entry as deleted
         /// </summary>
         /// <param name="id">Id of study plan</param>
+        /// <response code="400">Study plan entry is already finished by one of the students</response>
         /// <response code="401">Authorization token is invalid</response>
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">Study plan entry was not found</response>
@@ -212,7 +213,11 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new Response { Success = true });
             }
-            catch(NotFoundException ex)
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (NotFoundException ex)
             {
                 return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
