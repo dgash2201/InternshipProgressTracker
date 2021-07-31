@@ -10,6 +10,7 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Token;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace InternshipProgressTracker.Controllers
 {
@@ -136,9 +137,66 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }
-            catch(BadRequestException ex)
+            catch (BadRequestException ex)
             {
                 return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Mark user as deleted
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var userId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                await _userService.SoftDeleteAsync(userId, cancellationToken);
+
+                return Ok(new Response { Success = true });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Delete user (only for admin)
+        /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("hard-delete/{id}")]
+        public async Task<IActionResult> HardDelete(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _userService.DeleteAsync(id, cancellationToken);
+
+                return Ok(new Response { Success = true });
             }
             catch (NotFoundException ex)
             {

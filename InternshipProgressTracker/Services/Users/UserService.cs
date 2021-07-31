@@ -165,5 +165,42 @@ namespace InternshipProgressTracker.Services.Users
 
             return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
         }
+
+        /// <summary>
+        /// Marks user as deleted
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        public async Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("Study plan with this id was not found");
+            }
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// Deletes user
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("Study plan with this id was not found");
+            }
+
+            await _userManager.DeleteAsync(user);
+        }
     }
 }

@@ -14,5 +14,7 @@ namespace InternshipProgressTracker.Services.Users
         Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default);
         Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default);
         Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int id, CancellationToken cancellationToken = default);
+        Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task DeleteAsync(int id, CancellationToken cancellationToken);
     }
 }

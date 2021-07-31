@@ -409,6 +409,24 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Delete(System.Threading.CancellationToken)">
+            <summary>
+            Mark user as deleted
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.HardDelete(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Delete user (only for admin)
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="T:InternshipProgressTracker.Database.InternshipProgressTrackerDbContext">
             <summary>
             Class for working with InternshipProgressTracker database
@@ -881,6 +899,18 @@
             <summary>
             Creates new JWT
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.SoftDeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Marks user as deleted
+            </summary>
+            <param name="id">Id of study plan</param>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Deletes user
+            </summary>
+            <param name="id">Id of study plan</param>
         </member>
         <member name="M:InternshipProgressTracker.Startup.CreateRoles(System.IServiceProvider)">
             <summary>
