@@ -6,6 +6,7 @@ using InternshipProgressTracker.Services.Mentors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Admins
@@ -31,11 +32,11 @@ namespace InternshipProgressTracker.Services.Admins
         /// Gets list of all users
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<User>> GetAllUsersAsync()
+        public async Task<IReadOnlyCollection<User>> GetAllUsersAsync(CancellationToken cancellationToken = default)
         {
             var users = await _dbContext
                 .Users
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return users.AsReadOnly();
         }
@@ -46,8 +47,10 @@ namespace InternshipProgressTracker.Services.Admins
         /// <param name="userId"></param>
         /// <param name="role"></param>
         /// <returns></returns>
-        public async Task CreateAdminAsync(int userId)
+        public async Task CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
@@ -73,8 +76,10 @@ namespace InternshipProgressTracker.Services.Admins
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task CreateMentorAsync(int userId, MentorRole role)
+        public async Task CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)

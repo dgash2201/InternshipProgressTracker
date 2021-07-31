@@ -16,6 +16,8 @@ namespace InternshipProgressTracker.Entities
 
         public byte[] Photo { get; set; }
 
+        public string PhotoType { get; set; }
+
         public Student Student { get; set; }
 
         public Mentor Mentor { get; set; }

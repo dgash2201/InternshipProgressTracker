@@ -1,4 +1,5 @@
-﻿using InternshipProgressTracker.Entities;
+﻿using AutoMapper;
+using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Token;
 using InternshipProgressTracker.Models.Users;
@@ -21,25 +22,44 @@ namespace InternshipProgressTracker.Services.Users
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
+        private readonly IMapper _mapper;
 
         public UserService(UserManager<User> userManager,
             SignInManager<User> signInManager,
             ITokenGenerator tokenGenerator,
-            IStudentService studentService)
+            IStudentService studentService,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
             _studentService = studentService;
+            _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets user by id
+        /// </summary>
+        /// <param name="id">Id of user</param>
+        public async Task<UserResponseDto> GetAsync(int id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User was not found");
+            }
+
+            return _mapper.Map<UserResponseDto>(user);
+        }
 
         /// <summary>
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -60,7 +80,13 @@ namespace InternshipProgressTracker.Services.Users
 
             if (!result.Succeeded)
             {
-                throw new System.Exception("Failed to create a user");
+                var exceptionMessage = "";
+                foreach(var error in result.Errors)
+                {
+                    exceptionMessage += $"{error.Code}: {error.Description}" + System.Environment.NewLine;
+                }
+
+                throw new BadRequestException(exceptionMessage);
             }
 
             if (registerDto.Avatar != null)
@@ -69,12 +95,13 @@ namespace InternshipProgressTracker.Services.Users
                 {
                     await registerDto.Avatar.CopyToAsync(memoryStream);
                     user.Photo = memoryStream.ToArray();
+                    user.PhotoType = registerDto.Avatar.ContentType;
                 }
 
                 await _userManager.UpdateAsync(user);
             }
 
-            await _studentService.CreateAsync(user);
+            await _studentService.CreateAsync(user, cancellationToken);
             await _userManager.AddToRoleAsync(user, "Student");
 
             return user.Id;
@@ -84,10 +111,8 @@ namespace InternshipProgressTracker.Services.Users
         /// Checks login data and returns generated token
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        public async Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
+        public async Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
@@ -115,8 +140,10 @@ namespace InternshipProgressTracker.Services.Users
         /// <summary>
         /// Creates new JWT
         /// </summary>
-        public async Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int userId)
+        public async Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int userId, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
@@ -137,6 +164,43 @@ namespace InternshipProgressTracker.Services.Users
             await _userManager.UpdateAsync(user);
 
             return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
+        }
+
+        /// <summary>
+        /// Marks user as deleted
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        public async Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("Study plan with this id was not found");
+            }
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// Deletes user
+        /// </summary>
+        /// <param name="id">Id of study plan</param>
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("Study plan with this id was not found");
+            }
+
+            await _userManager.DeleteAsync(user);
         }
     }
 }

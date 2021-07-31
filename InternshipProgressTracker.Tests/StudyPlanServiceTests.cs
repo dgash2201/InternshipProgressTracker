@@ -172,6 +172,7 @@ namespace InternshipProgressTracker.Tests
             _dbContext.StudyPlans.Add(new StudyPlan
             {
                 Id = studyPlanId,
+                InternshipStreamId = ExistedStreamId,
                 Title = "Study plan",
             });
 
@@ -181,6 +182,7 @@ namespace InternshipProgressTracker.Tests
             var updateDto = new StudyPlanDto
             {
                 Title = newTitle,
+                InternshipStreamId = ExistedStreamId,
             };
 
             await _studyPlanService.UpdateAsync(studyPlanId, updateDto);

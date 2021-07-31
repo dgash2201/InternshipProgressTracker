@@ -6,6 +6,7 @@ using InternshipProgressTracker.Models.Students;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Students
@@ -25,11 +26,11 @@ namespace InternshipProgressTracker.Services.Students
         /// <summary>
         /// Gets the list of students
         /// </summary>
-        public async Task<IReadOnlyCollection<Student>> GetAsync()
+        public async Task<IReadOnlyCollection<Student>> GetAsync(CancellationToken cancellationToken = default)
         {
             var students = await _dbContext
                 .Students
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
             
             return students.AsReadOnly();
         }
@@ -38,11 +39,11 @@ namespace InternshipProgressTracker.Services.Students
         /// Gets a student by id
         /// </summary>
         /// <param name="id">Student id</param>
-        public async Task<Student> GetAsync(int id)
+        public async Task<Student> GetAsync(int id, CancellationToken cancellationToken = default)
         {
             var student =  await _dbContext
                 .Students
-                .FindAsync(id);
+                .FindAsync(new object[] { id }, cancellationToken);
 
             if (student == null)
             {
@@ -56,7 +57,7 @@ namespace InternshipProgressTracker.Services.Students
         /// Creates a student based on the user
         /// </summary>
         /// <param name="user">User entity</param>
-        public async Task CreateAsync(User user)
+        public async Task CreateAsync(User user, CancellationToken cancellationToken = default)
         {
             var student = new Student
             {
@@ -65,17 +66,17 @@ namespace InternshipProgressTracker.Services.Students
             };
 
             _dbContext.Students.Add(student);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Adds student notes
         /// </summary>
-        public async Task AddNotesAsync(int studentId, NotesDto notesDto)
+        public async Task AddNotesAsync(int studentId, NotesDto notesDto, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
-                .AnyAsync(s => s.Id == studentId);
+                .AnyAsync(s => s.Id == studentId, cancellationToken);
 
             if (!studentExists)
             {
@@ -84,7 +85,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var entryExists = await _dbContext
                 .StudyPlanEntries
-                .AnyAsync(e => e.Id == notesDto.StudyPlanEntryId);
+                .AnyAsync(e => e.Id == notesDto.StudyPlanEntryId, cancellationToken);
 
             if (!entryExists)
             {
@@ -93,7 +94,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var studentProgress = await _dbContext
                 .StudentStudyPlanProgresses
-                .FindAsync(studentId, notesDto.StudyPlanEntryId);
+                .FindAsync(new object[] { studentId, notesDto.StudyPlanEntryId }, cancellationToken);
 
             if (studentProgress == null || studentProgress.FinishTime == null)
             {
@@ -103,17 +104,17 @@ namespace InternshipProgressTracker.Services.Students
             studentProgress.StudentNotes = notesDto.Notes;
 
             _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Set grade to student progress
         /// </summary>
-        public async Task GradeStudentProgressAsync(GradeProgressDto gradeProgressDto)
+        public async Task GradeStudentProgressAsync(GradeProgressDto gradeProgressDto, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
-                .AnyAsync(s => s.Id == gradeProgressDto.StudentId);
+                .AnyAsync(s => s.Id == gradeProgressDto.StudentId, cancellationToken);
 
             if (!studentExists)
             {
@@ -122,7 +123,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var entryExists = await _dbContext
                 .StudyPlanEntries
-                .AnyAsync(e => e.Id == gradeProgressDto.StudyPlanEntryId);
+                .AnyAsync(e => e.Id == gradeProgressDto.StudyPlanEntryId, cancellationToken);
 
             if (!entryExists)
             {
@@ -131,7 +132,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var mentorExists = await _dbContext
                 .Mentors
-                .AnyAsync(e => e.Id == gradeProgressDto.GradingMentorId);
+                .AnyAsync(e => e.Id == gradeProgressDto.GradingMentorId, cancellationToken);
 
             if (!mentorExists)
             {
@@ -140,7 +141,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var studentProgress = await _dbContext
                 .StudentStudyPlanProgresses
-                .FindAsync(gradeProgressDto.StudentId, gradeProgressDto.StudyPlanEntryId);
+                .FindAsync(new object[] { gradeProgressDto.StudentId, gradeProgressDto.StudyPlanEntryId }, cancellationToken);
 
             if (studentProgress == null || studentProgress.FinishTime == null)
             {
@@ -156,7 +157,7 @@ namespace InternshipProgressTracker.Services.Students
             studentProgress.GradingMentorId = gradeProgressDto.GradingMentorId;
 
             _dbContext.Update(studentProgress);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -164,11 +165,11 @@ namespace InternshipProgressTracker.Services.Students
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="grade">Grade of his work</param>
-        public async Task SetStudentGradeAsync(int studentId, StudentGrade grade)
+        public async Task SetStudentGradeAsync(int studentId, StudentGrade grade, CancellationToken cancellationToken = default)
         {
             var student = await _dbContext
                 .Students
-                .FindAsync(studentId);
+                .FindAsync(new object[] { studentId }, cancellationToken);
 
             if (student == null)
             {
@@ -185,11 +186,11 @@ namespace InternshipProgressTracker.Services.Students
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="entryId">Id of study plan entry</param>
-        public async Task StartStudyPlanEntryAsync(int studentId, int entryId)
+        public async Task StartStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
         {
             var student = await _dbContext
                 .Students
-                .FindAsync(studentId);
+                .FindAsync(new object[] { studentId }, cancellationToken);
 
             if (student == null)
             {
@@ -198,7 +199,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var entry = await _dbContext
                 .StudyPlanEntries
-                .FindAsync(entryId);
+                .FindAsync(new object[] { entryId }, cancellationToken);
 
             if (entry == null)
             {
@@ -215,7 +216,7 @@ namespace InternshipProgressTracker.Services.Students
             };
 
             _dbContext.StudentStudyPlanProgresses.Add(studentProgress);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -223,11 +224,11 @@ namespace InternshipProgressTracker.Services.Students
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="entryId">Id of study plan entry</param>
-        public async Task FinishStudyPlanEntryAsync(int studentId, int entryId)
+        public async Task FinishStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
-                .AnyAsync(s => s.Id == studentId);
+                .AnyAsync(s => s.Id == studentId, cancellationToken);
 
             if (!studentExists)
             {
@@ -236,7 +237,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var entryExists = await _dbContext
                 .StudyPlanEntries
-                .AnyAsync(e => e.Id == entryId);
+                .AnyAsync(e => e.Id == entryId, cancellationToken);
 
             if (!entryExists)
             {
@@ -245,7 +246,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var studentProgress = await _dbContext
                 .StudentStudyPlanProgresses
-                .FindAsync(studentId, entryId);
+                .FindAsync(new object [] { studentId, entryId }, cancellationToken);
 
             if (studentProgress == null || studentProgress.StartTime == null)
             {
@@ -255,7 +256,7 @@ namespace InternshipProgressTracker.Services.Students
             studentProgress.FinishTime = DateTime.Now;
 
             _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

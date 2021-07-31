@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
+using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
-using InternshipProgressTracker.Utils.Mapper;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using InternshipProgressTracker.Tests.Helpers;
+using InternshipProgressTracker.Utils.Mapper;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System.Linq;
@@ -24,14 +25,14 @@ namespace InternshipProgressTracker.Tests
 
         [SetUp]
         public void Setup()
-        {           
+        {
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MapperProfile());
             });
 
             _mapper = mappingConfig.CreateMapper();
-            _dbContext = DbContextInitializer.CreateDbContext(); 
+            _dbContext = DbContextInitializer.CreateDbContext();
             _internshipStreamService = new InternshipStreamService(_dbContext, _mapper);
         }
 

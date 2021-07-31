@@ -9,7 +9,7 @@
             Represents Web API of Admins
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.GetAllUsers">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.GetAllUsers(System.Threading.CancellationToken)">
             <summary>
             Get list of all users
             </summary>
@@ -17,7 +17,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateAdminDto)">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateAdminDto,System.Threading.CancellationToken)">
             <summary>
             Add admin role to user
             </summary>
@@ -26,7 +26,7 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateMentorDto)">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateMentorDto,System.Threading.CancellationToken)">
             <summary>
             Add mentor role to user
             </summary>
@@ -40,7 +40,7 @@
             Represents Web API of Internship Streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.GetWithSoftDeleted">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.GetWithSoftDeleted(System.Threading.CancellationToken)">
             <summary>
             Get all internship stream including soft deleted (only for admin)
             </summary>
@@ -48,7 +48,16 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddMentor(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto,System.Threading.CancellationToken)">
+            <summary>
+            Bind mentor with internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or mentor was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.AddStudent(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto,System.Threading.CancellationToken)">
             <summary>
             Bind student with internship stream
             </summary>
@@ -57,7 +66,25 @@
             <response code="404">Internship stream or student was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.RemoveMentor(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto,System.Threading.CancellationToken)">
+            <summary>
+            Remove mentor from internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or mentor was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.RemoveStudent(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto,System.Threading.CancellationToken)">
+            <summary>
+            Remove student from internship stream
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Internship stream or student was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get list of internship streams
             </summary>
@@ -65,7 +92,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Get(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Get an internship stream by id
             </summary>
@@ -75,7 +102,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Create(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto,System.Threading.CancellationToken)">
             <summary>
             Create internship stream
             </summary>
@@ -84,7 +111,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
             <summary>
             Update internship stream data
             </summary>
@@ -95,7 +122,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
             <summary>
             Patch internship stream data
             </summary>
@@ -106,7 +133,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Delete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Mark internship stream as deleted
             </summary>
@@ -116,7 +143,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.HardDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.HardDelete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Delete internship stream (only for admin)
             </summary>
@@ -131,12 +158,12 @@
             Represents Web API of students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto,System.Threading.CancellationToken)">
             <summary>
             Set student grade
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
             <summary>
             Set grade to student progress on study plan entry
             </summary>
@@ -147,7 +174,7 @@
             <response code="409">Student already has grade on this study plan entry</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.AddNotes(InternshipProgressTracker.Models.Students.NotesDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.AddNotes(InternshipProgressTracker.Models.Students.NotesDto,System.Threading.CancellationToken)">
             <summary>
             Add notes
             </summary>
@@ -157,7 +184,7 @@
             <response code="404">Studentor study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.StartStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto,System.Threading.CancellationToken)">
             <summary>
             Mark study plan entry as started
             </summary>
@@ -166,7 +193,7 @@
             <response code="404">Student or study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudentsController.FinishStudyPlanEntry(InternshipProgressTracker.Models.Students.ProgressDto,System.Threading.CancellationToken)">
             <summary>
             Mark study plan entry as finished
             </summary>
@@ -180,7 +207,7 @@
             Represents Web API of Study Plan Entries
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.GetWithSoftDeleted">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.GetWithSoftDeleted(System.Threading.CancellationToken)">
             <summary>
             Get all study plan entries including soft deleted (only for admin)
             </summary>
@@ -188,7 +215,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get(System.Threading.CancellationToken)">
             <summary>
             Get list of study plan entries
             </summary>
@@ -196,7 +223,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Get(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Get study plan entry by id
             </summary>
@@ -206,7 +233,7 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Create(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Create(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto,System.Threading.CancellationToken)">
             <summary>
             Create study plan entry
             </summary>
@@ -216,7 +243,7 @@
             <response code="404">Related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
             <summary>
             Update study plan entry data
             </summary>
@@ -227,7 +254,7 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
             <summary>
             Patch study plan entry data
             </summary>
@@ -238,17 +265,18 @@
             <response code="404">Study plan entry or related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Delete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Mark study plan entry as deleted
             </summary>
             <param name="id">Id of study plan</param>
+            <response code="400">Study plan entry is already finished by one of the students</response>
             <response code="401">Authorization token is invalid</response>
             <response code="403">Forbidden for this role</response>
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.HardDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.HardDelete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Delete study plan entry (only for admin)
             </summary>
@@ -263,7 +291,7 @@
             Represents Web API of Study Plans
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.GetWithSoftDeleted">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.GetWithSoftDeleted(System.Threading.CancellationToken)">
             <summary>
             Get all study plans including soft deleted (only for admin)
             </summary>
@@ -271,7 +299,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Threading.CancellationToken)">
             <summary>
             Get list of study plans
             </summary>
@@ -279,7 +307,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Get(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Get study plan by id
             </summary>
@@ -289,7 +317,7 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Create(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto,System.Threading.CancellationToken)">
             <summary>
             Create study plan
             </summary>
@@ -299,7 +327,7 @@
             <response code="404">Related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
             <summary>
             Update study plan data
             </summary>
@@ -310,7 +338,7 @@
             <response code="404">Study plan or related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
             <summary>
             Patch study plan data
             </summary>
@@ -321,7 +349,7 @@
             <response code="404">Study plan or related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Delete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Mark study plan as deleted
             </summary>
@@ -331,7 +359,7 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.HardDelete(System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.HardDelete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Delete study plan (only for admin)
             </summary>
@@ -346,11 +374,22 @@
             Represents Web API of Users
             </summary>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Get(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Get user by id
+            </summary>
+            <param name="id">Id of user</param>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.Register(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
             Register new user
             </summary>
             <param name="registerDto">Contains signup form data</param>
+            <response code="400">Incorrect registration data</response>
             <response code="409">User already exists</response>
             <response code="500">Internal server error</response>
         </member>
@@ -363,11 +402,29 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32)">
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Create new JWT
             </summary>
             <response code="400">Refresh token is incorrect</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.Delete(System.Threading.CancellationToken)">
+            <summary>
+            Mark user as deleted
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">User was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.HardDelete(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Delete user (only for admin)
+            </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
@@ -474,6 +531,16 @@
             </summary>
             <typeparam name="TModel"></typeparam>
         </member>
+        <member name="T:InternshipProgressTracker.Models.InternshipStreams.InternshipStreamMentorDto">
+            <summary>
+            Contains data for binding mentro with internship stream
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.InternshipStreams.InternshipStreamStudentDto">
+            <summary>
+            Contains data for binding student with internship stream
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Students.GradeProgressDto">
             <summary>
             Contains data for grading student progress by mentor
@@ -509,13 +576,13 @@
             Service for admins
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.GetAllUsersAsync">
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.GetAllUsersAsync(System.Threading.CancellationToken)">
             <summary>
             Gets list of all users
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateAdminAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateAdminAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Adds admin role to user
             </summary>
@@ -523,7 +590,7 @@
             <param name="role"></param>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateMentorAsync(System.Int32,InternshipProgressTracker.Entities.Enums.MentorRole)">
+        <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateMentorAsync(System.Int32,InternshipProgressTracker.Entities.Enums.MentorRole,System.Threading.CancellationToken)">
             <summary>
             Creates mentor
             </summary>
@@ -545,54 +612,69 @@
             Logic service which works with internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddMentorAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Binds mentor with stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.AddStudentAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Binds student with stream
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetWithSoftDeletedAsync">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.RemoveMentorAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Remove mentor from internship stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.RemoveStudentAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Remove student from internship stream
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetWithSoftDeletedAsync(System.Threading.CancellationToken)">
             <summary>
             Gets all internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Gets list of internship streams
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.GetAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Gets internship stream by id
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.CreateAsync(InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto,System.Threading.CancellationToken)">
             <summary>
             Creates internship stream from createDto
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto,System.Threading.CancellationToken)">
             <summary>
             Updates data in internship stream
             </summary>
             <param name="id">Internship stream id</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto})">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
             <summary>
             Patches internship stream
             </summary>
             <param name="id">Id of internship stream</param>
             <param name="patchDocument">Json Patch operations</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.SoftDeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Marks the entity as deleted
             </summary>
             <param name="id">Internship stream id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.DeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.InternshipStreams.InternshipStreamService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Deletes internship stream by id
             </summary>
@@ -618,48 +700,48 @@
             Logic service which works with students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Threading.CancellationToken)">
             <summary>
             Gets the list of students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Gets a student by id
             </summary>
             <param name="id">Student id</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.CreateAsync(InternshipProgressTracker.Entities.User)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.CreateAsync(InternshipProgressTracker.Entities.User,System.Threading.CancellationToken)">
             <summary>
             Creates a student based on the user
             </summary>
             <param name="user">User entity</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.AddNotesAsync(System.Int32,InternshipProgressTracker.Models.Students.NotesDto)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.AddNotesAsync(System.Int32,InternshipProgressTracker.Models.Students.NotesDto,System.Threading.CancellationToken)">
             <summary>
             Adds student notes
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgressAsync(InternshipProgressTracker.Models.Students.GradeProgressDto)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgressAsync(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
             <summary>
             Set grade to student progress
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.Enums.StudentGrade)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.Enums.StudentGrade,System.Threading.CancellationToken)">
             <summary>
             Sets student grade
             </summary>
             <param name="studentId">Id of student</param>
             <param name="grade">Grade of his work</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.StartStudyPlanEntryAsync(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.StartStudyPlanEntryAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Mark study plan entry as started by student
             </summary>
             <param name="studentId">Id of student</param>
             <param name="entryId">Id of study plan entry</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.FinishStudyPlanEntryAsync(System.Int32,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Students.StudentService.FinishStudyPlanEntryAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Mark study plan entry as finished by student
             </summary>
@@ -676,51 +758,51 @@
             Service for working with study plan entries
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetWithSoftDeletedAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetWithSoftDeletedAsync(System.Threading.CancellationToken)">
             <summary>
             Gets all study plan entries
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync(System.Threading.CancellationToken)">
             <summary>
             Gets list of study plan entries
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.GetAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Gets study plan entry by id
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.CreateAsync(InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto,System.Threading.CancellationToken)">
             <summary>
             Creates study plan entry
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto,System.Threading.CancellationToken)">
             <summary>
             Updates study plan entry data
             </summary>
             <param name="id">Id of study plan entry</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto})">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
             <summary>
             Patches study plan
             </summary>
             <param name="id">Id of study plan entry</param>
             <param name="patchDocument">Json Patch operations</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.SoftDeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Marks study plan entry as deleted
             </summary>
             <param name="id">Id of study plan entry</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.DeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlanEntries.StudyPlanEntryService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Deletes study plan entry
             </summary>
@@ -736,51 +818,51 @@
             Service for working with study plans
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetWithSoftDeletedAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetWithSoftDeletedAsync(System.Threading.CancellationToken)">
             <summary>
             Gets all study plans
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync(System.Threading.CancellationToken)">
             <summary>
             Gets list of study plans
             </summary>
             <returns></returns>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.GetAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Gets study plan by id
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.CreateAsync(InternshipProgressTracker.Models.StudyPlans.StudyPlanDto,System.Threading.CancellationToken)">
             <summary>
             Creates study plan
             </summary>
             <param name="createDto">Data for creation</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto,System.Threading.CancellationToken)">
             <summary>
             Updates study plan data
             </summary>
             <param name="id">Id of study plan</param>
             <param name="updateDto">New data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto})">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.UpdateAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
             <summary>
             Patches study plan
             </summary>
             <param name="id">Id of study plan</param>
             <param name="patchDocument">Json Patch operations</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.SoftDeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Marks study plan as deleted
             </summary>
             <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.DeleteAsync(System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.StudyPlans.StudyPlanService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Deletes study plan
             </summary>
@@ -796,6 +878,12 @@
             Service for authorization and 
             </summary>
         </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.GetAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Gets user by id
+            </summary>
+            <param name="id">Id of user</param>
+        </member>
         <member name="M:InternshipProgressTracker.Services.Users.UserService.RegisterAsync(InternshipProgressTracker.Models.Users.RegisterDto,System.Threading.CancellationToken)">
             <summary>
             Creates user entity and saves it in the database
@@ -808,20 +896,22 @@
             </summary>
             <param name="loginDto">Contains login form data</param>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Users.UserService.RefreshJwtAsync(System.String,System.Int32)">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.RefreshJwtAsync(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Creates new JWT
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Settings.InternshipProgressTrackerSecrets">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.SoftDeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Contains secrets of application
+            Marks user as deleted
             </summary>
+            <param name="id">Id of study plan</param>
         </member>
-        <member name="M:InternshipProgressTracker.Startup.GetXmlCommentsPath">
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Gets path for file with xml comments
+            Deletes user
             </summary>
+            <param name="id">Id of study plan</param>
         </member>
         <member name="M:InternshipProgressTracker.Startup.CreateRoles(System.IServiceProvider)">
             <summary>
@@ -858,18 +948,6 @@
             <summary>
             Generates refresh token
             </summary>
-        </member>
-        <member name="T:Microsoft.EntityFrameworkCore.DbContextExtensions">
-            <summary>
-            Extensions for the database context
-            </summary>
-        </member>
-        <member name="M:Microsoft.EntityFrameworkCore.DbContextExtensions.FindTracked``1(Microsoft.EntityFrameworkCore.DbContext,System.Object[])">
-            <summary>
-            
-            </summary>
-            <param name="context">Database context</param>
-            <param name="keyValues">Keys for search</param>
         </member>
     </members>
 </doc>
