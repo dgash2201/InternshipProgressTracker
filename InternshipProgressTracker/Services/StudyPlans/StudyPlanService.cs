@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.StudyPlans
@@ -30,14 +31,14 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets all study plans
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<StudyPlanResponseDto>> GetWithSoftDeletedAsync()
+        public async Task<IReadOnlyCollection<StudyPlanResponseDto>> GetWithSoftDeletedAsync(CancellationToken cancellationToken = default)
         {
             var studyPlanDtos = await _dbContext
                 .StudyPlans
                 .Include(p => p.Entries)
                 .IgnoreQueryFilters()
                 .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return studyPlanDtos.AsReadOnly();
         }
@@ -46,13 +47,13 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets list of study plans
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<StudyPlanResponseDto>> GetAsync()
+        public async Task<IReadOnlyCollection<StudyPlanResponseDto>> GetAsync(CancellationToken cancellationToken = default)
         {
             var studyPlanDtos = await _dbContext
                 .StudyPlans
                 .Include(p => p.Entries)
                 .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return studyPlanDtos.AsReadOnly();
         }
@@ -61,14 +62,14 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Gets study plan by id
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task<StudyPlanResponseDto> GetAsync(int id)
+        public async Task<StudyPlanResponseDto> GetAsync(int id, CancellationToken cancellationToken = default)
         {
             var studyPlanDto = await _dbContext
                 .StudyPlans
                 .Where(p => p.Id == id)
                 .Include(p => p.Entries)
                 .ProjectTo<StudyPlanResponseDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (studyPlanDto == null)
             {
@@ -82,11 +83,11 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Creates study plan
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(StudyPlanDto createDto)
+        public async Task<int> CreateAsync(StudyPlanDto createDto, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(createDto.InternshipStreamId);
+                .FindAsync(new object[] { createDto.InternshipStreamId }, cancellationToken);
 
             if (stream == null)
             {
@@ -98,7 +99,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
             studyPlan.InternshipStream = stream;
 
             _dbContext.StudyPlans.Add(studyPlan);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return studyPlan.Id;
         }
@@ -108,9 +109,9 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, StudyPlanDto updateDto)
+        public async Task UpdateAsync(int id, StudyPlanDto updateDto, CancellationToken cancellationToken = default)
         {
-            var studyPlan = await _dbContext.StudyPlans.FindAsync(id);
+            var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
 
             if (studyPlan == null)
             {
@@ -119,7 +120,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
 
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(updateDto.InternshipStreamId);
+                .FindAsync(new object[] { updateDto.InternshipStreamId }, cancellationToken);
 
             if (stream == null)
             {
@@ -130,7 +131,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
             studyPlan.InternshipStream = stream;
 
             _dbContext.Entry(studyPlan).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -138,9 +139,9 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="patchDocument">Json Patch operations</param>
-        public async Task UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument)
+        public async Task UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument, CancellationToken cancellationToken = default)
         {
-            var studyPlan = await _dbContext.StudyPlans.FindAsync(id);
+            var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
 
             if (studyPlan == null)
             {
@@ -152,7 +153,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
 
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(studyPlanDto.InternshipStreamId);
+                .FindAsync(new object[] { studyPlanDto.InternshipStreamId }, cancellationToken);
 
             if (stream == null)
             {
@@ -163,16 +164,16 @@ namespace InternshipProgressTracker.Services.StudyPlans
             studyPlan.InternshipStream = stream;
 
             _dbContext.Entry(studyPlan).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Marks study plan as deleted
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task SoftDeleteAsync(int id)
+        public async Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var stydyPlan = await _dbContext.StudyPlans.FindAsync(id);
+            var stydyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
 
             if (stydyPlan == null)
             {
@@ -181,24 +182,24 @@ namespace InternshipProgressTracker.Services.StudyPlans
 
             stydyPlan.IsDeleted = true;
             _dbContext.Entry(stydyPlan).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Deletes study plan
         /// </summary>
         /// <param name="id">Id of study plan</param>
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var studyPlan = _dbContext.FindTracked<StudyPlan>(id);
+            var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
 
             if (studyPlan == null)
             {
                 throw new NotFoundException("Study plan with this id was not found");
             }
 
-            _dbContext.Remove(_dbContext.FindTracked<StudyPlan>(id));
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Remove(studyPlan);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

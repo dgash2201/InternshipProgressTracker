@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -34,11 +35,11 @@ namespace InternshipProgressTracker.Controllers
         /// </summary>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("set-grade")]
-        public async Task<IActionResult> SetStudentGrade(StudentGradeDto gradeDto)
+        public async Task<IActionResult> SetStudentGrade(StudentGradeDto gradeDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _studentService.SetStudentGradeAsync(gradeDto.StudentId, gradeDto.Grade);
+                await _studentService.SetStudentGradeAsync(gradeDto.StudentId, gradeDto.Grade, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -64,11 +65,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("grade-progress")]
-        public async Task<IActionResult> GradeStudentProgress(GradeProgressDto gradeProgressDto)
+        public async Task<IActionResult> GradeStudentProgress(GradeProgressDto gradeProgressDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _studentService.GradeStudentProgressAsync(gradeProgressDto);
+                await _studentService.GradeStudentProgressAsync(gradeProgressDto, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -101,13 +102,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPut("add-notes")]
-        public async Task<IActionResult> AddNotes(NotesDto notesDto)
+        public async Task<IActionResult> AddNotes(NotesDto notesDto, CancellationToken cancellationToken)
         {
             try
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.AddNotesAsync(studentId, notesDto);
+                await _studentService.AddNotesAsync(studentId, notesDto, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -135,13 +136,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPost("start-study-plan-entry")]
-        public async Task<IActionResult> StartStudyPlanEntry(ProgressDto progressDto)
+        public async Task<IActionResult> StartStudyPlanEntry(ProgressDto progressDto, CancellationToken cancellationToken)
         {
             try
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.StartStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId);
+                await _studentService.StartStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -165,13 +166,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpPut("finish-study-plan-entry")]
-        public async Task<IActionResult> FinishStudyPlanEntry(ProgressDto progressDto)
+        public async Task<IActionResult> FinishStudyPlanEntry(ProgressDto progressDto, CancellationToken cancellationToken)
         {
             try
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.FinishStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId);
+                await _studentService.FinishStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }

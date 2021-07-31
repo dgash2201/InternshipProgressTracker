@@ -5,7 +5,6 @@ using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.Extensions;
-using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.InternshipStreams
@@ -34,15 +34,15 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <summary>
         /// Binds mentor with stream
         /// </summary>
-        public async Task AddMentorAsync(int streamId, int mentorId)
+        public async Task AddMentorAsync(int streamId, int mentorId, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(streamId);
+                .FindAsync(new object[] { streamId }, cancellationToken);
 
             var mentor = await _dbContext
                 .Mentors
-                .FindAsync(mentorId);
+                .FindAsync(new object[] { mentorId }, cancellationToken);
 
             if (stream == null)
             {
@@ -60,21 +60,21 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             stream.Mentors.Add(mentor);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Binds student with stream
         /// </summary>
-        public async Task AddStudentAsync(int streamId, int studentId)
+        public async Task AddStudentAsync(int streamId, int studentId, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(streamId);
+                .FindAsync(new object[] { streamId }, cancellationToken);
 
             var student = await _dbContext
                 .Students
-                .FindAsync(studentId);
+                .FindAsync(new object[] { studentId }, cancellationToken);
 
             if (stream == null)
             {
@@ -92,21 +92,21 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             stream.Students.Add(student);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Remove mentor from internship stream
         /// </summary>
-        public async Task RemoveMentorAsync(int streamId, int mentorId)
+        public async Task RemoveMentorAsync(int streamId, int mentorId, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(streamId);
+                .FindAsync(new object[] { streamId }, cancellationToken);
 
             var mentor = await _dbContext
                 .Mentors
-                .FindAsync(mentorId);
+                .FindAsync(new object[] { mentorId }, cancellationToken);
 
             if (stream == null)
             {
@@ -119,21 +119,21 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             stream.Mentors.Remove(mentor);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Remove student from internship stream
         /// </summary>
-        public async Task RemoveStudentAsync(int streamId, int studentId)
+        public async Task RemoveStudentAsync(int streamId, int studentId, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
-                .FindAsync(streamId);
+                .FindAsync(new object[] { streamId }, cancellationToken);
 
             var student = await _dbContext
                 .Students
-                .FindAsync(studentId);
+                .FindAsync(new object[] { studentId }, cancellationToken);
 
             if (stream == null)
             {
@@ -146,13 +146,13 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             }
 
             stream.Students.Remove(student);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Gets all internship streams
         /// </summary>
-        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync()
+        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetWithSoftDeletedAsync(CancellationToken cancellationToken = default)
         {
             var internshipStreamDtos = await _dbContext
                 .InternshipStreams
@@ -162,7 +162,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 .ThenInclude(p => p.Entries)
                 .IgnoreQueryFilters()
                 .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return internshipStreamDtos.AsReadOnly();
         }
@@ -170,7 +170,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// <summary>
         /// Gets list of internship streams
         /// </summary>
-        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync(int? studentId, int? mentorId)
+        public async Task<IReadOnlyCollection<InternshipStreamResponseDto>> GetAsync(int? studentId, int? mentorId, CancellationToken cancellationToken = default)
         {
             var filters = new List<Expression<Func<InternshipStream, bool>>>();
 
@@ -192,7 +192,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 .ThenInclude(p => p.Entries)
                 .ApplyFilters(filters)
                 .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return internshipStreamDtos.AsReadOnly();
         }
@@ -201,7 +201,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Gets internship stream by id
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task<InternshipStreamResponseDto> GetAsync(int id)
+        public async Task<InternshipStreamResponseDto> GetAsync(int id, CancellationToken cancellationToken = default)
         {
             var internshipStreamDto = await _dbContext
                 .InternshipStreams
@@ -210,7 +210,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
                 .Include(s => s.StudyPlans)
                 .ThenInclude(p => p.Entries)
                 .ProjectTo<InternshipStreamResponseDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (internshipStreamDto == null)
             {
@@ -219,28 +219,28 @@ namespace InternshipProgressTracker.Services.InternshipStreams
 
             return internshipStreamDto;
         }
-        
+
         /// <summary>
         /// Creates internship stream from createDto
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(InternshipStreamDto createDto)
+        public async Task<int> CreateAsync(InternshipStreamDto createDto, CancellationToken cancellationToken = default)
         {
             var internshipStream = _mapper.Map<InternshipStreamDto, InternshipStream>(createDto);
             _dbContext.InternshipStreams.Add(internshipStream);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return internshipStream.Id;
         }
-        
+
         /// <summary>
         /// Updates data in internship stream
         /// </summary>
         /// <param name="id">Internship stream id</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, InternshipStreamDto updateDto)
+        public async Task UpdateAsync(int id, InternshipStreamDto updateDto, CancellationToken cancellationToken = default)
         {
-            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(new object[] { id }, cancellationToken);
 
             if (internshipStream == null)
             {
@@ -249,7 +249,7 @@ namespace InternshipProgressTracker.Services.InternshipStreams
 
             _mapper.Map(updateDto, internshipStream);
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -257,9 +257,9 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// </summary>
         /// <param name="id">Id of internship stream</param>
         /// <param name="patchDocument">Json Patch operations</param>
-        public async Task UpdateAsync(int id, JsonPatchDocument<InternshipStreamDto> patchDocument)
+        public async Task UpdateAsync(int id, JsonPatchDocument<InternshipStreamDto> patchDocument, CancellationToken cancellationToken = default)
         {
-            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(new object[] { id }, cancellationToken);
 
             if (internshipStream == null)
             {
@@ -272,16 +272,16 @@ namespace InternshipProgressTracker.Services.InternshipStreams
             _mapper.Map(internshipStreamDto, internshipStream);
 
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Marks the entity as deleted
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task SoftDeleteAsync(int id)
+        public async Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var internshipStream = await _dbContext.InternshipStreams.FindAsync(id);
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(new object[] { id }, cancellationToken);
 
             if (internshipStream == null)
             {
@@ -290,24 +290,24 @@ namespace InternshipProgressTracker.Services.InternshipStreams
 
             internshipStream.IsDeleted = true;
             _dbContext.Entry(internshipStream).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Deletes internship stream by id
         /// </summary>
         /// <param name="id">Internship stream id</param>
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var internshipStream = _dbContext.FindTracked<InternshipStream>(id);
+            var internshipStream = await _dbContext.InternshipStreams.FindAsync(new object[] { id }, cancellationToken);
 
             if (internshipStream == null)
             {
                 throw new NotFoundException("Internship stream with this id was not found");
             }
 
-            _dbContext.Remove(_dbContext.FindTracked<InternshipStream>(id));
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Remove(internshipStream);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

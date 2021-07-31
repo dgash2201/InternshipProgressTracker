@@ -1,6 +1,7 @@
 ﻿using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Entities.Enums;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Admins
@@ -10,10 +11,10 @@ namespace InternshipProgressTracker.Services.Admins
     /// </summary>
     public interface IAdminService
     {
-        Task<IReadOnlyCollection<User>> GetAllUsersAsync();
+        Task<IReadOnlyCollection<User>> GetAllUsersAsync(CancellationToken cancellationToken = default);
 
-        Task CreateAdminAsync(int userId);
+        Task CreateAdminAsync(int userId, CancellationToken cancellationToken = default);
 
-        Task CreateMentorAsync(int userId, MentorRole role);
+        Task CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default);
     }
 }

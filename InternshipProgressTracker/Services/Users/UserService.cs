@@ -41,8 +41,10 @@ namespace InternshipProgressTracker.Services.Users
         /// Gets user by id
         /// </summary>
         /// <param name="id">Id of user</param>
-        public async Task<UserResponseDto> GetAsync(int id)
+        public async Task<UserResponseDto> GetAsync(int id, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
@@ -57,7 +59,7 @@ namespace InternshipProgressTracker.Services.Users
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -99,7 +101,7 @@ namespace InternshipProgressTracker.Services.Users
                 await _userManager.UpdateAsync(user);
             }
 
-            await _studentService.CreateAsync(user);
+            await _studentService.CreateAsync(user, cancellationToken);
             await _userManager.AddToRoleAsync(user, "Student");
 
             return user.Id;
@@ -109,10 +111,8 @@ namespace InternshipProgressTracker.Services.Users
         /// Checks login data and returns generated token
         /// </summary>
         /// <param name="loginDto">Contains login form data</param>
-        public async Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
+        public async Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
@@ -140,8 +140,10 @@ namespace InternshipProgressTracker.Services.Users
         /// <summary>
         /// Creates new JWT
         /// </summary>
-        public async Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int userId)
+        public async Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int userId, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)

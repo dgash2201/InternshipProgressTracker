@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -36,11 +37,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="403">Forbidden for this role</response>
         /// <response code="500">Internal server error</response>
         [HttpGet("get-users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
         {
             try
             {
-                var users = await _adminService.GetAllUsersAsync();
+                var users = await _adminService.GetAllUsersAsync(cancellationToken);
 
                 return Ok(new ResponseWithModel<IReadOnlyCollection<User>> { Success = true, Model = users });
             }
@@ -59,11 +60,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
         [HttpPost("create-admin")]
-        public async Task<IActionResult> CreateAdmin(CreateAdminDto createDto)
+        public async Task<IActionResult> CreateAdmin(CreateAdminDto createDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _adminService.CreateAdminAsync(createDto.UserId);
+                await _adminService.CreateAdminAsync(createDto.UserId, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -86,11 +87,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
         [HttpPost("create-mentor")]
-        public async Task<IActionResult> CreateAdmin(CreateMentorDto createDto)
+        public async Task<IActionResult> CreateAdmin(CreateMentorDto createDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _adminService.CreateMentorAsync(createDto.UserId, createDto.Role);
+                await _adminService.CreateMentorAsync(createDto.UserId, createDto.Role, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
@@ -37,11 +38,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Admin")]
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetWithSoftDeleted()
+        public async Task<IActionResult> GetWithSoftDeleted(CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanEntries = await _studyPlanEntryService.GetWithSoftDeletedAsync();
+                var studyPlanEntries = await _studyPlanEntryService.GetWithSoftDeletedAsync(cancellationToken);
 
                 return Ok(new ResponseWithModel<IReadOnlyCollection<StudyPlanEntryResponseDto>> { Success = true, Model = studyPlanEntries });
             }
@@ -60,11 +61,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanEntries = await _studyPlanEntryService.GetAsync();
+                var studyPlanEntries = await _studyPlanEntryService.GetAsync(cancellationToken);
 
                 return Ok(new ResponseWithModel<IReadOnlyCollection<StudyPlanEntryResponseDto>> { Success = true, Model = studyPlanEntries });
             }
@@ -85,11 +86,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanEntry = await _studyPlanEntryService.GetAsync(id);
+                var studyPlanEntry = await _studyPlanEntryService.GetAsync(id, cancellationToken);
 
                 return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntry });
             }
@@ -114,11 +115,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(StudyPlanEntryDto createDto)
+        public async Task<IActionResult> Create(StudyPlanEntryDto createDto, CancellationToken cancellationToken)
         {
             try
             {
-                var id = await _studyPlanEntryService.CreateAsync(createDto);
+                var id = await _studyPlanEntryService.CreateAsync(createDto, cancellationToken);
 
                 return Ok(new ResponseWithId { Success = true, Id = id });
             }
@@ -144,11 +145,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(PutRequestDto<StudyPlanEntryDto> putRequestDto)
+        public async Task<IActionResult> Update(PutRequestDto<StudyPlanEntryDto> putRequestDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model);
+                await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -174,11 +175,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Update(PatchRequestDto<StudyPlanEntryDto> patchRequestDto)
+        public async Task<IActionResult> Update(PatchRequestDto<StudyPlanEntryDto> patchRequestDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument);
+                await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -203,11 +204,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             try
             {
-                await _studyPlanEntryService.SoftDeleteAsync(id);
+                await _studyPlanEntryService.SoftDeleteAsync(id, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }
@@ -232,11 +233,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Admin")]
         [HttpDelete("hard-delete/{id}")]
-        public async Task<IActionResult> HardDelete(int id)
+        public async Task<IActionResult> HardDelete(int id, CancellationToken cancellationToken)
         {
             try
             {
-                await _studyPlanEntryService.DeleteAsync(id);
+                await _studyPlanEntryService.DeleteAsync(id, cancellationToken);
 
                 return Ok(new Response { Success = true });
             }

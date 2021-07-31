@@ -33,13 +33,17 @@ namespace InternshipProgressTracker.Controllers
         /// Get user by id
         /// </summary>
         /// <param name="id">Id of user</param>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="500">Internal server error</response>
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var responseDto = await _userService.GetAsync(id);
+                var responseDto = await _userService.GetAsync(id, cancellationToken);
 
                 return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = responseDto });
             }
@@ -124,11 +128,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [HttpGet]
         [Route("refresh-jwt")]
-        public async Task<IActionResult> RefreshJwt(string refreshToken, int userId)
+        public async Task<IActionResult> RefreshJwt(string refreshToken, int userId, CancellationToken cancellationToken)
         {
             try
             {
-                var tokenPair = await _userService.RefreshJwtAsync(refreshToken, userId);
+                var tokenPair = await _userService.RefreshJwtAsync(refreshToken, userId, cancellationToken);
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }
