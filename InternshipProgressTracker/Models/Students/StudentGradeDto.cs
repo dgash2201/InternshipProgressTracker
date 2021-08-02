@@ -1,12 +1,10 @@
-﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using InternshipProgressTracker.Entities.Enums;
 
 namespace InternshipProgressTracker.Models.Students
 {
+    /// <summary>
+    /// Contains data that is needed in order to give a student a grade
+    /// </summary>
     public class StudentGradeDto
     {
         public int StudentId { get; set; }

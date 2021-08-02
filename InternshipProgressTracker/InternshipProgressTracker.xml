@@ -541,6 +541,11 @@
             Contains data for binding student with internship stream
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Models.StudentStudyPlanProgresses.StudentProgressResponseDto">
+            <summary>
+            Contains student's progress data on study plan entry
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Models.Students.GradeProgressDto">
             <summary>
             Contains data for grading student progress by mentor
@@ -549,6 +554,16 @@
         <member name="T:InternshipProgressTracker.Models.Students.NotesDto">
             <summary>
             Contains data for adding notes
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Students.ProgressDto">
+            <summary>
+            Contains data that student needs to start or finish study plan entry
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Students.StudentGradeDto">
+            <summary>
+            Contains data that is needed in order to give a student a grade
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Models.StudyPlans.StudyPlanDto">
@@ -569,6 +584,16 @@
         <member name="T:InternshipProgressTracker.Models.Users.RegisterDto">
             <summary>
             Represents data from signup form
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Users.StudentResponseDto">
+            <summary>
+            Contains student data
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Models.Users.UserResponseDto">
+            <summary>
+            Contains user data
             </summary>
         </member>
         <member name="T:InternshipProgressTracker.Services.Admins.AdminService">

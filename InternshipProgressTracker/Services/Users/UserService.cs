@@ -6,6 +6,7 @@ using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Students;
 using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -45,14 +46,24 @@ namespace InternshipProgressTracker.Services.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _userManager
+                .Users
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
                 throw new NotFoundException("User was not found");
             }
 
-            return _mapper.Map<UserResponseDto>(user);
+            var responseDto = _mapper.Map<UserResponseDto>(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            responseDto.Role = roles.FirstOrDefault();
+
+            return responseDto;
         }
 
         /// <summary>
