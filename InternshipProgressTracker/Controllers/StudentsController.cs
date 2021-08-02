@@ -1,5 +1,4 @@
-﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Services.Students;
@@ -118,7 +117,7 @@ namespace InternshipProgressTracker.Controllers
             }
             catch (NotFoundException ex)
             {
-                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message});
+                return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
             catch (Exception ex)
             {

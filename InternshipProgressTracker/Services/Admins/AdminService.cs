@@ -1,7 +1,10 @@
-﻿using InternshipProgressTracker.Database;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
+using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Mentors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,26 +19,31 @@ namespace InternshipProgressTracker.Services.Admins
     /// </summary>
     public class AdminService : IAdminService
     {
-        private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly UserManager<User> _userManager;
         private readonly IMentorService _mentorService;
+        private readonly IMapper _mapper;
 
-        public AdminService(InternshipProgressTrackerDbContext dbContext, 
-            UserManager<User> userManager, IMentorService mentorService)
+        public AdminService(UserManager<User> userManager, 
+            IMentorService mentorService, IMapper mapper)
         {
-            _dbContext = dbContext;
             _userManager = userManager;
             _mentorService = mentorService;
+            _mapper = mapper;
         }
 
         /// <summary>
         /// Gets list of all users
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<User>> GetAllUsersAsync(CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyCollection<UserResponseDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
         {
-            var users = await _dbContext
+            var users = await _userManager
                 .Users
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .ProjectTo<UserResponseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
             return users.AsReadOnly();

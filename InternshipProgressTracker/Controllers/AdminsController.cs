@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Admins;
 using InternshipProgressTracker.Models.Common;
+using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Admins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace InternshipProgressTracker.Controllers
             {
                 var users = await _adminService.GetAllUsersAsync(cancellationToken);
 
-                return Ok(new ResponseWithModel<IReadOnlyCollection<User>> { Success = true, Model = users });
+                return Ok(new ResponseWithModel<IReadOnlyCollection<UserResponseDto>> { Success = true, Model = users });
             }
             catch (Exception ex)
             {
