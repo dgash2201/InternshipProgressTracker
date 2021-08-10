@@ -9,6 +9,12 @@
       "type": "appInsights.azure",
       "connectionId": "APPINSIGHTS_CONNECTIONSTRING",
       "secretStore": "AzureAppSettings"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/internshipprogresstrackerdbserver/databases/InternshipProgressTrackerDB",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnection",
+      "secretStore": "AzureAppSettings"
     }
   }
 }
