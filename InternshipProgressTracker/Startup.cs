@@ -216,7 +216,7 @@ namespace InternshipProgressTracker
                     LastName = Configuration["Admin:LastName"],
                 };
 
-                var creationResult = await userManager.CreateAsync(admin, Configuration["Admin:Password"]);
+                var creationResult = await userManager.CreateAsync(admin, Configuration["AdminPassword"]);
 
                 if (creationResult.Succeeded)
                 {
