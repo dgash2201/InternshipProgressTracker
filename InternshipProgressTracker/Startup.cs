@@ -9,6 +9,7 @@ using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -19,33 +20,31 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -68,21 +67,17 @@ namespace InternshipProgressTracker
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"));
+
+            services
+                .AddAuthorization(options =>
                 {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ServiceApiKey"])),
-                    };
+                    options.DefaultPolicy =
+                        new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .RequireClaim("http://schemas.microsoft.com/identity/claims/scope", "user_impersonation")
+                            .Build();
                 });
-            services.AddAuthorization();
 
             services
                 .AddControllers(options =>
@@ -128,7 +123,7 @@ namespace InternshipProgressTracker
                 });
             });
 
-            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
@@ -136,9 +131,10 @@ namespace InternshipProgressTracker
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InternshipProgressTracker v1"));
-            }
+            } 
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InternshipProgressTracker v1"));
 
             app.UseHttpsRedirection();
 
@@ -202,7 +198,7 @@ namespace InternshipProgressTracker
         /// </summary>
         private async Task CreateAdmin(IServiceProvider serviceProvider)
         {
-            var adminEmail = Configuration["Admin:Email"];
+            var adminEmail = _configuration["Admin:Email"];
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var user = await userManager.FindByEmailAsync(adminEmail);
 
@@ -212,11 +208,11 @@ namespace InternshipProgressTracker
                 {
                     UserName = adminEmail,
                     Email = adminEmail,
-                    FirstName = Configuration["Admin:FirstName"],
-                    LastName = Configuration["Admin:LastName"],
+                    FirstName = _configuration["Admin:FirstName"],
+                    LastName = _configuration["Admin:LastName"],
                 };
 
-                var creationResult = await userManager.CreateAsync(admin, Configuration["AdminPassword"]);
+                var creationResult = await userManager.CreateAsync(admin, _configuration["AdminPassword"]);
 
                 if (creationResult.Succeeded)
                 {
