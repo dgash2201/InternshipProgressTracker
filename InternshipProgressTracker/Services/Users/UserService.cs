@@ -23,18 +23,21 @@ namespace InternshipProgressTracker.Services.Users
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
+        private readonly IPhotoManager _photoManager;
         private readonly IMapper _mapper;
 
         public UserService(UserManager<User> userManager,
             SignInManager<User> signInManager,
             ITokenGenerator tokenGenerator,
             IStudentService studentService,
+            IPhotoManager photoManager,
             IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
             _studentService = studentService;
+            _photoManager = photoManager;
             _mapper = mapper;
         }
 
@@ -61,7 +64,9 @@ namespace InternshipProgressTracker.Services.Users
 
             var responseDto = _mapper.Map<UserResponseDto>(user);
             var roles = await _userManager.GetRolesAsync(user);
+
             responseDto.Role = roles.FirstOrDefault();
+            responseDto.Avatar = await _photoManager.GetAsync(user.PhotoName, cancellationToken);
 
             return responseDto;
         }
@@ -102,13 +107,8 @@ namespace InternshipProgressTracker.Services.Users
 
             if (registerDto.Avatar != null)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await registerDto.Avatar.CopyToAsync(memoryStream);
-                    user.Photo = memoryStream.ToArray();
-                    user.PhotoType = registerDto.Avatar.ContentType;
-                }
-
+                var photoName = await _photoManager.UploadAsync(registerDto.Avatar, cancellationToken);
+                user.PhotoName = photoName;
                 await _userManager.UpdateAsync(user);
             }
 

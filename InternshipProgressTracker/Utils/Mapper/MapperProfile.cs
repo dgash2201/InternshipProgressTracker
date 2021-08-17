@@ -33,9 +33,7 @@ namespace InternshipProgressTracker.Utils.Mapper
                 .ForMember(dto => dto.StudentProgresses, 
                     options => options.MapFrom(entity => entity.StudentsProgresses.ToList()));
 
-            CreateMap<User, UserResponseDto>()
-                .ForMember(dto => dto.Avatar, 
-                    options => options.MapFrom(entity => CreateAvatar(entity.Photo, entity.PhotoType)));
+            CreateMap<User, UserResponseDto>();
 
             CreateMap<Student, StudentResponseDto>()
                 .ForMember(dto => dto.StudyPlanProgresses,
@@ -46,16 +44,6 @@ namespace InternshipProgressTracker.Utils.Mapper
                     options => options.MapFrom(entity => entity.StudentStudyPlanProgresses.ToList()));
 
             CreateMap<StudentStudyPlanProgress, StudentProgressResponseDto>();
-        }
-
-        private static FileContentResult CreateAvatar(byte[] photo, string type)
-        {
-            if (photo == null)
-            {
-                return null;
-            }
-
-            return new FileContentResult(photo, type);
         }
     }
 }

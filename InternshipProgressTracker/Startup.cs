@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Services.Admins;
@@ -9,7 +10,6 @@ using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -20,13 +20,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker
@@ -49,6 +50,8 @@ namespace InternshipProgressTracker
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
+            services.AddSingleton<IPhotoManager, PhotoManager>();
+            services.AddSingleton(options => new BlobServiceClient(_configuration["BlobStorageConnectionString"]));
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IInternshipStreamService, InternshipStreamService>();
@@ -67,17 +70,32 @@ namespace InternshipProgressTracker
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"));
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
+                    };
+                });
+
+            //.AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"));
 
             services
-                .AddAuthorization(options =>
+                .AddAuthorization(/*options =>
                 {
                     options.DefaultPolicy =
                         new AuthorizationPolicyBuilder()
                             .RequireAuthenticatedUser()
                             .RequireClaim("http://schemas.microsoft.com/identity/claims/scope", "user_impersonation")
                             .Build();
-                });
+                }*/);
 
             services
                 .AddControllers(options =>
@@ -131,8 +149,8 @@ namespace InternshipProgressTracker
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            } 
-            
+            }
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InternshipProgressTracker v1"));
 
