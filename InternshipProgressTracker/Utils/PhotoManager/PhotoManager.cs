@@ -3,12 +3,16 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Utils
 {
+    /// <summary>
+    /// Works with user avatars
+    /// </summary>
     public class PhotoManager : IPhotoManager
     {
         private readonly BlobContainerClient _blobContainer;
@@ -18,26 +22,40 @@ namespace InternshipProgressTracker.Utils
             _blobContainer = blobService.GetBlobContainerClient("photocontainer");
         }
 
-        public async Task<FileContentResult> GetAsync(string photoName, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Gets photo from Azure Blob Storage
+        /// </summary>
+        public async Task<FileContentResult> GetAsync(string photoId, CancellationToken cancellationToken = default)
         {
-            var blob = _blobContainer.GetBlobClient(photoName);
+            var blob = _blobContainer.GetBlobClient(photoId);
 
             await using var memoryStream = new MemoryStream();
             await blob.DownloadToAsync(memoryStream, cancellationToken);
             var properties = await blob.GetPropertiesAsync(cancellationToken: cancellationToken);
 
-            return new FileContentResult(memoryStream.ToArray(), properties.Value.ContentType);
+            return new FileContentResult(memoryStream.ToArray(), properties.Value.ContentType)
+            {
+                FileDownloadName = properties.Value.Metadata["photoName"]
+            };
         }
 
+        /// <summary>
+        /// Uploads photo to the Azure Blob Storage
+        /// </summary>
+        /// <returns>Unique Id of photo in the Azure Blob Storage</returns>
         public async Task<string> UploadAsync(IFormFile photo, CancellationToken cancellationToken = default)
         {
-            var name = photo.FileName + Guid.NewGuid().ToString();
-            var blob = _blobContainer.GetBlobClient(name);
+            var photoId = Guid.NewGuid().ToString();
+            var blob = _blobContainer.GetBlobClient(photoId);
 
             await using var readStream = photo.OpenReadStream();
-            var response = await blob.UploadAsync(readStream, new BlobHttpHeaders { ContentType = photo.ContentType }, cancellationToken: cancellationToken);
+            var response = await blob.UploadAsync(
+                readStream, 
+                new BlobHttpHeaders { ContentType = photo.ContentType },
+                new Dictionary<string, string> { ["photoName"] = photo.FileName },
+                cancellationToken: cancellationToken);
 
-            return name;
+            return photoId;
         }
     }
 }

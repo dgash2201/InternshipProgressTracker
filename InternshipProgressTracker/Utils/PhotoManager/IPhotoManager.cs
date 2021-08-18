@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Utils
 {
+    /// <summary>
+    /// Interface of photo manager
+    /// </summary>
     public interface IPhotoManager
     {
         Task<FileContentResult> GetAsync(string name, CancellationToken cancellationToken = default);

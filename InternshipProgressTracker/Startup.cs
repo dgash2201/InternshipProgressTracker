@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -85,17 +86,7 @@ namespace InternshipProgressTracker
                     };
                 });
 
-            //.AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"));
-
-            services
-                .AddAuthorization(/*options =>
-                {
-                    options.DefaultPolicy =
-                        new AuthorizationPolicyBuilder()
-                            .RequireAuthenticatedUser()
-                            .RequireClaim("http://schemas.microsoft.com/identity/claims/scope", "user_impersonation")
-                            .Build();
-                }*/);
+            services.AddAuthorization();
 
             services
                 .AddControllers(options =>

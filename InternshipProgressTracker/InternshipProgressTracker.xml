@@ -953,6 +953,27 @@
             Contains settings for AutoMapper
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Utils.IPhotoManager">
+            <summary>
+            Interface of photo manager
+            </summary>
+        </member>
+        <member name="T:InternshipProgressTracker.Utils.PhotoManager">
+            <summary>
+            Works with user avatars
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.PhotoManager.GetAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets photo from Azure Blob Storage
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+            <summary>
+            Uploads photo to the Azure Blob Storage
+            </summary>
+            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+        </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
             <summary>
             Interface for token generator
