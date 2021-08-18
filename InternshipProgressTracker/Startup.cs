@@ -10,6 +10,7 @@ using InternshipProgressTracker.Services.StudyPlans;
 using InternshipProgressTracker.Services.Users;
 using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -84,9 +85,16 @@ namespace InternshipProgressTracker
                         IssuerSigningKey =
                             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
                     };
-                });
+                })
+                .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"), "AzureAd");
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+                {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder(
+                        JwtBearerDefaults.AuthenticationScheme, "AzureAd")
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
 
             services
                 .AddControllers(options =>
