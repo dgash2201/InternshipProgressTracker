@@ -402,6 +402,11 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="M:InternshipProgressTracker.Controllers.UsersController.LoginByAzure">
+            <summary>
+            Authenticate user with Azure token
+            </summary>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Create new JWT
@@ -921,6 +926,13 @@
             </summary>
             <param name="loginDto">Contains login form data</param>
         </member>
+        <member name="M:InternshipProgressTracker.Services.Users.UserService.LoginByAzureAsync(Microsoft.Graph.IUserRequest,Microsoft.Graph.IProfilePhotoContentRequest)">
+            <summary>
+            Authenticate azure user and save him in the database
+            </summary>
+            <param name="userRequest">Microsoft Graph API request to get user</param>
+            <param name="photoRequest">Microsoft Graph API request to get photo content</param>
+        </member>
         <member name="M:InternshipProgressTracker.Services.Users.UserService.RefreshJwtAsync(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Creates new JWT
@@ -972,6 +984,13 @@
             <summary>
             Uploads photo to the Azure Blob Storage
             </summary>
+            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+        </member>
+        <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.Graph.IProfilePhotoContentRequest,System.Threading.CancellationToken)">
+            <summary>
+            Get Azure user photo and upload it to Azure Blob Storage
+            </summary>
+            <param name="photoRequest">Microsoft Graph API request to get photo content</param>
             <returns>Unique Id of photo in the Azure Blob Storage</returns>
         </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
