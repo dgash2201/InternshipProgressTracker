@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,6 +54,27 @@ namespace InternshipProgressTracker.Utils
                 readStream, 
                 new BlobHttpHeaders { ContentType = photo.ContentType },
                 new Dictionary<string, string> { ["photoName"] = photo.FileName },
+                cancellationToken: cancellationToken);
+
+            return photoId;
+        }
+
+        /// <summary>
+        /// Get Azure user photo and upload it to Azure Blob Storage
+        /// </summary>
+        /// <param name="photoRequest">Microsoft Graph API request to get photo content</param>
+        /// <returns>Unique Id of photo in the Azure Blob Storage</returns>
+        public async Task<string> UploadAsync(IProfilePhotoContentRequest photoRequest, CancellationToken cancellationToken = default)
+        {
+            using var photoStream = await photoRequest.GetAsync();
+
+            if (photoStream == null) return null;
+
+            var photoId = Guid.NewGuid().ToString();
+            var blob = _blobContainer.GetBlobClient(photoId);
+
+            var response = await blob.UploadAsync(
+                photoStream,
                 cancellationToken: cancellationToken);
 
             return photoId;

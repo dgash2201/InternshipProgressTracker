@@ -3,7 +3,6 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,9 +15,9 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of Internship Streams
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = "MyBearer")]
     [ApiController]
+    [Route("[controller]")]
     public class InternshipStreamsController : Controller
     {
         private readonly IInternshipStreamService _internshipStreamService;

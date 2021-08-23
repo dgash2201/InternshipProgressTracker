@@ -1,10 +1,8 @@
-﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Services.StudyPlans;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,9 +15,9 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of Study Plans
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = "MyBearer")]
     [ApiController]
+    [Route("[controller]")]
     public class StudyPlansController : ControllerBase
     {
         private readonly IStudyPlanService _studyPlanService;

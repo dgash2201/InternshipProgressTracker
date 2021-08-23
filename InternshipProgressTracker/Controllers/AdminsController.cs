@@ -1,5 +1,4 @@
-﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Exceptions;
+﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Admins;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Users;
@@ -17,9 +16,9 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of Admins
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-    [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = "MyBearer", Roles = "Admin")]
     [ApiController]
+    [Route("[controller]")]
     public class AdminsController : ControllerBase
     {
         private readonly IAdminService _adminService;

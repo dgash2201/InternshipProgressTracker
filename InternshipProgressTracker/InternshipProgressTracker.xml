@@ -372,7 +372,7 @@
         <member name="T:InternshipProgressTracker.Controllers.UsersController">
             <summary>
             Represents Web API of Users
-            </summary>
+            </summary> 
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.Get(System.Int32,System.Threading.CancellationToken)">
             <summary>

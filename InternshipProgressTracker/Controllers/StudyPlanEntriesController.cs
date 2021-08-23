@@ -3,7 +3,6 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,9 +15,9 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of Study Plan Entries
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = "MyBearer")]
     [ApiController]
+    [Route("[controller]")]
     public class StudyPlanEntriesController : ControllerBase
     {
         private readonly IStudyPlanEntryService _studyPlanEntryService;
@@ -94,7 +93,7 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntry });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
@@ -123,7 +122,7 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new ResponseWithId { Success = true, Id = id });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
@@ -153,7 +152,7 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new Response { Success = true });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }

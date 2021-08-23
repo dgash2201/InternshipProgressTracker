@@ -1,33 +1,45 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using InternshipProgressTracker.Models.Users;
-using InternshipProgressTracker.Services.Users;
-using InternshipProgressTracker.Exceptions;
-using Microsoft.Extensions.Logging;
+﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Token;
-using Microsoft.AspNetCore.Http;
+using InternshipProgressTracker.Models.Users;
+using InternshipProgressTracker.Services.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.Resource;
+using System;
+using System.Net;
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
     /// <summary>
     /// Represents Web API of Users
-    /// </summary>
+    /// </summary> 
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly ILogger<UsersController> _logger;
+        private readonly ITokenAcquisition _tokenAcquisition;
+        private readonly GraphServiceClient _graphServiceClient;
+        private readonly IOptions<MicrosoftGraphOptions> _graphOptions;
 
-        public UsersController(IUserService service, ILogger<UsersController> logger)
+        public UsersController(IUserService service, ILogger<UsersController> logger, ITokenAcquisition tokenAcquisition, GraphServiceClient graphServiceClient, IOptions<MicrosoftGraphOptions> graphOptions)
         {
             _userService = service;
             _logger = logger;
+            _tokenAcquisition = tokenAcquisition;
+            _graphServiceClient = graphServiceClient;
+            _graphOptions = graphOptions;
         }
 
         /// <summary>
@@ -38,7 +50,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Student, Mentor, Lead, Admin")]
+        [Authorize(AuthenticationSchemes = "MyBearer", Roles = "Student, Mentor, Lead, Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
         {
@@ -67,7 +79,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="409">User already exists</response>
         /// <response code="500">Internal server error</response>
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm]RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Register([FromForm] RegisterDto registerDto, CancellationToken cancellationToken)
         {
             try
             {
@@ -75,15 +87,15 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new ResponseWithId { Success = true, Id = id });
             }
-            catch(BadRequestException ex)
+            catch (BadRequestException ex)
             {
                 return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
-            catch(AlreadyExistsException ex)
+            catch (AlreadyExistsException ex)
             {
                 return Conflict(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 throw;
@@ -106,14 +118,38 @@ namespace InternshipProgressTracker.Controllers
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }
-            catch(BadRequestException ex)
+            catch (BadRequestException ex)
             {
                 return BadRequest(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new ResponseWithMessage { Success = false, Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Authenticate user with Azure token
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpPost("login-by-azure")]
+        [RequiredScope("access_as_user")]
+        public async Task<IActionResult> LoginByAzure()
+        {
+            try
+            {
+                var azureUserRequest = _graphServiceClient.Me.Request();
+                var photoRequest =  _graphServiceClient.Me.Photo.Content.Request();
+                var tokenPair = await _userService.LoginByAzureAsync(azureUserRequest, photoRequest);
+
+                return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
+            }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
@@ -159,8 +195,8 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [Authorize(Roles = "Student, Mentor, Lead, Admin")]
-        [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "MyBearer", Roles = "Student, Mentor, Lead, Admin")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(CancellationToken cancellationToken)
         {
             try
@@ -188,7 +224,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="403">Forbidden for this role</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "MyBearer", Roles = "Admin")]
         [HttpDelete("hard-delete/{id}")]
         public async Task<IActionResult> HardDelete(int id, CancellationToken cancellationToken)
         {

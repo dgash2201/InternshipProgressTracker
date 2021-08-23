@@ -70,28 +70,55 @@ namespace InternshipProgressTracker
                 })
                 .AddEntityFrameworkStores<InternshipProgressTrackerDbContext>();
 
+            //services
+            //    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.RequireHttpsMetadata = false;
+            //        options.SaveToken = true;
+            //        options.TokenValidationParameters = new TokenValidationParameters()
+            //        {
+            //            ValidateIssuer = false,
+            //            ValidateAudience = false,
+            //            ValidateLifetime = true,
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey =
+            //                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
+            //        };
+            //    })
+            //    .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"), "AzureAd")
+            //    .EnableTokenAcquisitionToCallDownstreamApi()
+            //    .AddMicrosoftGraph(_configuration.GetSection("DownstreamApi"))
+            //    .AddInMemoryTokenCaches();
+
+
+
             services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                .AddAuthentication("Bearer")
+                .AddJwtBearer("MyBearer", options =>
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
-                    };
-                })
-                .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"), "AzureAd");
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken = true;
+                        options.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
+                        };
+                    })
+                .AddMicrosoftIdentityWebApi(_configuration)
+                .EnableTokenAcquisitionToCallDownstreamApi()
+                .AddMicrosoftGraph(_configuration.GetSection("DownstreamApi"))
+                .AddInMemoryTokenCaches()
+                ;
 
             services.AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder(
-                        JwtBearerDefaults.AuthenticationScheme, "AzureAd")
+                        JwtBearerDefaults.AuthenticationScheme, "MyBearer")
                         .RequireAuthenticatedUser()
                         .Build();
                 });
@@ -154,7 +181,6 @@ namespace InternshipProgressTracker
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InternshipProgressTracker v1"));
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthentication();
