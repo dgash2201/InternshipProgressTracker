@@ -4,14 +4,16 @@ using InternshipProgressTracker.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProgressTracker.Database.Migrations
 {
     [DbContext(typeof(InternshipProgressTrackerDbContext))]
-    partial class InternshipProgressTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210817225802_PhotoId")]
+    partial class PhotoId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

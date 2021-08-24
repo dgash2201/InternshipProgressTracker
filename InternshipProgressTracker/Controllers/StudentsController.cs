@@ -15,7 +15,7 @@ namespace InternshipProgressTracker.Controllers
     /// <summary>
     /// Represents Web API of students
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "MyBearer")]
     [ApiController]
     [Route("[controller]")]
     public class StudentsController : ControllerBase

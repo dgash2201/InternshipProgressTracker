@@ -23,18 +23,21 @@ namespace InternshipProgressTracker.Services.Users
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IStudentService _studentService;
+        private readonly IPhotoManager _photoManager;
         private readonly IMapper _mapper;
 
         public UserService(UserManager<User> userManager,
             SignInManager<User> signInManager,
             ITokenGenerator tokenGenerator,
             IStudentService studentService,
+            IPhotoManager photoManager,
             IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenGenerator = tokenGenerator;
             _studentService = studentService;
+            _photoManager = photoManager;
             _mapper = mapper;
         }
 
@@ -61,7 +64,13 @@ namespace InternshipProgressTracker.Services.Users
 
             var responseDto = _mapper.Map<UserResponseDto>(user);
             var roles = await _userManager.GetRolesAsync(user);
+
             responseDto.Role = roles.FirstOrDefault();
+
+            if (user.PhotoId != null)
+            {
+                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
+            }
 
             return responseDto;
         }
@@ -79,41 +88,14 @@ namespace InternshipProgressTracker.Services.Users
                 throw new AlreadyExistsException("User with this email already exists");
             }
 
-            var user = new User
-            {
-                Email = registerDto.Email,
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                UserName = registerDto.Email,
-            };
-
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-            if (!result.Succeeded)
-            {
-                var exceptionMessage = "";
-                foreach(var error in result.Errors)
-                {
-                    exceptionMessage += $"{error.Code}: {error.Description}" + System.Environment.NewLine;
-                }
-
-                throw new BadRequestException(exceptionMessage);
-            }
+            var user = await CreateAsync(registerDto, cancellationToken);
 
             if (registerDto.Avatar != null)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await registerDto.Avatar.CopyToAsync(memoryStream);
-                    user.Photo = memoryStream.ToArray();
-                    user.PhotoType = registerDto.Avatar.ContentType;
-                }
-
+                var photoId = await _photoManager.UploadAsync(registerDto.Avatar, cancellationToken);
+                user.PhotoId = photoId;
                 await _userManager.UpdateAsync(user);
             }
-
-            await _studentService.CreateAsync(user, cancellationToken);
-            await _userManager.AddToRoleAsync(user, "Student");
 
             return user.Id;
         }
@@ -138,14 +120,41 @@ namespace InternshipProgressTracker.Services.Users
                 throw new BadRequestException("Email or password is incorrect");
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var jwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
-            var refreshToken = _tokenGenerator.GenerateRefreshToken();
+            return await GetTokenPairAsync(user, cancellationToken);
+        }
 
-            user.RefreshToken = refreshToken;
-            await _userManager.UpdateAsync(user);
+        /// <summary>
+        /// Authenticate azure user and save him in the database
+        /// </summary>
+        /// <param name="userRequest">Microsoft Graph API request to get user</param>
+        /// <param name="photoRequest">Microsoft Graph API request to get photo content</param>
+        public async Task<TokenResponseDto> LoginByAzureAsync(
+            Microsoft.Graph.IUserRequest userRequest, 
+            Microsoft.Graph.IProfilePhotoContentRequest photoRequest)
+        {
+            var azureUser = await userRequest.GetAsync();
+            var user = await _userManager.FindByEmailAsync(azureUser.Mail);
 
-            return new TokenResponseDto { UserId = user.Id, Jwt = jwt, RefreshToken = refreshToken };
+            if (user == null)
+            {
+                var registerDto = new RegisterDto
+                {
+                    Email = azureUser.Mail,
+                    FirstName = azureUser.GivenName,
+                    LastName = azureUser.Surname,
+                };
+                
+                user = await CreateAsync(registerDto);
+
+                if (azureUser.Photo != null)
+                {
+                    var photoId = await _photoManager.UploadAsync(photoRequest);
+                    user.PhotoId = photoId;
+                    await _userManager.UpdateAsync(user);
+                }
+            }
+
+            return await GetTokenPairAsync(user);
         }
 
         /// <summary>
@@ -212,6 +221,51 @@ namespace InternshipProgressTracker.Services.Users
             }
 
             await _userManager.DeleteAsync(user);
+        }
+
+        private async Task<User> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
+        {
+            var user = new User
+            {
+                Email = registerDto.Email,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                UserName = registerDto.Email,
+            };
+
+            var result = registerDto.Password == null ? 
+                await _userManager.CreateAsync(user) :
+                await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                var exceptionMessage = "";
+                foreach (var error in result.Errors)
+                {
+                    exceptionMessage += $"{error.Code}: {error.Description}" + System.Environment.NewLine;
+                }
+
+                throw new BadRequestException(exceptionMessage);
+            }
+
+            await _studentService.CreateAsync(user, cancellationToken);
+            await _userManager.AddToRoleAsync(user, "Student");
+
+            return user;
+        }
+
+        private async Task<TokenResponseDto> GetTokenPairAsync(User user, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var newJwt = _tokenGenerator.GenerateJwt(user, userRoles.FirstOrDefault());
+            var newRefreshToken = _tokenGenerator.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
         }
     }
 }
