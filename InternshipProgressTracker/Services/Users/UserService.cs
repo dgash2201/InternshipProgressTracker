@@ -66,7 +66,11 @@ namespace InternshipProgressTracker.Services.Users
             var roles = await _userManager.GetRolesAsync(user);
 
             responseDto.Role = roles.FirstOrDefault();
-            responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
+
+            if (user.PhotoId != null)
+            {
+                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
+            }
 
             return responseDto;
         }

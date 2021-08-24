@@ -70,29 +70,6 @@ namespace InternshipProgressTracker
                 })
                 .AddEntityFrameworkStores<InternshipProgressTrackerDbContext>();
 
-            //services
-            //    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.RequireHttpsMetadata = false;
-            //        options.SaveToken = true;
-            //        options.TokenValidationParameters = new TokenValidationParameters()
-            //        {
-            //            ValidateIssuer = false,
-            //            ValidateAudience = false,
-            //            ValidateLifetime = true,
-            //            ValidateIssuerSigningKey = true,
-            //            IssuerSigningKey =
-            //                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServiceApiKey"])),
-            //        };
-            //    })
-            //    .AddMicrosoftIdentityWebApi(_configuration.GetSection("AzureAd"), "AzureAd")
-            //    .EnableTokenAcquisitionToCallDownstreamApi()
-            //    .AddMicrosoftGraph(_configuration.GetSection("DownstreamApi"))
-            //    .AddInMemoryTokenCaches();
-
-
-
             services
                 .AddAuthentication("Bearer")
                 .AddJwtBearer("MyBearer", options =>
