@@ -72,14 +72,14 @@ namespace InternshipProgressTracker.Services.Users
                 responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
             }
 
-            return responseDto;
+            return await GetUserResponseDto(user);
         }
 
         /// <summary>
         /// Creates user entity and saves it in the database
         /// </summary>
         /// <param name="registerDto">Contains signup form data</param>
-        public async Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
+        public async Task<UserResponseDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -97,7 +97,7 @@ namespace InternshipProgressTracker.Services.Users
                 await _userManager.UpdateAsync(user);
             }
 
-            return user.Id;
+            return await GetUserResponseDto(user);
         }
 
         /// <summary>
@@ -266,6 +266,21 @@ namespace InternshipProgressTracker.Services.Users
             await _userManager.UpdateAsync(user);
 
             return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
+        }
+
+        private async Task<UserResponseDto> GetUserResponseDto(User user, CancellationToken cancellationToken = default)
+        {
+            var responseDto = _mapper.Map<UserResponseDto>(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            responseDto.Role = roles.FirstOrDefault();
+
+            if (user.PhotoId != null)
+            {
+                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
+            }
+
+            return responseDto;
         }
     }
 }

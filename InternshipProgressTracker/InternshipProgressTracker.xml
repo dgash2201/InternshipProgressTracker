@@ -26,7 +26,7 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateMentorDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateMentor(InternshipProgressTracker.Models.Admins.CreateMentorDto,System.Threading.CancellationToken)">
             <summary>
             Add mentor role to user
             </summary>

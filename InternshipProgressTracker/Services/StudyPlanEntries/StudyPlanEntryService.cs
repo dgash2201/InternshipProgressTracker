@@ -80,7 +80,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
         /// Creates study plan entry
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(StudyPlanEntryDto createDto, CancellationToken cancellationToken = default)
+        public async Task<StudyPlanEntryResponseDto> CreateAsync(StudyPlanEntryDto createDto, CancellationToken cancellationToken = default)
         {
             var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { createDto.StudyPlanId }, cancellationToken);
 
@@ -95,7 +95,7 @@ namespace InternshipProgressTracker.Services.StudyPlanEntries
             _dbContext.StudyPlanEntries.Add(studyPlanEntry);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return studyPlanEntry.Id;
+            return _mapper.Map<StudyPlanEntryResponseDto>(studyPlanEntry);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         Task<IReadOnlyCollection<StudyPlanResponseDto>> GetWithSoftDeletedAsync(CancellationToken cancellationToken = default);
         Task<IReadOnlyCollection<StudyPlanResponseDto>> GetAsync(CancellationToken cancellationToken = default);
         Task<StudyPlanResponseDto> GetAsync(int id, CancellationToken cancellationToken = default);
-        Task<int> CreateAsync(StudyPlanDto createDto, CancellationToken cancellationToken = default);
+        Task<StudyPlanResponseDto> CreateAsync(StudyPlanDto createDto, CancellationToken cancellationToken = default);
         Task UpdateAsync(int id, StudyPlanDto updateDto, CancellationToken cancellationToken = default);
         Task UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument, CancellationToken cancellationToken = default);
         Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default);

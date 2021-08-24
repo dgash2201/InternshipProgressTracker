@@ -224,13 +224,13 @@ namespace InternshipProgressTracker.Services.InternshipStreams
         /// Creates internship stream from createDto
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(InternshipStreamDto createDto, CancellationToken cancellationToken = default)
+        public async Task<InternshipStreamResponseDto> CreateAsync(InternshipStreamDto createDto, CancellationToken cancellationToken = default)
         {
             var internshipStream = _mapper.Map<InternshipStreamDto, InternshipStream>(createDto);
             _dbContext.InternshipStreams.Add(internshipStream);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return internshipStream.Id;
+            return _mapper.Map<InternshipStreamResponseDto>(internshipStream);
         }
 
         /// <summary>

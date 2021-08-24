@@ -83,7 +83,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// Creates study plan
         /// </summary>
         /// <param name="createDto">Data for creation</param>
-        public async Task<int> CreateAsync(StudyPlanDto createDto, CancellationToken cancellationToken = default)
+        public async Task<StudyPlanResponseDto> CreateAsync(StudyPlanDto createDto, CancellationToken cancellationToken = default)
         {
             var stream = await _dbContext
                 .InternshipStreams
@@ -101,7 +101,7 @@ namespace InternshipProgressTracker.Services.StudyPlans
             _dbContext.StudyPlans.Add(studyPlan);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return studyPlan.Id;
+            return _mapper.Map<StudyPlanResponseDto>(studyPlan);
         }
 
         /// <summary>

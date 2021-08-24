@@ -64,9 +64,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _adminService.CreateAdminAsync(createDto.UserId, cancellationToken);
+                var adminDto = await _adminService.CreateAdminAsync(createDto.UserId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = adminDto });
             }
             catch (NotFoundException ex)
             {
@@ -87,13 +87,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
         [HttpPost("create-mentor")]
-        public async Task<IActionResult> CreateAdmin(CreateMentorDto createDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateMentor(CreateMentorDto createDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _adminService.CreateMentorAsync(createDto.UserId, createDto.Role, cancellationToken);
+                var mentorDto = await _adminService.CreateMentorAsync(createDto.UserId, createDto.Role, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = mentorDto });
             }
             catch (NotFoundException ex)
             {

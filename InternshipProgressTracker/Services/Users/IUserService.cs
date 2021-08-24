@@ -11,7 +11,7 @@ namespace InternshipProgressTracker.Services.Users
     public interface IUserService
     {
         Task<UserResponseDto> GetAsync(int id, CancellationToken cancellationToken = default);
-        Task<int> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default);
+        Task<UserResponseDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default);
         Task<TokenResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default);
         Task<TokenResponseDto> LoginByAzureAsync(Microsoft.Graph.IUserRequest azureUserRequest, Microsoft.Graph.IProfilePhotoContentRequest photoRequest);
         Task<TokenResponseDto> RefreshJwtAsync(string refreshToken, int id, CancellationToken cancellationToken = default);

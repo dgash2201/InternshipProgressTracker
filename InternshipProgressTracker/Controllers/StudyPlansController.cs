@@ -118,9 +118,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _studyPlanService.CreateAsync(createDto, cancellationToken);
+                var studyPlanResponseDto = await _studyPlanService.CreateAsync(createDto, cancellationToken);
 
-                return Ok(new ResponseWithId { Success = true, Id = id });
+                return Ok(new ResponseWithModel<StudyPlanResponseDto> { Success = true, Model = studyPlanResponseDto });
             }
             catch (NotFoundException ex)
             {

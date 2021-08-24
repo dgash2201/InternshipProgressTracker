@@ -83,9 +83,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _userService.RegisterAsync(registerDto, cancellationToken);
+                var userResponseDto = await _userService.RegisterAsync(registerDto, cancellationToken);
 
-                return Ok(new ResponseWithId { Success = true, Id = id });
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = userResponseDto });
             }
             catch (BadRequestException ex)
             {

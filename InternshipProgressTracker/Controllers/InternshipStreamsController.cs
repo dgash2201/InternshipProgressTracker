@@ -229,9 +229,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _internshipStreamService.CreateAsync(createDto, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.CreateAsync(createDto, cancellationToken);
 
-                return Ok(new ResponseWithId { Success = true, Id = id });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (Exception ex)
             {

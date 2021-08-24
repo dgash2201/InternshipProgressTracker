@@ -11,7 +11,7 @@ namespace InternshipProgressTracker.Utils
     /// </summary>
     public interface IPhotoManager
     {
-        Task<FileContentResult> GetAsync(string name, CancellationToken cancellationToken = default);
+        Task<FileContentResult> GetAsync(string photoId, CancellationToken cancellationToken = default);
         Task<string> UploadAsync(IFormFile photo, CancellationToken cancellationToken = default);
         Task<string> UploadAsync(IProfilePhotoContentRequest photoRequest, CancellationToken cancellationToken = default);
     }

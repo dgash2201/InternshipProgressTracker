@@ -14,8 +14,8 @@ namespace InternshipProgressTracker.Services.Admins
     {
         Task<IReadOnlyCollection<UserResponseDto>> GetAllUsersAsync(CancellationToken cancellationToken = default);
 
-        Task CreateAdminAsync(int userId, CancellationToken cancellationToken = default);
+        Task<UserResponseDto> CreateAdminAsync(int userId, CancellationToken cancellationToken = default);
 
-        Task CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default);
+        Task<UserResponseDto> CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default);
     }
 }

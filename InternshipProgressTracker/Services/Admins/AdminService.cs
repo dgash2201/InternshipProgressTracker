@@ -55,7 +55,7 @@ namespace InternshipProgressTracker.Services.Admins
         /// <param name="userId"></param>
         /// <param name="role"></param>
         /// <returns></returns>
-        public async Task CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task<UserResponseDto> CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -77,6 +77,8 @@ namespace InternshipProgressTracker.Services.Admins
             }
 
             await _userManager.UpdateAsync(user);
+
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace InternshipProgressTracker.Services.Admins
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
+        public async Task<UserResponseDto> CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -107,6 +109,8 @@ namespace InternshipProgressTracker.Services.Admins
 
             await _mentorService.CreateAsync(user);
             await _userManager.UpdateAsync(user);
+
+            return _mapper.Map<UserResponseDto>(user);
         }
     }
 }
