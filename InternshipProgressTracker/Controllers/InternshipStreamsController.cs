@@ -3,6 +3,7 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -255,11 +256,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut]
-        public async Task<IActionResult> Update(PutRequestDto<InternshipStreamDto> putRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, InternshipStreamDto updateDto, CancellationToken cancellationToken)
         {
             try
             {
-                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(id, updateDto, cancellationToken);
 
                 return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
@@ -285,11 +286,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch]
-        public async Task<IActionResult> Update(PatchRequestDto<InternshipStreamDto> patchDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument, CancellationToken cancellationToken)
         {
             try
             {
-                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(patchDto.Id, patchDto.PatchDocument, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(id, patchDocument, cancellationToken);
 
                 return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }

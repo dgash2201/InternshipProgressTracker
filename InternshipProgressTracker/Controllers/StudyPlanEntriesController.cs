@@ -3,6 +3,7 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Services.StudyPlanEntries;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -144,11 +145,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut]
-        public async Task<IActionResult> Update(PutRequestDto<StudyPlanEntryDto> putRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, StudyPlanEntryDto updateDto, CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(id, updateDto, cancellationToken);
 
                 return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntryResponseDto });
             }
@@ -174,11 +175,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch]
-        public async Task<IActionResult> Update(PatchRequestDto<StudyPlanEntryDto> patchRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument, CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
+                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(id, patchDocument, cancellationToken);
 
                 return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntryResponseDto });
             }

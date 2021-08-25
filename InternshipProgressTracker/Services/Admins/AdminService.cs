@@ -58,9 +58,6 @@ namespace InternshipProgressTracker.Services.Admins
         /// <summary>
         /// Adds admin role to user
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="role"></param>
-        /// <returns></returns>
         public async Task<UserResponseDto> CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -90,8 +87,6 @@ namespace InternshipProgressTracker.Services.Admins
         /// <summary>
         /// Creates mentor
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
         public async Task<UserResponseDto> CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();

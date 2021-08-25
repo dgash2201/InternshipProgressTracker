@@ -3,6 +3,7 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Services.StudyPlans;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -144,11 +145,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut]
-        public async Task<IActionResult> Update(PutRequestDto<StudyPlanDto> putRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, StudyPlanDto updateDto, CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(id, updateDto, cancellationToken);
 
                 return Ok(new ResponseWithModel<StudyPlanResponseDto> { Success = true, Model = studyPlanResponseDto });
             }
@@ -174,11 +175,11 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch]
-        public async Task<IActionResult> Update(PatchRequestDto<StudyPlanDto> patchRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanDto> patchDocument, CancellationToken cancellationToken)
         {
             try
             {
-                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
+                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(id, patchDocument, cancellationToken);
 
                 return Ok(new ResponseWithModel<StudyPlanResponseDto> { Success = true, Model = studyPlanResponseDto });
             }
