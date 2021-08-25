@@ -65,9 +65,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -93,9 +94,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.AddStudentAsync(addStudentDto.InternshipStreamId, addStudentDto.StudentId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .AddStudentAsync(addStudentDto.InternshipStreamId, addStudentDto.StudentId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -121,9 +123,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.RemoveMentorAsync(removeMentorDto.InternshipStreamId, removeMentorDto.MentorId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .RemoveMentorAsync(removeMentorDto.InternshipStreamId, removeMentorDto.MentorId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -149,9 +152,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.RemoveStudentAsync(removeStudentDto.InternshipStreamId, removeStudentDto.StudentId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .RemoveStudentAsync(removeStudentDto.InternshipStreamId, removeStudentDto.StudentId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -255,9 +259,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -285,9 +289,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(patchDto.Id, patchDto.PatchDocument, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(patchDto.Id, patchDto.PatchDocument, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {

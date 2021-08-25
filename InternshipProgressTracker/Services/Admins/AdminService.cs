@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Mentors;
+using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +22,18 @@ namespace InternshipProgressTracker.Services.Admins
     {
         private readonly UserManager<User> _userManager;
         private readonly IMentorService _mentorService;
+        private readonly IPhotoManager _photoManager;
         private readonly IMapper _mapper;
 
-        public AdminService(UserManager<User> userManager, 
-            IMentorService mentorService, IMapper mapper)
+        public AdminService(
+            UserManager<User> userManager,
+            IMentorService mentorService,
+            IPhotoManager photoManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _mentorService = mentorService;
+            _photoManager = photoManager;
             _mapper = mapper;
         }
 
@@ -78,7 +84,7 @@ namespace InternshipProgressTracker.Services.Admins
 
             await _userManager.UpdateAsync(user);
 
-            return _mapper.Map<UserResponseDto>(user);
+            return await GetUserResponseDto(user);
         }
 
         /// <summary>
@@ -110,7 +116,22 @@ namespace InternshipProgressTracker.Services.Admins
             await _mentorService.CreateAsync(user);
             await _userManager.UpdateAsync(user);
 
-            return _mapper.Map<UserResponseDto>(user);
+            return await GetUserResponseDto(user);
+        }
+
+        private async Task<UserResponseDto> GetUserResponseDto(User user, CancellationToken cancellationToken = default)
+        {
+            var responseDto = _mapper.Map<UserResponseDto>(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            responseDto.Role = roles.FirstOrDefault();
+
+            if (user.PhotoId != null)
+            {
+                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
+            }
+
+            return responseDto;
         }
     }
 }

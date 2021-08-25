@@ -109,9 +109,13 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="updateDto">New data</param>
-        public async Task UpdateAsync(int id, StudyPlanDto updateDto, CancellationToken cancellationToken = default)
+        public async Task<StudyPlanResponseDto> UpdateAsync(int id, StudyPlanDto updateDto, CancellationToken cancellationToken = default)
         {
-            var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .Where(p => p.Id == id)
+                .Include(p => p.Entries)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (studyPlan == null)
             {
@@ -132,6 +136,8 @@ namespace InternshipProgressTracker.Services.StudyPlans
 
             _dbContext.Entry(studyPlan).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudyPlanResponseDto>(studyPlan);
         }
 
         /// <summary>
@@ -139,9 +145,13 @@ namespace InternshipProgressTracker.Services.StudyPlans
         /// </summary>
         /// <param name="id">Id of study plan</param>
         /// <param name="patchDocument">Json Patch operations</param>
-        public async Task UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument, CancellationToken cancellationToken = default)
+        public async Task<StudyPlanResponseDto> UpdateAsync(int id, JsonPatchDocument<StudyPlanDto> patchDocument, CancellationToken cancellationToken = default)
         {
-            var studyPlan = await _dbContext.StudyPlans.FindAsync(new object[] { id }, cancellationToken);
+            var studyPlan = await _dbContext
+                .StudyPlans
+                .Where(p => p.Id == id)
+                .Include(p => p.Entries)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (studyPlan == null)
             {
@@ -165,6 +175,8 @@ namespace InternshipProgressTracker.Services.StudyPlans
 
             _dbContext.Entry(studyPlan).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudyPlanResponseDto>(studyPlan);
         }
 
         /// <summary>

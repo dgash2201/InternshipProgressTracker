@@ -148,9 +148,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudyPlanResponseDto> { Success = true, Model = studyPlanResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -178,9 +178,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
+                var studyPlanResponseDto = await _studyPlanService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudyPlanResponseDto> { Success = true, Model = studyPlanResponseDto });
             }
             catch (NotFoundException ex)
             {

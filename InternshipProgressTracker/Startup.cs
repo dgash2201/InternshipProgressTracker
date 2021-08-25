@@ -45,9 +45,13 @@ namespace InternshipProgressTracker
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
             {
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(environment == "Production" ? 
+                    _configuration.GetConnectionString("DefaultConnection") : 
+                    _configuration.GetConnectionString("LocalhostConnection"));
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

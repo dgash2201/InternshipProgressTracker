@@ -89,9 +89,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var studyPlanEntry = await _studyPlanEntryService.GetAsync(id, cancellationToken);
+                var studyPlanEntryResponseDto = await _studyPlanEntryService.GetAsync(id, cancellationToken);
 
-                return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntry });
+                return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntryResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -148,9 +148,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntryResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -178,9 +178,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
+                var studyPlanEntryResponseDto = await _studyPlanEntryService.UpdateAsync(patchRequestDto.Id, patchRequestDto.PatchDocument, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudyPlanEntryResponseDto> { Success = true, Model = studyPlanEntryResponseDto });
             }
             catch (NotFoundException ex)
             {

@@ -9,11 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
 using System;
-using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,7 +142,7 @@ namespace InternshipProgressTracker.Controllers
             try
             {
                 var azureUserRequest = _graphServiceClient.Me.Request();
-                var photoRequest =  _graphServiceClient.Me.Photo.Content.Request();
+                var photoRequest = _graphServiceClient.Me.Photo.Content.Request();
                 var tokenPair = await _userService.LoginByAzureAsync(azureUserRequest, photoRequest);
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
