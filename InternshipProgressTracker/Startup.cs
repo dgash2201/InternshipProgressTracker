@@ -45,11 +45,11 @@ namespace InternshipProgressTracker
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
 
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
             {
-                options.UseSqlServer(environment == "Production" ? 
+                options.UseSqlServer(isProduction ? 
                     _configuration.GetConnectionString("DefaultConnection") : 
                     _configuration.GetConnectionString("LocalhostConnection"));
             });
@@ -68,7 +68,7 @@ namespace InternshipProgressTracker
             services.AddScoped<IMentorService, MentorService>();
 
             services
-                .AddIdentity<User, IdentityRole<int>>(options =>
+                .AddIdentity<User, Role>(options =>
                 {
                     options.Password.RequireNonAlphanumeric = false;
                 })
@@ -203,7 +203,7 @@ namespace InternshipProgressTracker
         /// </summary>
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
             var roleNames = new[] { "Admin", "Lead", "Mentor", "Student" };
 
             foreach (var roleName in roleNames)
@@ -212,7 +212,7 @@ namespace InternshipProgressTracker
 
                 if (!roleExists)
                 {
-                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                    await roleManager.CreateAsync(new Role { Name = roleName });
                 }
             }
         }

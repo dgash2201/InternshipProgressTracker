@@ -11,7 +11,7 @@ namespace InternshipProgressTracker.Models.Users
 
         public string LastName { get; set; }
 
-        public FileContentResult Avatar { get; set; }
+        public string PhotoUrl { get; set; }
 
         public string Email { get; set; }
 

@@ -524,15 +524,14 @@
             Exception that means that an entity was not found
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Models.Common.PatchRequestDto`1">
+        <member name="T:InternshipProgressTracker.Models.Common.ResponseWithMessage">
             <summary>
-            DTO for patch requests
+            Represents response with some message
             </summary>
-            <typeparam name="TModel"></typeparam>
         </member>
-        <member name="T:InternshipProgressTracker.Models.Common.PutRequestDto`1">
+        <member name="T:InternshipProgressTracker.Models.Common.ResponseWithModel`1">
             <summary>
-            DTO for put requests
+            Represents response with entity model
             </summary>
             <typeparam name="TModel"></typeparam>
         </member>
@@ -970,23 +969,18 @@
             Works with user avatars
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Utils.PhotoManager.GetAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Gets photo from Azure Blob Storage
-            </summary>
-        </member>
         <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
             <summary>
             Uploads photo to the Azure Blob Storage
             </summary>
-            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+            <returns>Url of photo in the Azure Blob Storage</returns>
         </member>
         <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.Graph.IProfilePhotoContentRequest,System.Threading.CancellationToken)">
             <summary>
             Get Azure user photo and upload it to Azure Blob Storage
             </summary>
             <param name="photoRequest">Microsoft Graph API request to get photo content</param>
-            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+            <returns>Url of photo in the Azure Blob Storage</returns>
         </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
             <summary>

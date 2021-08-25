@@ -47,32 +47,21 @@ namespace InternshipProgressTracker.Services.Users
         /// <param name="id">Id of user</param>
         public async Task<UserResponseDto> GetAsync(int id, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var user = await _userManager
                 .Users
+                .Include(u => u.Roles)
                 .Include(u => u.Student)
                 .ThenInclude(s => s.StudyPlanProgresses)
                 .Include(u => u.Mentor)
                 .ThenInclude(m => m.StudentStudyPlanProgresses)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
             if (user == null)
             {
                 throw new NotFoundException("User was not found");
             }
 
-            var responseDto = _mapper.Map<UserResponseDto>(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            responseDto.Role = roles.FirstOrDefault();
-
-            if (user.PhotoId != null)
-            {
-                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
-            }
-
-            return await GetUserResponseDto(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
@@ -92,12 +81,11 @@ namespace InternshipProgressTracker.Services.Users
 
             if (registerDto.Avatar != null)
             {
-                var photoId = await _photoManager.UploadAsync(registerDto.Avatar, cancellationToken);
-                user.PhotoId = photoId;
+                user.PhotoUrl = await _photoManager.UploadAsync(registerDto.Avatar, cancellationToken);
                 await _userManager.UpdateAsync(user);
             }
 
-            return await GetUserResponseDto(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
@@ -148,8 +136,7 @@ namespace InternshipProgressTracker.Services.Users
 
                 if (azureUser.Photo != null)
                 {
-                    var photoId = await _photoManager.UploadAsync(photoRequest);
-                    user.PhotoId = photoId;
+                    user.PhotoUrl = await _photoManager.UploadAsync(photoRequest);
                     await _userManager.UpdateAsync(user);
                 }
             }
@@ -266,21 +253,6 @@ namespace InternshipProgressTracker.Services.Users
             await _userManager.UpdateAsync(user);
 
             return new TokenResponseDto { UserId = user.Id, Jwt = newJwt, RefreshToken = newRefreshToken };
-        }
-
-        private async Task<UserResponseDto> GetUserResponseDto(User user, CancellationToken cancellationToken = default)
-        {
-            var responseDto = _mapper.Map<UserResponseDto>(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            responseDto.Role = roles.FirstOrDefault();
-
-            if (user.PhotoId != null)
-            {
-                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
-            }
-
-            return responseDto;
         }
     }
 }

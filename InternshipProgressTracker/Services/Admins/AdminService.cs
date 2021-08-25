@@ -45,6 +45,7 @@ namespace InternshipProgressTracker.Services.Admins
         {
             var users = await _userManager
                 .Users
+                .Include(u => u.Roles)
                 .Include(u => u.Student)
                 .ThenInclude(s => s.StudyPlanProgresses)
                 .Include(u => u.Mentor)
@@ -60,9 +61,14 @@ namespace InternshipProgressTracker.Services.Admins
         /// </summary>
         public async Task<UserResponseDto> CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager
+                .Users
+                .Include(u => u.Roles)
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user == null)
             {
@@ -81,7 +87,7 @@ namespace InternshipProgressTracker.Services.Admins
 
             await _userManager.UpdateAsync(user);
 
-            return await GetUserResponseDto(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
@@ -89,9 +95,14 @@ namespace InternshipProgressTracker.Services.Admins
         /// </summary>
         public async Task<UserResponseDto> CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager
+                .Users
+                .Include(u => u.Roles)
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user == null)
             {
@@ -111,22 +122,7 @@ namespace InternshipProgressTracker.Services.Admins
             await _mentorService.CreateAsync(user);
             await _userManager.UpdateAsync(user);
 
-            return await GetUserResponseDto(user);
-        }
-
-        private async Task<UserResponseDto> GetUserResponseDto(User user, CancellationToken cancellationToken = default)
-        {
-            var responseDto = _mapper.Map<UserResponseDto>(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            responseDto.Role = roles.FirstOrDefault();
-
-            if (user.PhotoId != null)
-            {
-                responseDto.Avatar = await _photoManager.GetAsync(user.PhotoId, cancellationToken);
-            }
-
-            return responseDto;
+            return _mapper.Map<UserResponseDto>(user);
         }
     }
 }
