@@ -484,6 +484,11 @@
             Represents the Mentor entity
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Entities.Role">
+            <summary>
+            Represents user role
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Entities.Student">
             <summary>
             Represents the Student entity

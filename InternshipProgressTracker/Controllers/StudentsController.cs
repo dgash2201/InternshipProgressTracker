@@ -2,6 +2,7 @@
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
+using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,9 +40,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studentService.SetStudentGradeAsync(gradeDto.StudentId, gradeDto.Grade, cancellationToken);
+                var userResponseDto = await _studentService.SetStudentGradeAsync(gradeDto.StudentId, gradeDto.Grade, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = userResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -69,9 +70,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _studentService.GradeStudentProgressAsync(gradeProgressDto, cancellationToken);
+                var studentProgressResponseDto = await _studentService.GradeStudentProgressAsync(gradeProgressDto, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudentProgressResponseDto> { Success = true, Model = studentProgressResponseDto });
             }
             catch (BadRequestException ex)
             {
@@ -108,9 +109,9 @@ namespace InternshipProgressTracker.Controllers
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.AddNotesAsync(studentId, notesDto, cancellationToken);
+                var studentProgressResponseDto = await _studentService.AddNotesAsync(studentId, notesDto, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudentProgressResponseDto> { Success = true, Model = studentProgressResponseDto });
             }
             catch (BadRequestException ex)
             {

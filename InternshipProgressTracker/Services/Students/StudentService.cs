@@ -5,6 +5,8 @@ using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
+using InternshipProgressTracker.Models.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -19,11 +21,13 @@ namespace InternshipProgressTracker.Services.Students
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public StudentService(InternshipProgressTrackerDbContext dbContext, IMapper mapper)
+        public StudentService(InternshipProgressTrackerDbContext dbContext, IMapper mapper, UserManager<User> userManager)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace InternshipProgressTracker.Services.Students
         /// <summary>
         /// Adds student notes
         /// </summary>
-        public async Task AddNotesAsync(int studentId, NotesDto notesDto, CancellationToken cancellationToken = default)
+        public async Task<StudentProgressResponseDto> AddNotesAsync(int studentId, NotesDto notesDto, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
@@ -78,12 +82,14 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudentProgressResponseDto>(studentProgress);
         }
 
         /// <summary>
         /// Set grade to student progress
         /// </summary>
-        public async Task GradeStudentProgressAsync(GradeProgressDto gradeProgressDto, CancellationToken cancellationToken = default)
+        public async Task<StudentProgressResponseDto> GradeStudentProgressAsync(GradeProgressDto gradeProgressDto, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
@@ -131,6 +137,8 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.Update(studentProgress);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudentProgressResponseDto>(studentProgress);
         }
 
         /// <summary>
@@ -140,18 +148,24 @@ namespace InternshipProgressTracker.Services.Students
         /// <param name="grade">Grade of his work</param>
         public async Task SetStudentGradeAsync(int studentId, StudentGrade grade, CancellationToken cancellationToken = default)
         {
-            var student = await _dbContext
-                .Students
-                .FindAsync(new object[] { studentId }, cancellationToken);
+            var user = await _userManager
+                .Users
+                .Include(u => u.Roles)
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == studentId, cancellationToken);
 
-            if (student == null)
+            if (user == null)
             {
                 throw new NotFoundException("Student with this id was not found");
             }
 
-            student.CurrentGrade = grade;
+            user.Student.CurrentGrade = grade;
 
             await _dbContext.SaveChangesAsync();
+            _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
