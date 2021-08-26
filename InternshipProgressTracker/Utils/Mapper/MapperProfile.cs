@@ -5,7 +5,6 @@ using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Models.Users;
-using Microsoft.AspNetCore.Identity;
 using System.Linq;
 
 namespace InternshipProgressTracker.Utils.Mapper
@@ -16,7 +15,7 @@ namespace InternshipProgressTracker.Utils.Mapper
     public class MapperProfile : Profile
     {
         public MapperProfile()
-        {            
+        {
             CreateMap<InternshipStreamDto, InternshipStream>().ReverseMap();
             CreateMap<StudyPlanDto, StudyPlan>().ReverseMap();
             CreateMap<StudyPlanEntryDto, StudyPlanEntry>().ReverseMap();

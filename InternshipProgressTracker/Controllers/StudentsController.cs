@@ -1,6 +1,7 @@
 ﻿using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.Students;
+using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
 using InternshipProgressTracker.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -141,9 +142,10 @@ namespace InternshipProgressTracker.Controllers
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.StartStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
+                var studentProgressResponseDto = await _studentService
+                    .StartStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudentProgressResponseDto> { Success = true, Model = studentProgressResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -171,9 +173,10 @@ namespace InternshipProgressTracker.Controllers
             {
                 var studentId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                await _studentService.FinishStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
+                var studentProgressResponseDto = await _studentService
+                    .FinishStudyPlanEntryAsync(studentId, progressDto.StudyPlanEntryId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<StudentProgressResponseDto> { Success = true, Model = studentProgressResponseDto });
             }
             catch (BadRequestException ex)
             {

@@ -1,11 +1,12 @@
-﻿using InternshipProgressTracker.Database;
+﻿using AutoMapper;
+using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Students;
+using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,40 +18,12 @@ namespace InternshipProgressTracker.Services.Students
     public class StudentService : IStudentService
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
-        
-        public StudentService(InternshipProgressTrackerDbContext dbContext)
+        private readonly IMapper _mapper;
+
+        public StudentService(InternshipProgressTrackerDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
-        }
-
-        /// <summary>
-        /// Gets the list of students
-        /// </summary>
-        public async Task<IReadOnlyCollection<Student>> GetAsync(CancellationToken cancellationToken = default)
-        {
-            var students = await _dbContext
-                .Students
-                .ToListAsync(cancellationToken);
-            
-            return students.AsReadOnly();
-        }
-
-        /// <summary>
-        /// Gets a student by id
-        /// </summary>
-        /// <param name="id">Student id</param>
-        public async Task<Student> GetAsync(int id, CancellationToken cancellationToken = default)
-        {
-            var student =  await _dbContext
-                .Students
-                .FindAsync(new object[] { id }, cancellationToken);
-
-            if (student == null)
-            {
-                throw new NotFoundException("Student with this id was not found");
-            }
-
-            return student;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -186,7 +159,7 @@ namespace InternshipProgressTracker.Services.Students
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="entryId">Id of study plan entry</param>
-        public async Task StartStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
+        public async Task<StudentProgressResponseDto> StartStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
         {
             var student = await _dbContext
                 .Students
@@ -217,6 +190,8 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.StudentStudyPlanProgresses.Add(studentProgress);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudentProgressResponseDto>(studentProgress);
         }
 
         /// <summary>
@@ -224,7 +199,7 @@ namespace InternshipProgressTracker.Services.Students
         /// </summary>
         /// <param name="studentId">Id of student</param>
         /// <param name="entryId">Id of study plan entry</param>
-        public async Task FinishStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
+        public async Task<StudentProgressResponseDto> FinishStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default)
         {
             var studentExists = await _dbContext
                 .Students
@@ -246,7 +221,7 @@ namespace InternshipProgressTracker.Services.Students
 
             var studentProgress = await _dbContext
                 .StudentStudyPlanProgresses
-                .FindAsync(new object [] { studentId, entryId }, cancellationToken);
+                .FindAsync(new object[] { studentId, entryId }, cancellationToken);
 
             if (studentProgress == null || studentProgress.StartTime == null)
             {
@@ -257,6 +232,8 @@ namespace InternshipProgressTracker.Services.Students
 
             _dbContext.StudentStudyPlanProgresses.Update(studentProgress);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<StudentProgressResponseDto>(studentProgress);
         }
     }
 }
