@@ -15,8 +15,6 @@ namespace InternshipProgressTracker.Services.Students
     {
         Task CreateAsync(User user, CancellationToken cancellationToken = default);
         Task<StudentProgressResponseDto> AddNotesAsync(int studentId, NotesDto notesDto, CancellationToken cancellationToken = default);
-        Task<StudentProgressResponseDto> GradeStudentProgressAsync(GradeProgressDto gradeProgressDto, CancellationToken cancellationToken = default);
-        Task<UserResponseDto> SetStudentGradeAsync(int studentId, StudentGrade grade, CancellationToken cancellationToken = default);
         Task<StudentProgressResponseDto> StartStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default);
         Task<StudentProgressResponseDto> FinishStudyPlanEntryAsync(int studentId, int entryId, CancellationToken cancellationToken = default);
     }
