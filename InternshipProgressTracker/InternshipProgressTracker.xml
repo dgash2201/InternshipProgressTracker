@@ -153,10 +153,19 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
+        <member name="T:InternshipProgressTracker.Controllers.MentorsController">
+            <summary>
+            Represents Web API of Mentors
+            </summary>
+        </member>
         <member name="M:InternshipProgressTracker.Controllers.MentorsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto,System.Threading.CancellationToken)">
             <summary>
             Set student grade
             </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Student was not found</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.MentorsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
             <summary>

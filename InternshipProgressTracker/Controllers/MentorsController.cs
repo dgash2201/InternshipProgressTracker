@@ -14,6 +14,12 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Controllers
 {
+    /// <summary>
+    /// Represents Web API of Mentors
+    /// </summary>
+    [Authorize(AuthenticationSchemes = "MyBearer")]
+    [ApiController]
+    [Route("[controller]")]
     public class MentorsController : ControllerBase
     {
         private readonly IMentorService _mentorService;
@@ -28,6 +34,10 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Set student grade
         /// </summary>
+        /// <response code="401">Authorization token is invalid</response>
+        /// <response code="403">Forbidden for this role</response>
+        /// <response code="404">Student was not found</response>
+        /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut("set-grade")]
         public async Task<IActionResult> SetStudentGrade(StudentGradeDto gradeDto, CancellationToken cancellationToken)

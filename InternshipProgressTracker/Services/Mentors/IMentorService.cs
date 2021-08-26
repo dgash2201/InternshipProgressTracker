@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProgressTracker.Services.Mentors
 {
+    /// <summary>
+    /// Represents interface of mentor logic service
+    /// </summary>
     public interface IMentorService
     {
         Task CreateAsync(User user);
