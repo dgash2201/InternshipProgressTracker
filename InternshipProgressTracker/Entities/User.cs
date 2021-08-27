@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace InternshipProgressTracker.Entities
@@ -14,11 +15,13 @@ namespace InternshipProgressTracker.Entities
         [Required]
         public string LastName { get; set; }
 
-        public string PhotoId { get; set; }
+        public string PhotoUrl { get; set; }
 
         public Student Student { get; set; }
 
         public Mentor Mentor { get; set; }
+
+        public ICollection<Role> Roles { get; set; }
 
         public bool IsDeleted { get; set; }
 

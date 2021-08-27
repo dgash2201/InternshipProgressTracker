@@ -5,11 +5,10 @@ using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
 using InternshipProgressTracker.Models.StudyPlanEntries;
 using InternshipProgressTracker.Models.StudyPlans;
 using InternshipProgressTracker.Models.Users;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace InternshipProgressTracker.Utils.Mapper
-{        
+{
     /// <summary>
     /// Contains settings for AutoMapper
     /// </summary>
@@ -26,14 +25,12 @@ namespace InternshipProgressTracker.Utils.Mapper
                     options => options.MapFrom(entity => entity.StudyPlans.ToList()));
 
             CreateMap<StudyPlan, StudyPlanResponseDto>()
-                .ForMember(dto => dto.Entries, 
+                .ForMember(dto => dto.Entries,
                     options => options.MapFrom(entity => entity.Entries.ToList()));
 
             CreateMap<StudyPlanEntry, StudyPlanEntryResponseDto>()
-                .ForMember(dto => dto.StudentProgresses, 
+                .ForMember(dto => dto.StudentProgresses,
                     options => options.MapFrom(entity => entity.StudentsProgresses.ToList()));
-
-            CreateMap<User, UserResponseDto>();
 
             CreateMap<Student, StudentResponseDto>()
                 .ForMember(dto => dto.StudyPlanProgresses,
@@ -42,6 +39,10 @@ namespace InternshipProgressTracker.Utils.Mapper
             CreateMap<Mentor, MentorResponseDto>()
                 .ForMember(dto => dto.StudentProgresses,
                     options => options.MapFrom(entity => entity.StudentStudyPlanProgresses.ToList()));
+
+            CreateMap<User, UserResponseDto>()
+                .ForMember(dto => dto.Role,
+                    options => options.MapFrom(entity => entity.Roles.FirstOrDefault().Name));
 
             CreateMap<StudentStudyPlanProgress, StudentProgressResponseDto>();
         }

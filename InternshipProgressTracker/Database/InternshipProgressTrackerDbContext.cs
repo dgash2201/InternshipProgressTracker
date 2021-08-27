@@ -9,7 +9,7 @@ namespace InternshipProgressTracker.Database
     /// <summary>
     /// Class for working with InternshipProgressTracker database
     /// </summary>
-    public class InternshipProgressTrackerDbContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class InternshipProgressTrackerDbContext : IdentityDbContext<User, Role, int>
     {
         public InternshipProgressTrackerDbContext([NotNull] DbContextOptions options) 
             : base(options) {}
@@ -69,6 +69,20 @@ namespace InternshipProgressTracker.Database
                 .HasOne(u => u.Mentor)
                 .WithOne(m => m.User)
                 .HasForeignKey<Mentor>(m => m.UserId);
+
+            builder
+                .Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany(r => r.Users)
+                .UsingEntity<IdentityUserRole<int>>(
+                    userRole => userRole.HasOne<Role>()
+                        .WithMany()
+                        .HasForeignKey(ur => ur.RoleId)
+                        .IsRequired(),
+                    userRole => userRole.HasOne<User>()
+                        .WithMany()
+                        .HasForeignKey(ur => ur.UserId)
+                        .IsRequired());
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {

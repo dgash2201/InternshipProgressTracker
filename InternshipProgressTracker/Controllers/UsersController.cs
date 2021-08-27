@@ -9,11 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
 using System;
-using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,17 +27,15 @@ namespace InternshipProgressTracker.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILogger<UsersController> _logger;
-        private readonly ITokenAcquisition _tokenAcquisition;
         private readonly GraphServiceClient _graphServiceClient;
-        private readonly IOptions<MicrosoftGraphOptions> _graphOptions;
 
-        public UsersController(IUserService service, ILogger<UsersController> logger, ITokenAcquisition tokenAcquisition, GraphServiceClient graphServiceClient, IOptions<MicrosoftGraphOptions> graphOptions)
+        public UsersController(IUserService service, 
+            ILogger<UsersController> logger, 
+            GraphServiceClient graphServiceClient)
         {
             _userService = service;
             _logger = logger;
-            _tokenAcquisition = tokenAcquisition;
             _graphServiceClient = graphServiceClient;
-            _graphOptions = graphOptions;
         }
 
         /// <summary>
@@ -83,9 +79,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _userService.RegisterAsync(registerDto, cancellationToken);
+                var userResponseDto = await _userService.RegisterAsync(registerDto, cancellationToken);
 
-                return Ok(new ResponseWithId { Success = true, Id = id });
+                return Ok(new ResponseWithModel<UserResponseDto> { Success = true, Model = userResponseDto });
             }
             catch (BadRequestException ex)
             {
@@ -136,6 +132,8 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Authenticate user with Azure token
         /// </summary>
+        /// <response code="401">Azure authorization token is invalid</response>
+        /// <response code="500">Internal server error</response>
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("login-by-azure")]
         [RequiredScope("access_as_user")]
@@ -144,7 +142,7 @@ namespace InternshipProgressTracker.Controllers
             try
             {
                 var azureUserRequest = _graphServiceClient.Me.Request();
-                var photoRequest =  _graphServiceClient.Me.Photo.Content.Request();
+                var photoRequest = _graphServiceClient.Me.Photo.Content.Request();
                 var tokenPair = await _userService.LoginByAzureAsync(azureUserRequest, photoRequest);
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });

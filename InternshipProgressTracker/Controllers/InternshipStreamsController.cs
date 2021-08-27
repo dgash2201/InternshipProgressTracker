@@ -3,6 +3,7 @@ using InternshipProgressTracker.Models.Common;
 using InternshipProgressTracker.Models.InternshipStreams;
 using InternshipProgressTracker.Services.InternshipStreams;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -65,9 +66,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .AddMentorAsync(addMentorDto.InternshipStreamId, addMentorDto.MentorId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -93,9 +95,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.AddStudentAsync(addStudentDto.InternshipStreamId, addStudentDto.StudentId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .AddStudentAsync(addStudentDto.InternshipStreamId, addStudentDto.StudentId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -121,9 +124,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.RemoveMentorAsync(removeMentorDto.InternshipStreamId, removeMentorDto.MentorId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .RemoveMentorAsync(removeMentorDto.InternshipStreamId, removeMentorDto.MentorId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -149,9 +153,10 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                await _internshipStreamService.RemoveStudentAsync(removeStudentDto.InternshipStreamId, removeStudentDto.StudentId, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService
+                    .RemoveStudentAsync(removeStudentDto.InternshipStreamId, removeStudentDto.StudentId, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -229,9 +234,9 @@ namespace InternshipProgressTracker.Controllers
         {
             try
             {
-                var id = await _internshipStreamService.CreateAsync(createDto, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.CreateAsync(createDto, cancellationToken);
 
-                return Ok(new ResponseWithId { Success = true, Id = id });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (Exception ex)
             {
@@ -251,13 +256,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPut]
-        public async Task<IActionResult> Update(PutRequestDto<InternshipStreamDto> putRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, InternshipStreamDto updateDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(putRequestDto.Id, putRequestDto.Model, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(id, updateDto, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {
@@ -281,13 +286,13 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
         [HttpPatch]
-        public async Task<IActionResult> Update(PatchRequestDto<InternshipStreamDto> patchDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument, CancellationToken cancellationToken)
         {
             try
             {
-                await _internshipStreamService.UpdateAsync(patchDto.Id, patchDto.PatchDocument, cancellationToken);
+                var internshipStreamResponseDto = await _internshipStreamService.UpdateAsync(id, patchDocument, cancellationToken);
 
-                return Ok(new Response { Success = true });
+                return Ok(new ResponseWithModel<InternshipStreamResponseDto> { Success = true, Model = internshipStreamResponseDto });
             }
             catch (NotFoundException ex)
             {

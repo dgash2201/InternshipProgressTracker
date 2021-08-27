@@ -45,9 +45,13 @@ namespace InternshipProgressTracker
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
+
             services.AddDbContext<InternshipProgressTrackerDbContext>(options =>
             {
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(isProduction ? 
+                    _configuration.GetConnectionString("DefaultConnection") : 
+                    _configuration.GetConnectionString("LocalhostConnection"));
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -64,7 +68,7 @@ namespace InternshipProgressTracker
             services.AddScoped<IMentorService, MentorService>();
 
             services
-                .AddIdentity<User, IdentityRole<int>>(options =>
+                .AddIdentity<User, Role>(options =>
                 {
                     options.Password.RequireNonAlphanumeric = false;
                 })
@@ -144,7 +148,7 @@ namespace InternshipProgressTracker
                 });
             });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS-CONNECTIONSTRING"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
@@ -199,7 +203,7 @@ namespace InternshipProgressTracker
         /// </summary>
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
             var roleNames = new[] { "Admin", "Lead", "Mentor", "Student" };
 
             foreach (var roleName in roleNames)
@@ -208,7 +212,7 @@ namespace InternshipProgressTracker
 
                 if (!roleExists)
                 {
-                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                    await roleManager.CreateAsync(new Role { Name = roleName });
                 }
             }
         }
@@ -232,7 +236,7 @@ namespace InternshipProgressTracker
                     LastName = _configuration["Admin:LastName"],
                 };
 
-                var creationResult = await userManager.CreateAsync(admin, _configuration["AdminPassword"]);
+                var creationResult = await userManager.CreateAsync(admin, _configuration["Admin:Password"]);
 
                 if (creationResult.Succeeded)
                 {

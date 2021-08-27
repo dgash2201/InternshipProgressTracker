@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
 using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Users;
 using InternshipProgressTracker.Services.Mentors;
+using InternshipProgressTracker.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +22,18 @@ namespace InternshipProgressTracker.Services.Admins
     {
         private readonly UserManager<User> _userManager;
         private readonly IMentorService _mentorService;
+        private readonly IPhotoManager _photoManager;
         private readonly IMapper _mapper;
 
-        public AdminService(UserManager<User> userManager, 
-            IMentorService mentorService, IMapper mapper)
+        public AdminService(
+            UserManager<User> userManager,
+            IMentorService mentorService,
+            IPhotoManager photoManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _mentorService = mentorService;
+            _photoManager = photoManager;
             _mapper = mapper;
         }
 
@@ -39,6 +45,7 @@ namespace InternshipProgressTracker.Services.Admins
         {
             var users = await _userManager
                 .Users
+                .Include(u => u.Roles)
                 .Include(u => u.Student)
                 .ThenInclude(s => s.StudyPlanProgresses)
                 .Include(u => u.Mentor)
@@ -52,14 +59,16 @@ namespace InternshipProgressTracker.Services.Admins
         /// <summary>
         /// Adds admin role to user
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="role"></param>
-        /// <returns></returns>
-        public async Task CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task<UserResponseDto> CreateAdminAsync(int userId, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager
+                .Users
+                .Include(u => u.Roles)
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user == null)
             {
@@ -77,18 +86,23 @@ namespace InternshipProgressTracker.Services.Admins
             }
 
             await _userManager.UpdateAsync(user);
+
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         /// <summary>
         /// Creates mentor
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public async Task CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
+        public async Task<UserResponseDto> CreateMentorAsync(int userId, MentorRole role, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager
+                .Users
+                .Include(u => u.Roles)
+                .Include(u => u.Student)
+                .ThenInclude(s => s.StudyPlanProgresses)
+                .Include(u => u.Mentor)
+                .ThenInclude(m => m.StudentStudyPlanProgresses)
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user == null)
             {
@@ -107,6 +121,8 @@ namespace InternshipProgressTracker.Services.Admins
 
             await _mentorService.CreateAsync(user);
             await _userManager.UpdateAsync(user);
+
+            return _mapper.Map<UserResponseDto>(user);
         }
     }
 }

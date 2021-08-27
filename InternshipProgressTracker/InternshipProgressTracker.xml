@@ -26,7 +26,7 @@
             <response code="404">User was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateAdmin(InternshipProgressTracker.Models.Admins.CreateMentorDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.AdminsController.CreateMentor(InternshipProgressTracker.Models.Admins.CreateMentorDto,System.Threading.CancellationToken)">
             <summary>
             Add mentor role to user
             </summary>
@@ -111,7 +111,7 @@
             <response code="403">Forbidden for this role</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto,System.Threading.CancellationToken)">
             <summary>
             Update internship stream data
             </summary>
@@ -122,7 +122,7 @@
             <response code="404">Internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.InternshipStreamsController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.InternshipStreams.InternshipStreamDto},System.Threading.CancellationToken)">
             <summary>
             Patch internship stream data
             </summary>
@@ -153,17 +153,21 @@
             <response code="404">Study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="T:InternshipProgressTracker.Controllers.StudentsController">
+        <member name="T:InternshipProgressTracker.Controllers.MentorsController">
             <summary>
-            Represents Web API of students
+            Represents Web API of Mentors
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.MentorsController.SetStudentGrade(InternshipProgressTracker.Models.Students.StudentGradeDto,System.Threading.CancellationToken)">
             <summary>
             Set student grade
             </summary>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Student was not found</response>
+            <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudentsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.MentorsController.GradeStudentProgress(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
             <summary>
             Set grade to student progress on study plan entry
             </summary>
@@ -173,6 +177,21 @@
             <response code="404">Student, mentor or study plan entry was not found</response>
             <response code="409">Student already has grade on this study plan entry</response>
             <response code="500">Internal server error</response>
+        </member>
+        <member name="M:InternshipProgressTracker.Controllers.MentorsController.AddNotes(InternshipProgressTracker.Models.Mentors.MentorNotesDto,System.Threading.CancellationToken)">
+            <summary>
+            Add notes
+            </summary>
+            <response code="400">Study plan entry was not started by the student</response>
+            <response code="401">Authorization token is invalid</response>
+            <response code="403">Forbidden for this role</response>
+            <response code="404">Studentor study plan entry was not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="T:InternshipProgressTracker.Controllers.StudentsController">
+            <summary>
+            Represents Web API of students
+            </summary>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.StudentsController.AddNotes(InternshipProgressTracker.Models.Students.NotesDto,System.Threading.CancellationToken)">
             <summary>
@@ -243,7 +262,7 @@
             <response code="404">Related study plan was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto,System.Threading.CancellationToken)">
             <summary>
             Update study plan entry data
             </summary>
@@ -254,7 +273,7 @@
             <response code="404">Study plan entry was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlanEntriesController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlanEntries.StudyPlanEntryDto},System.Threading.CancellationToken)">
             <summary>
             Patch study plan entry data
             </summary>
@@ -327,7 +346,7 @@
             <response code="404">Related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PutRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,InternshipProgressTracker.Models.StudyPlans.StudyPlanDto,System.Threading.CancellationToken)">
             <summary>
             Update study plan data
             </summary>
@@ -338,7 +357,7 @@
             <response code="404">Study plan or related internship stream was not found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(InternshipProgressTracker.Models.Common.PatchRequestDto{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
+        <member name="M:InternshipProgressTracker.Controllers.StudyPlansController.Update(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{InternshipProgressTracker.Models.StudyPlans.StudyPlanDto},System.Threading.CancellationToken)">
             <summary>
             Patch study plan data
             </summary>
@@ -406,6 +425,8 @@
             <summary>
             Authenticate user with Azure token
             </summary>
+            <response code="401">Azure authorization token is invalid</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
@@ -484,6 +505,11 @@
             Represents the Mentor entity
             </summary>
         </member>
+        <member name="T:InternshipProgressTracker.Entities.Role">
+            <summary>
+            Represents user role
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Entities.Student">
             <summary>
             Represents the Student entity
@@ -524,15 +550,14 @@
             Exception that means that an entity was not found
             </summary>
         </member>
-        <member name="T:InternshipProgressTracker.Models.Common.PatchRequestDto`1">
+        <member name="T:InternshipProgressTracker.Models.Common.ResponseWithMessage">
             <summary>
-            DTO for patch requests
+            Represents response with some message
             </summary>
-            <typeparam name="TModel"></typeparam>
         </member>
-        <member name="T:InternshipProgressTracker.Models.Common.PutRequestDto`1">
+        <member name="T:InternshipProgressTracker.Models.Common.ResponseWithModel`1">
             <summary>
-            DTO for put requests
+            Represents response with entity model
             </summary>
             <typeparam name="TModel"></typeparam>
         </member>
@@ -616,16 +641,11 @@
             <summary>
             Adds admin role to user
             </summary>
-            <param name="userId"></param>
-            <param name="role"></param>
-            <returns></returns>
         </member>
         <member name="M:InternshipProgressTracker.Services.Admins.AdminService.CreateMentorAsync(System.Int32,InternshipProgressTracker.Entities.Enums.MentorRole,System.Threading.CancellationToken)">
             <summary>
             Creates mentor
             </summary>
-            <param name="userId"></param>
-            <returns></returns>
         </member>
         <member name="T:InternshipProgressTracker.Services.Admins.IAdminService">
             <summary>
@@ -710,6 +730,11 @@
             </summary>
             <param name="id">Internship stream id</param>
         </member>
+        <member name="T:InternshipProgressTracker.Services.Mentors.IMentorService">
+            <summary>
+            Represents interface of mentor logic service
+            </summary>
+        </member>
         <member name="T:InternshipProgressTracker.Services.Mentors.MentorService">
             <summary>
             Logic service which works with students
@@ -719,6 +744,23 @@
             <summary>
             Creates a student based on the user
             </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Mentors.MentorService.AddNotesAsync(InternshipProgressTracker.Models.Mentors.MentorNotesDto,System.Threading.CancellationToken)">
+            <summary>
+            Adds mentor notes
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Mentors.MentorService.GradeStudentProgressAsync(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
+            <summary>
+            Set grade to student progress
+            </summary>
+        </member>
+        <member name="M:InternshipProgressTracker.Services.Mentors.MentorService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.Enums.StudentGrade,System.Threading.CancellationToken)">
+            <summary>
+            Sets student grade
+            </summary>
+            <param name="studentId">Id of student</param>
+            <param name="grade">Grade of his work</param>
         </member>
         <member name="T:InternshipProgressTracker.Services.Students.IStudentService">
             <summary>
@@ -730,17 +772,6 @@
             Logic service which works with students
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Threading.CancellationToken)">
-            <summary>
-            Gets the list of students
-            </summary>
-        </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GetAsync(System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Gets a student by id
-            </summary>
-            <param name="id">Student id</param>
-        </member>
         <member name="M:InternshipProgressTracker.Services.Students.StudentService.CreateAsync(InternshipProgressTracker.Entities.User,System.Threading.CancellationToken)">
             <summary>
             Creates a student based on the user
@@ -751,18 +782,6 @@
             <summary>
             Adds student notes
             </summary>
-        </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.GradeStudentProgressAsync(InternshipProgressTracker.Models.Students.GradeProgressDto,System.Threading.CancellationToken)">
-            <summary>
-            Set grade to student progress
-            </summary>
-        </member>
-        <member name="M:InternshipProgressTracker.Services.Students.StudentService.SetStudentGradeAsync(System.Int32,InternshipProgressTracker.Entities.Enums.StudentGrade,System.Threading.CancellationToken)">
-            <summary>
-            Sets student grade
-            </summary>
-            <param name="studentId">Id of student</param>
-            <param name="grade">Grade of his work</param>
         </member>
         <member name="M:InternshipProgressTracker.Services.Students.StudentService.StartStudyPlanEntryAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
@@ -975,23 +994,18 @@
             Works with user avatars
             </summary>
         </member>
-        <member name="M:InternshipProgressTracker.Utils.PhotoManager.GetAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Gets photo from Azure Blob Storage
-            </summary>
-        </member>
         <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
             <summary>
             Uploads photo to the Azure Blob Storage
             </summary>
-            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+            <returns>Url of photo in the Azure Blob Storage</returns>
         </member>
         <member name="M:InternshipProgressTracker.Utils.PhotoManager.UploadAsync(Microsoft.Graph.IProfilePhotoContentRequest,System.Threading.CancellationToken)">
             <summary>
             Get Azure user photo and upload it to Azure Blob Storage
             </summary>
             <param name="photoRequest">Microsoft Graph API request to get photo content</param>
-            <returns>Unique Id of photo in the Azure Blob Storage</returns>
+            <returns>Url of photo in the Azure Blob Storage</returns>
         </member>
         <member name="T:InternshipProgressTracker.Utils.ITokenGenerator">
             <summary>

@@ -1,10 +1,8 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,60 +22,37 @@ namespace InternshipProgressTracker.Utils
         }
 
         /// <summary>
-        /// Gets photo from Azure Blob Storage
-        /// </summary>
-        public async Task<FileContentResult> GetAsync(string photoId, CancellationToken cancellationToken = default)
-        {
-            var blob = _blobContainer.GetBlobClient(photoId);
-
-            await using var memoryStream = new MemoryStream();
-            await blob.DownloadToAsync(memoryStream, cancellationToken);
-            var properties = await blob.GetPropertiesAsync(cancellationToken: cancellationToken);
-
-            return new FileContentResult(memoryStream.ToArray(), properties.Value.ContentType)
-            {
-                FileDownloadName = properties.Value.Metadata["photoName"]
-            };
-        }
-
-        /// <summary>
         /// Uploads photo to the Azure Blob Storage
         /// </summary>
-        /// <returns>Unique Id of photo in the Azure Blob Storage</returns>
+        /// <returns>Url of photo in the Azure Blob Storage</returns>
         public async Task<string> UploadAsync(IFormFile photo, CancellationToken cancellationToken = default)
         {
-            var photoId = Guid.NewGuid().ToString();
-            var blob = _blobContainer.GetBlobClient(photoId);
-
-            await using var readStream = photo.OpenReadStream();
-            var response = await blob.UploadAsync(
-                readStream, 
-                new BlobHttpHeaders { ContentType = photo.ContentType },
-                new Dictionary<string, string> { ["photoName"] = photo.FileName },
-                cancellationToken: cancellationToken);
-
-            return photoId;
+            await using var photoStream = photo.OpenReadStream();
+            return await UploadAsync(photoStream, photo.ContentType, cancellationToken);
         }
 
         /// <summary>
         /// Get Azure user photo and upload it to Azure Blob Storage
         /// </summary>
         /// <param name="photoRequest">Microsoft Graph API request to get photo content</param>
-        /// <returns>Unique Id of photo in the Azure Blob Storage</returns>
+        /// <returns>Url of photo in the Azure Blob Storage</returns>
         public async Task<string> UploadAsync(IProfilePhotoContentRequest photoRequest, CancellationToken cancellationToken = default)
         {
-            using var photoStream = await photoRequest.GetAsync();
+            await using var photoStream = await photoRequest.GetAsync();
+            return await UploadAsync(photoStream, photoRequest.ContentType, cancellationToken);
+        }
 
-            if (photoStream == null) return null;
-
+        private async Task<string> UploadAsync(Stream photoStream, string contentType, CancellationToken cancellationToken = default)
+        {
             var photoId = Guid.NewGuid().ToString();
             var blob = _blobContainer.GetBlobClient(photoId);
 
-            var response = await blob.UploadAsync(
+            await blob.UploadAsync(
                 photoStream,
+                new BlobHttpHeaders { ContentType = contentType },
                 cancellationToken: cancellationToken);
 
-            return photoId;
+            return blob.Uri.AbsoluteUri;
         }
     }
 }
