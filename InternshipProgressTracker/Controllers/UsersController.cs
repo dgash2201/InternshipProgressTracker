@@ -27,17 +27,15 @@ namespace InternshipProgressTracker.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILogger<UsersController> _logger;
-        private readonly ITokenAcquisition _tokenAcquisition;
         private readonly GraphServiceClient _graphServiceClient;
-        private readonly IOptions<MicrosoftGraphOptions> _graphOptions;
 
-        public UsersController(IUserService service, ILogger<UsersController> logger, ITokenAcquisition tokenAcquisition, GraphServiceClient graphServiceClient, IOptions<MicrosoftGraphOptions> graphOptions)
+        public UsersController(IUserService service, 
+            ILogger<UsersController> logger, 
+            GraphServiceClient graphServiceClient)
         {
             _userService = service;
             _logger = logger;
-            _tokenAcquisition = tokenAcquisition;
             _graphServiceClient = graphServiceClient;
-            _graphOptions = graphOptions;
         }
 
         /// <summary>
