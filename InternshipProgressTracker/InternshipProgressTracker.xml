@@ -425,6 +425,8 @@
             <summary>
             Authenticate user with Azure token
             </summary>
+            <response code="401">Azure authorization token is invalid</response>
+            <response code="500">Internal server error</response>
         </member>
         <member name="M:InternshipProgressTracker.Controllers.UsersController.RefreshJwt(System.String,System.Int32,System.Threading.CancellationToken)">
             <summary>
@@ -727,6 +729,11 @@
             Deletes internship stream by id
             </summary>
             <param name="id">Internship stream id</param>
+        </member>
+        <member name="T:InternshipProgressTracker.Services.Mentors.IMentorService">
+            <summary>
+            Represents interface of mentor logic service
+            </summary>
         </member>
         <member name="T:InternshipProgressTracker.Services.Mentors.MentorService">
             <summary>

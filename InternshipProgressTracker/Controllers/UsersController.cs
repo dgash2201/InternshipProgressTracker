@@ -134,6 +134,8 @@ namespace InternshipProgressTracker.Controllers
         /// <summary>
         /// Authenticate user with Azure token
         /// </summary>
+        /// <response code="401">Azure authorization token is invalid</response>
+        /// <response code="500">Internal server error</response>
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("login-by-azure")]
         [RequiredScope("access_as_user")]
