@@ -144,7 +144,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">Study plan entry was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, StudyPlanEntryDto updateDto, CancellationToken cancellationToken)
         {
             try
@@ -174,7 +174,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">Study plan entry or related study plan was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPatch]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Update(int id, JsonPatchDocument<StudyPlanEntryDto> patchDocument, CancellationToken cancellationToken)
         {
             try

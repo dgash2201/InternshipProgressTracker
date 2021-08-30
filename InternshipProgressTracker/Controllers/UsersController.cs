@@ -161,13 +161,12 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="400">Refresh token is incorrect</response>
         /// <response code="404">User was not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet]
-        [Route("refresh-jwt")]
-        public async Task<IActionResult> RefreshJwt(string refreshToken, int userId, CancellationToken cancellationToken)
+        [HttpPost("refresh-jwt")]
+        public async Task<IActionResult> RefreshJwt(RefreshJwtDto dto, CancellationToken cancellationToken)
         {
             try
             {
-                var tokenPair = await _userService.RefreshJwtAsync(refreshToken, userId, cancellationToken);
+                var tokenPair = await _userService.RefreshJwtAsync(dto.RefreshToken, dto.UserId, cancellationToken);
 
                 return Ok(new ResponseWithModel<TokenResponseDto> { Success = true, Model = tokenPair });
             }

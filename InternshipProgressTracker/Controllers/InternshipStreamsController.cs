@@ -255,7 +255,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">Internship stream was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, InternshipStreamDto updateDto, CancellationToken cancellationToken)
         {
             try
@@ -285,7 +285,7 @@ namespace InternshipProgressTracker.Controllers
         /// <response code="404">Internship stream was not found</response>
         /// <response code="500">Internal server error</response>
         [Authorize(Roles = "Mentor, Lead, Admin")]
-        [HttpPatch]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Update(int id, JsonPatchDocument<InternshipStreamDto> patchDocument, CancellationToken cancellationToken)
         {
             try

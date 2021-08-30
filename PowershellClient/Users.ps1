@@ -93,6 +93,43 @@ function Register {
     }
 }
 
+function Update-Jwt {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [Int]
+        $UserId
+    )
+    begin {
+        $uri = "$BaseUrl/login"
+    }
+    process {
+        $body = ConvertTo-Json @{
+            UserId = $UserId
+            RefreshToken = $Global:Context.RefreshToken
+        }
+
+        $parameters = @{
+            Uri = $uri
+            Method = "POST"
+            Body = $body
+            ContentType = $ContentType
+        }
+
+        try {
+            $response = Invoke-RestMethod @parameters
+
+            $Global:Context = @{
+                Token = $response.Model.Jwt
+                RerfreshToken = $response.Model.RefreshToken
+            }
+        }
+        catch {
+            Write-Host $Error[0] | ConvertTo-Json
+        }
+    }
+} 
+
 function Get-Profile {
     param (
         [Parameter(Mandatory)]
