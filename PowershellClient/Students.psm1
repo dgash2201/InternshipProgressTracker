@@ -35,7 +35,7 @@ function Set-Notes {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -43,7 +43,7 @@ function Set-Notes {
     }
 }
 
-function Set-Notes {
+function Set-StudyPlanEntryAsStarted {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
@@ -73,7 +73,7 @@ function Set-Notes {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -81,7 +81,7 @@ function Set-Notes {
     }
 }
 
-function Set-Notes {
+function Set-StudyPlanEntryAsFinished {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
@@ -111,7 +111,7 @@ function Set-Notes {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json

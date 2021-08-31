@@ -21,7 +21,7 @@ function Get-InternshipStreams {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -51,7 +51,7 @@ function Get-InternshipStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -124,7 +124,7 @@ function New-InternshipStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -194,7 +194,7 @@ function Set-InternshipStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -222,7 +222,7 @@ function Remove-InternshipStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -251,7 +251,7 @@ function Remove-InternshipStreamHard {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -293,7 +293,7 @@ function Add-MentorToStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -335,7 +335,7 @@ function Add-StudentToStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -377,7 +377,7 @@ function Remove-MentorFromStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -419,7 +419,7 @@ function Remove-StudentFromStream {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json

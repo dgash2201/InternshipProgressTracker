@@ -32,6 +32,7 @@ function Login {
             $response = Invoke-RestMethod @parameters
             $Script:Context.Token = $response.Model.Jwt
             $Script:Context.RefreshToken = $response.Model.RefreshToken
+            $Script:Context.UserId = $response.Model.UserId
 
             $response | ConvertTo-Json
         }
@@ -92,7 +93,7 @@ function Register {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -103,16 +104,13 @@ function Register {
 function Update-Jwt {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [Int]
-        $UserId
     )
     begin {
-        $uri = "$UsersUrl/login"
+        $uri = "$UsersUrl/refresh-jwt"
     }
     process {
         $body = ConvertTo-Json @{
-            UserId = $UserId
+            UserId = $Script:Context.UserId
             RefreshToken = $Script:Context.RefreshToken
         }
 
@@ -127,6 +125,8 @@ function Update-Jwt {
             $response = Invoke-RestMethod @parameters
             $Script:Context.Token = $response.Model.Jwt
             $Script:Context.RefreshToken = $response.Model.RefreshToken
+
+            $response | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -153,7 +153,7 @@ function Get-Profile {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -164,9 +164,6 @@ function Get-Profile {
 function Remove-User {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [Int]
-        $UserId
     )
     begin {
         $headers = @{
@@ -175,13 +172,13 @@ function Remove-User {
     }
     process {
         $parameters = @{
-            Uri = "$UsersUrl/$UserId"
+            Uri = "$UsersUrl"
             Method = "DELETE"
             Headers = $headers
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -210,7 +207,7 @@ function Remove-UserHard {
         }
 
         try {
-            Invoke-RestMethod @parameters
+            Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
