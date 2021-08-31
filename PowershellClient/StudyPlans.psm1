@@ -1,5 +1,5 @@
-$Script:BaseUrl = "https://localhost:44312/StudyPlans"
-$ContentType = "application/json"
+Import-Module ".\SharedData.psm1"
+$Script:StudyPlansUrl = "$($Script:Context.BaseUrl)/StudyPlans"
 
 function Get-StudyPlans {
     [CmdletBinding()]
@@ -7,9 +7,9 @@ function Get-StudyPlans {
     )
     
     begin {
-        $uri = $Script:BaseUrl
+        $uri = $Script:StudyPlansUrl
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -38,12 +38,12 @@ function Get-StudyPlan {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$Id"
+            Uri = "$Script:StudyPlansUrl/$Id"
             Method = "GET"
             Headers = $headers
         }
@@ -73,11 +73,11 @@ function New-StudyPlan {
         $InternshipStreamId
     )
     begin {
-        $uri = "$Script:BaseUrl"
+        $uri = "$Script:StudyPlansUrl"
     }
     process {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
 
         $body = ConvertTo-Json @{
@@ -91,7 +91,7 @@ function New-StudyPlan {
             Method = "POST"
             Headers = $headers
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -123,13 +123,12 @@ function Set-StudyPlan {
         $InternshipStreamId
     )
     begin {
-        
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
-        $uri = "$Script:BaseUrl/$Id" 
+        $uri = "$Script:StudyPlansUrl/$Id" 
 
         $body = ConvertTo-Json @{
             Title = $Title
@@ -142,7 +141,7 @@ function Set-StudyPlan {
             Method = "PUT"
             Headers = $headers
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -163,12 +162,12 @@ function Remove-StudyPlan {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$Id"
+            Uri = "$Script:StudyPlansUrl/$Id"
             Method = "DELETE"
             Headers = $headers
         }
@@ -192,12 +191,12 @@ function Remove-StudyPlanHard {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$Id"
+            Uri = "$Script:StudyPlansUrl/$Id"
             Method = "DELETE"
             Headers = $headers
         }

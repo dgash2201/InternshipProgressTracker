@@ -1,12 +1,9 @@
-$Script:BaseUrl = "https://localhost:44312/Mentors"
+Import-Module ".\SharedData.psm1"
+$Script:StudentsUrl = "$($Script:Context.BaseUrl)/Students"
 
 function Set-Notes {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [Int]
-        $StudentId,
-
         [Parameter(Mandatory)]
         [Int]
         $StudyPlanEntryId,
@@ -17,15 +14,14 @@ function Set-Notes {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/add-notes"
+        $uri = "$Script:StudentsUrl/add-notes"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
     process {
         $body = ConvertTo-Json @{
-            StudentId = $StudentId
             StudyPlanEntryId = $StudyPlanEntryId
             Notes = $Notes
         }
@@ -35,6 +31,7 @@ function Set-Notes {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -46,40 +43,25 @@ function Set-Notes {
     }
 }
 
-function Set-ProgressGrade {
+function Set-Notes {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [Int]
-        $StudentId,
-
-        [Parameter(Mandatory)]
-        [Int]
-        $StudyPlanEntryId,
-
-        [Parameter(Mandatory)]
-        [Int]
-        $GradingMentorId,
-
-        [Parameter(Mandatory)]
-        [ValidateRange(1,10)]
-        [Int]
-        $Grade
+        $StudyPlanEntryId
     )
     
     begin {
-        $uri = "$Script:BaseUrl/grade-progress"
+        $uri = "$Script:StudentsUrl/start-study-plan-entry"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
     process {
         $body = ConvertTo-Json @{
-            StudentId = $StudentId
             StudyPlanEntryId = $StudyPlanEntryId
-            GradingMentorId = $GradingMentorId
-            Grade = $Grade
+            Notes = $Notes
         }
 
         $parameters = @{
@@ -87,6 +69,7 @@ function Set-ProgressGrade {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -98,36 +81,25 @@ function Set-ProgressGrade {
     }
 }
 
-enum StudentGrade {
-    Junior
-    Middle
-    Senior
-}
-
-function Set-StudentGrade {
+function Set-Notes {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [Int]
-        $StudentId,
-
-        [Parameter(Mandatory)]
-        [ValidateRange(1,10)]
-        [StudentGrade]
-        $Grade
+        $StudyPlanEntryId
     )
     
     begin {
-        $uri = "$Script:BaseUrl/set-grade"
+        $uri = "$Script:StudentsUrl/finish-study-plan-entry"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
     process {
         $body = ConvertTo-Json @{
-            StudentId = $StudentId
-            Grade = $Grade
+            StudyPlanEntryId = $StudyPlanEntryId
+            Notes = $Notes
         }
 
         $parameters = @{
@@ -135,6 +107,7 @@ function Set-StudentGrade {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {

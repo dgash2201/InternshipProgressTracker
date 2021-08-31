@@ -1,4 +1,5 @@
-$Script:BaseUrl = "https://localhost:44312/Admins"
+Import-Module ".\SharedData.psm1"
+$Script:AdminsUrl = "$($Script:Context.BaseUrl)/Admins"
 
 function Get-Users {
     [CmdletBinding()]
@@ -6,9 +7,9 @@ function Get-Users {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/get-users"
+        $uri = "$Script:AdminsUrl/get-users"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -36,9 +37,9 @@ function New-Admin {
         $UserId
     )
     begin {
-        $uri = "$Script:BaseUrl/create-admin"
+        $uri = "$Script:AdminsUrl/create-admin"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
@@ -51,6 +52,7 @@ function New-Admin {
             Method = "POST"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -79,9 +81,9 @@ function New-Mentor {
         $Role
     )
     begin {
-        $uri = "$Script:BaseUrl/create-mentor"
+        $uri = "$Script:AdminsUrl/create-mentor"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
@@ -95,6 +97,7 @@ function New-Mentor {
             Method = "POST"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {

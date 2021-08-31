@@ -1,5 +1,5 @@
-$Script:BaseUrl = "https://localhost:44312/InternshipStream"
-$ContentType = "application/json"
+Import-Module ".\SharedData.psm1"
+$Script:InternshipStreamsUrl = "$($Script:Context.BaseUrl)/InternshipStreams"
 
 function Get-InternshipStreams {
     [CmdletBinding()]
@@ -7,9 +7,9 @@ function Get-InternshipStreams {
     )
     
     begin {
-        $uri = $Script:BaseUrl
+        $uri = $Script:InternshipStreamsUrl
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -38,11 +38,11 @@ function Get-InternshipStream {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
-        $uri = "$Script:BaseUrl/$Id"
+        $uri = "$Script:InternshipStreamsUrl/$Id"
 
         $parameters = @{
             Uri = $uri
@@ -98,11 +98,11 @@ function New-InternshipStream {
         $FactEndDate
     )
     begin {
-        $uri = "$Script:BaseUrl"
+        $uri = $Script:InternshipStreamsUrl
     }
     process {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
 
         $body = ConvertTo-Json @{
@@ -120,7 +120,7 @@ function New-InternshipStream {
             Method = "POST"
             Headers = $headers
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -169,11 +169,11 @@ function Set-InternshipStream {
     )
     begin {        
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
-        $uri = "$BaseUrl/$Id"      
+        $uri = "$Script:InternshipStreamsUrl/$Id"      
 
         $body = ConvertTo-Json @{
             Title = $Title
@@ -190,7 +190,7 @@ function Set-InternshipStream {
             Method = "PUT"
             Headers = $headers
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -211,12 +211,12 @@ function Remove-InternshipStream {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$Id"
+            Uri = "$Script:InternshipStreamsUrl/$Id"
             Method = "DELETE"
             Headers = $headers
         }
@@ -240,12 +240,12 @@ function Remove-InternshipStreamHard {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$Id"
+            Uri = "$Script:InternshipStreamsUrl/$Id"
             Method = "DELETE"
             Headers = $headers
         }
@@ -272,9 +272,9 @@ function Add-MentorToStream {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/add-mentor"
+        $uri = "$Script:InternshipStreamsUrl/add-mentor"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -289,6 +289,7 @@ function Add-MentorToStream {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -313,9 +314,9 @@ function Add-StudentToStream {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/add-student"
+        $uri = "$Script:InternshipStreamsUrl/add-student"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -330,6 +331,7 @@ function Add-StudentToStream {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -354,9 +356,9 @@ function Remove-MentorFromStream {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/remove-mentor"
+        $uri = "$Script:InternshipStreamsUrl/remove-mentor"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -371,6 +373,7 @@ function Remove-MentorFromStream {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {
@@ -395,9 +398,9 @@ function Remove-StudentFromStream {
     )
     
     begin {
-        $uri = "$Script:BaseUrl/remove-student"
+        $uri = "$Script:InternshipStreamsUrl/remove-student"
         $headers = @{
-            Authorization = "Bearer $($Global:Context.Token)"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     
@@ -412,6 +415,7 @@ function Remove-StudentFromStream {
             Method = "PUT"
             Headers = $headers
             Body = $body
+            ContentType = $Script:JsonContentType
         }
 
         try {

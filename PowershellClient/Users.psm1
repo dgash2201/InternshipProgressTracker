@@ -1,5 +1,5 @@
-$BaseUrl = "https://localhost:44312/Users"
-$ContentType = "application/json"
+Import-Module ".\SharedData.psm1"
+$UsersUrl = "$($Script:Context.BaseUrl)/Users"
 
 function Login {
     [CmdletBinding()]
@@ -13,7 +13,7 @@ function Login {
         $Password
     )
     begin {
-        $Uri = "$BaseUrl/login"
+        $Uri = "$UsersUrl/login"
     }
     process {
         $body = ConvertTo-Json @{
@@ -25,16 +25,15 @@ function Login {
             Uri = $Uri
             Method = "POST"
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
             $response = Invoke-RestMethod @parameters
+            $Script:Context.Token = $response.Model.Jwt
+            $Script:Context.RefreshToken = $response.Model.RefreshToken
 
-            $Global:Context = @{
-                Token = $response.Model.Jwt
-                RerfreshToken = $response.Model.RefreshToken
-            }
+            $response | ConvertTo-Json
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -53,7 +52,7 @@ function Register {
         [String]
         $FirstName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$false)]
         [String]
         $AvatarPath,
 
@@ -70,14 +69,18 @@ function Register {
         $ConfirmPassword
     )
     begin {
-        $Uri = "$BaseUrl/register"
+        $Uri = "$UsersUrl/register"
     }
     process {
+        if ($AvatarPath) {
+            $avatar = Get-Item -Path $AvatarPath
+        }
+
         $form = @{
             Email = $Email
             FirstName = $FirstName
             LastName = $LastName
-            Avatar = Get-Item -Path $AvatarPath
+            Avatar = $avatar
             Password = $Password
             ConfirmPassword = $ConfirmPassword
         }
@@ -105,28 +108,25 @@ function Update-Jwt {
         $UserId
     )
     begin {
-        $uri = "$BaseUrl/login"
+        $uri = "$UsersUrl/login"
     }
     process {
         $body = ConvertTo-Json @{
             UserId = $UserId
-            RefreshToken = $Global:Context.RefreshToken
+            RefreshToken = $Script:Context.RefreshToken
         }
 
         $parameters = @{
             Uri = $uri
             Method = "POST"
             Body = $body
-            ContentType = $ContentType
+            ContentType = $Script:JsonContentType
         }
 
         try {
             $response = Invoke-RestMethod @parameters
-
-            $Global:Context = @{
-                Token = $response.Model.Jwt
-                RerfreshToken = $response.Model.RefreshToken
-            }
+            $Script:Context.Token = $response.Model.Jwt
+            $Script:Context.RefreshToken = $response.Model.RefreshToken
         }
         catch {
             Write-Host $Error[0] | ConvertTo-Json
@@ -142,12 +142,12 @@ function Get-Profile {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $Global:Context.Token"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$UserId"
+            Uri = "$UsersUrl/$UserId"
             Method = "GET"
             Headers = $headers
         }
@@ -170,12 +170,12 @@ function Remove-User {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $Global:Context.Token"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$UserId"
+            Uri = "$UsersUrl/$UserId"
             Method = "DELETE"
             Headers = $headers
         }
@@ -199,12 +199,12 @@ function Remove-UserHard {
     )
     begin {
         $headers = @{
-            Authorization = "Bearer $Global:Context.Token"
+            Authorization = "Bearer $($Script:Context.Token)"
         }
     }
     process {
         $parameters = @{
-            Uri = "$BaseUrl/$UserId"
+            Uri = "$UsersUrl/$UserId"
             Method = "DELETE"
             Headers = $headers
         }
