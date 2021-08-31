@@ -45,13 +45,17 @@ function Login {
 function Register {
     [CmdletBinding()]
     param (
-        [Parameter()]
+        [Parameter(Mandatory)]
         [String]
         $Email,
 
-        [Parameter]
+        [Parameter(Mandatory)]
         [String]
         $FirstName,
+
+        [Parameter(Mandatory)]
+        [String]
+        $AvatarPath,
 
         [Parameter(Mandatory)]
         [String]
@@ -69,10 +73,11 @@ function Register {
         $Uri = "$BaseUrl/register"
     }
     process {
-        $body = ConvertTo-Json @{
+        $form = @{
             Email = $Email
             FirstName = $FirstName
             LastName = $LastName
+            Avatar = Get-Item -Path $AvatarPath
             Password = $Password
             ConfirmPassword = $ConfirmPassword
         }
@@ -80,8 +85,7 @@ function Register {
         $parameters = @{
             Uri = $Uri
             Method = "POST"
-            Body = $body
-            ContentType = ContentType
+            Form = $form
         }
 
         try {
