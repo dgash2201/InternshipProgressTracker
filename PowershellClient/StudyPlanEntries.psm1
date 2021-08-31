@@ -24,7 +24,7 @@ function Get-StudyPlanEntries {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -51,7 +51,7 @@ function Get-StudyPlanEntry {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -102,7 +102,7 @@ function New-StudyPlanEntry {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -157,7 +157,7 @@ function Set-StudyPlanEntry {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -185,7 +185,7 @@ function Remove-StudyPlanEntry {
             Invoke-RestMethod @parameters
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -213,7 +213,7 @@ function Remove-StudyPlanEntryHard {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }

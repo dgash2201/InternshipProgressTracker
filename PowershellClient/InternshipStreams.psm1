@@ -24,7 +24,7 @@ function Get-InternshipStreams {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -54,7 +54,7 @@ function Get-InternshipStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -127,7 +127,7 @@ function New-InternshipStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -197,7 +197,7 @@ function Set-InternshipStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -225,7 +225,7 @@ function Remove-InternshipStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
     
@@ -254,7 +254,7 @@ function Remove-InternshipStreamHard {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -296,7 +296,7 @@ function Add-MentorToStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -338,7 +338,7 @@ function Add-StudentToStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -380,7 +380,7 @@ function Remove-MentorFromStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -422,7 +422,7 @@ function Remove-StudentFromStream {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }

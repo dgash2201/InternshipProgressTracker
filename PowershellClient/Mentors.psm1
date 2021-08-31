@@ -43,7 +43,7 @@ function Set-Notes {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -96,7 +96,7 @@ function Set-ProgressGrade {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -145,7 +145,7 @@ function Set-StudentGrade {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }

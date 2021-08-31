@@ -24,7 +24,7 @@ function Get-Users {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -59,7 +59,7 @@ function New-Admin {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
@@ -104,7 +104,7 @@ function New-Mentor {
             Invoke-RestMethod @parameters | ConvertTo-Json
         }
         catch {
-            Write-Host $Error[0] | ConvertTo-Json
+            $_.Exception
         }
     }
 }
