@@ -21,13 +21,11 @@ namespace InternshipProgressTracker.Services.Students
     {
         private readonly InternshipProgressTrackerDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
 
-        public StudentService(InternshipProgressTrackerDbContext dbContext, IMapper mapper, UserManager<User> userManager)
+        public StudentService(InternshipProgressTrackerDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         /// <summary>
