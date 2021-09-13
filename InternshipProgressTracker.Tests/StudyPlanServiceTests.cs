@@ -52,7 +52,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that GetAsync returns study plan successfully by id
         /// </summary>
         [Test]
-        public async Task StudyPlanService_GetAsync_ReturnsSuccessfullyById()
+        public async Task GetAsync_ReturnsSuccessfullyById()
         {
             var id = 1;
             var title = "Study plan";
@@ -76,7 +76,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that GetAsync throws not found exception for unexisted study plan id
         /// </summary>
         [Test]
-        public void StudyPlanService_GetAsync_ThrowsForUnexistedId()
+        public void GetAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.GetAsync(1));
         }
@@ -85,7 +85,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that CreateAsync creates study plan successfully
         /// </summary>
         [Test]
-        public async Task StudyPlanService_CreateAsync_CreatesSuccessfully()
+        public async Task CreateAsync_CreatesSuccessfully()
         {
             var studyPlanTitle = "Study plan";
 
@@ -109,7 +109,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that CreateAsync throws not found exception for unexisted study plan id
         /// </summary>
         [Test]
-        public void StudyPlanService_CreateAsync_ThrowsForUnexistedInternshipStreamId()
+        public void CreateAsync_ThrowsForUnexistedInternshipStreamId()
         {
             var createDto = new StudyPlanDto
             {
@@ -124,7 +124,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that UpdateAsync throws not found exception for unexisted study plan id
         /// </summary>
         [Test]
-        public void StudyPlanService_UpdateAsync_ThrowsForUnexistedId()
+        public void UpdateAsync_ThrowsForUnexistedId()
         {
             var updateDto = new StudyPlanDto
             {
@@ -140,7 +140,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that UpdateAsync throws not found exception for unexisted internship stream id
         /// </summary>
         [Test]
-        public async Task StudyPlanService_UpdateAsync_ThrowsForUnexistedInternshipStreamId()
+        public async Task UpdateAsync_ThrowsForUnexistedInternshipStreamId()
         {
             var studyPlanId = 1;
 
@@ -165,7 +165,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that UpdateAsync updates study plan successfully
         /// </summary>
         [Test]
-        public async Task StudyPlanService_UpdateAsync_UpdatesSuccessfully()
+        public async Task UpdateAsync_UpdatesSuccessfully()
         {
             var studyPlanId = 1;
 
@@ -197,7 +197,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that SoftDeleteAsync throws not found exception for unexisted study plan id
         /// </summary>
         [Test]
-        public void StudyPlanService_SoftDeleteAsync_ThrowsForUnexistedId()
+        public void SoftDeleteAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.SoftDeleteAsync(1));
         }
@@ -206,7 +206,7 @@ namespace InternshipProgressTracker.Tests
         /// Checks that DeleteAsync throws not found exception for unexisted study plan id
         /// </summary>
         [Test]
-        public void StudyPlanService_DeleteAsync_ThrowsForUnexistedId()
+        public void DeleteAsync_ThrowsForUnexistedId()
         {
             Assert.ThrowsAsync<NotFoundException>(() => _studyPlanService.DeleteAsync(1));
         }

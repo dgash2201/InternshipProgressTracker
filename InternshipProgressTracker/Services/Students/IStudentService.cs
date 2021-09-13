@@ -1,8 +1,6 @@
 ﻿using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
-using InternshipProgressTracker.Models.Users;
 using System.Threading;
 using System.Threading.Tasks;
 

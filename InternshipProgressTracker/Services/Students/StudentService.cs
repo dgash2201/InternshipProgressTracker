@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using InternshipProgressTracker.Database;
 using InternshipProgressTracker.Entities;
-using InternshipProgressTracker.Entities.Enums;
 using InternshipProgressTracker.Exceptions;
 using InternshipProgressTracker.Models.Students;
 using InternshipProgressTracker.Models.StudentStudyPlanProgresses;
-using InternshipProgressTracker.Models.Users;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
